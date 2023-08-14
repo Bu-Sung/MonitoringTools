@@ -12,18 +12,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  *
  * @author qntjd
  */
-@Entity
 @Data
+@Entity
 @Table(name="user")// 필수는 X, DB에 테이블 설정 가능
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserEntity {
+
     @Id
     @Column(name="user_id")
     private String id; // 사용자 아이디
@@ -44,5 +46,6 @@ public class UserEntity {
     private String birth; // 사용자 생년월일
     
     @Column(name="user_state")
+    @ColumnDefault("0")
     private int state; // 사용자 삭제 여부
 }
