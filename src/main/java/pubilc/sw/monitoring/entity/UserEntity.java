@@ -34,6 +34,9 @@ public class UserEntity {
     @Column(name="user_name")
     private String name; // 사용자 이름
     
+    @Column(name="user_email")
+    private String email; // 사용자 전화번호
+    
     @Column(name="user_phone")
     private String phone; // 사용자 전화번호
     
