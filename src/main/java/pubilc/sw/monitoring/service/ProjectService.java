@@ -1,0 +1,201 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package pubilc.sw.monitoring.service;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import pubilc.sw.monitoring.dto.ProjectDTO;
+import pubilc.sw.monitoring.entity.ProjectEntity;
+import pubilc.sw.monitoring.repository.ProjectRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import pubilc.sw.monitoring.entity.MemberEntity;
+import pubilc.sw.monitoring.repository.MemberRepository;
+
+/**
+ *
+ * @author parkchaebin
+ */
+@Service
+@RequiredArgsConstructor
+public class ProjectService {
+
+    private final ProjectRepository projectRepository;
+    private final MemberRepository memberRepository;
+
+    /**
+     * 프로젝트 추가 함수 (project 테이블 및 member 테이블에 정보 추가)
+     * 
+     * @param projectDTO 프로젝트 정보를 담은 ProjectDTO 객체
+     * @param uid 사용자 아이디 
+     * @return 추가 성공 여부 (true : 추가 성공, false : 추가 실패)
+     */
+    public boolean addProject(ProjectDTO projectDTO, String uid) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        ProjectEntity addEntity = ProjectEntity.builder()
+                .name(projectDTO.getName())
+                .content(projectDTO.getContent())
+                .start(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getStart(), formatter)))
+                .end(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getEnd(), formatter)))
+                .category(projectDTO.getCategory())
+                .build();
+
+        addEntity = projectRepository.save(addEntity);
+        
+        if (addEntity != null) {
+            // member 테이블에 정보 추가
+            MemberEntity memberEntity = MemberEntity.builder()
+                    .uid(uid) 
+                    .pid(addEntity.getId()) // 새로 추가된 프로젝트 아이디
+                    .right(1) // 권한 정보 
+                    .build();
+
+            memberRepository.save(memberEntity);
+        }
+
+        return addEntity != null;
+    }
+
+    
+    /**
+     * 본인이 해당하는 프로젝트 얻기 위한 함수 
+     * 
+     * @param uid 본인이 해당하는 프로젝트를 얻기 위한 사용자 아이디 
+     * @return 해당 사용자의 프로젝트 정보를 담은 DTO 리스트 
+     */
+    public List<ProjectDTO> getProjectsByUserId(String uid) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // 사용자 아이디를 기반으로 프로젝트 멤버 조회 
+        List<MemberEntity> memberEntities = memberRepository.findByUid(uid);
+        List<ProjectDTO> projectDTOs = new ArrayList<>();  // 프로젝트 엔티티 리스트 
+
+        for (MemberEntity memberEntity : memberEntities) {
+            // 본인이 해당하는 프로젝트 아이디 
+            long pid = memberEntity.getPid();
+            ProjectEntity projectEntity = projectRepository.findById(pid);
+
+            if (projectEntity != null) {
+                // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환
+                Instant startInstant = projectEntity.getStart().toInstant();
+                Instant endInstant = projectEntity.getEnd().toInstant();
+                // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+                LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+                // 프로젝트 정보를 DTO로 변환하여 리스트에 추가
+                ProjectDTO projectDTO = ProjectDTO.builder()
+                        .pid(projectEntity.getId())
+                        .name(projectEntity.getName())
+                        .content(projectEntity.getContent())
+                        .start(startDate.format(formatter))
+                        .end(endDate.format(formatter))
+                        .category(projectEntity.getCategory())
+                        .build();
+
+                projectDTOs.add(projectDTO);
+            }
+        }
+
+        return projectDTOs;
+    }
+
+    
+    /**
+     * 프로젝트 상세 정보 얻기 위한 함수 
+     * 
+     * @param pid 상세 정보를 얻을 프로젝트 아이디 
+     * @return 프로젝트 상세 정보를 담은 ProjectDTO 객체 
+     */
+    public ProjectDTO getProjectDetails(Long pid) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // 프로젝트 아이디 기반으로 프로젝트 조회 
+        Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(pid);
+
+        if (projectEntityOptional.isPresent()) {  // 조회한 엔티티 존재 여부 확인 
+            ProjectEntity projectEntity = projectEntityOptional.get();
+            
+            // 프로젝트의 시작 및 종료 기를 Instant 객체로 변환
+            Instant startInstant = projectEntity.getStart().toInstant();
+            Instant endInstant = projectEntity.getEnd().toInstant();
+            // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+            LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+            // ProjectDTO 객체 생성
+            ProjectDTO projectDTO = ProjectDTO.builder()
+                    .pid(projectEntity.getId())
+                    .name(projectEntity.getName())
+                    .content(projectEntity.getContent())
+                    .start(startDate.format(formatter))
+                    .end(endDate.format(formatter))
+                    .category(projectEntity.getCategory())
+                    .build();
+
+            return projectDTO;
+        } else {
+            return null;  // 해당 프로젝트가 존재하지 않는 경우
+        }
+    }
+
+    /**
+     * 프로젝트 정보 수정 함수
+     * 
+     * @param projectDTO 수정할 프로젝트 정보를 담은 ProjectDTO 객체 
+     * @return 수정 성공 여부 (true : 수정 성공, false : 수정 실패 또는 수정할 프로젝트가 존재하지 않음)
+     */  
+    public boolean updateProject(ProjectDTO projectDTO) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // 프로젝트 아이디를 기반으로 프로젝트 조회 
+        Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(projectDTO.getPid());
+
+        if (projectEntityOptional.isPresent()) {  // 조회한 엔티티 존재 여부 확인 
+            ProjectEntity projectEntity = projectEntityOptional.get();
+
+            // 엔티티 정보를 업데이트하여 새로운 엔티티 생성
+            ProjectEntity updateEntity = ProjectEntity.builder()
+                    .id(projectEntity.getId())
+                    .name(projectDTO.getName())
+                    .content(projectDTO.getContent())
+                    .start(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getStart(), formatter)))
+                    .end(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getEnd(), formatter)))
+                    .category(projectDTO.getCategory())
+                    .build();
+
+            updateEntity = projectRepository.save(updateEntity);
+            return updateEntity != null;  // 수정 성공 시 true, 실패 시 false 반환
+        } else {
+            return false; // 수정할 프로젝트가 존재하지 않는 경우
+        }
+    } 
+    
+
+    /**
+     * 프로젝트 삭제 함수 
+     * 
+     * @param pid 삭제할 프로젝트 아이디 
+     * @return 삭제 성공 여부 (true : 삭제 성공, false : 삭제할 프로젝트가 존재하지 않음)
+     */
+    public boolean deleteProject(Long pid) {
+        // 프로젝트 아이디를 기반으로 프로젝트 조회 
+        Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(pid);
+        
+        if (projectEntityOptional.isPresent()) { // 조회한 엔티티 존재 여부 확인 
+            projectRepository.delete(projectEntityOptional.get());
+            return true; // 삭제 성공
+        } else {
+            return false; // 삭제할 프로젝트가 존재하지 않는 경우
+        }
+    }
+
+}
