@@ -148,6 +148,19 @@ public class ProjectService {
     }
 
     /**
+     * 프로젝트에 대한 수정 및 삭제에 대한 권한 확인 (member_right=1인 경우만 수정 및 삭제 가능) 
+     * 
+     * @param uid 사용자 아이디 
+     * @param pid 프로젝트 아이디 
+     * @return 수정 및 삭제 권한 여부 (true : 수정 및 삭제 가능, false : 수정 및 삭제 불가능) 
+     */
+    public boolean hasRight(String uid, Long pid) {
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        return memberEntity != null && memberEntity.getRight() == 1;
+    }
+    
+    
+    /**
      * 프로젝트 정보 수정 함수
      * 
      * @param projectDTO 수정할 프로젝트 정보를 담은 ProjectDTO 객체 

@@ -34,12 +34,14 @@
                 <p><b>프로젝트 종료 기간 :</b> <input type="date" name="end" value="${project.end}" required/></p>
                 <p><b>게시글 카테고리 :</b> <input type="text" name="category" value="${project.category}" /></p>
 
-                <button type="submit">수정</button>
+                <button type="submit" ${right ? '' : 'disabled'}>수정</button>
+
             </form>
 
             <form action="/monitoring/project/deleteProject/${project.pid}" method="post">
                 <input type="hidden" name="pid" value="${project.pid}" />
-                <button type="submit">삭제</button>
+                <button type="submit" ${right ? '' : 'disabled'}>삭제</button>
+
             </form>
         </c:if>
 

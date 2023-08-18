@@ -20,4 +20,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     @Query("SELECT m FROM MemberEntity m WHERE m.uid = :uid")
     List<MemberEntity> findByUid(String uid);
     
+    MemberEntity findByUidAndPid(String uid, Long pid);
+    
 }

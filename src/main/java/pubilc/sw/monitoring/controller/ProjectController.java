@@ -27,7 +27,7 @@ import pubilc.sw.monitoring.service.ProjectService;
 public class ProjectController {
 
     private final ProjectService projectService;
-   
+    
 
     /**
      * 프로젝트 리스트 조회
@@ -39,6 +39,7 @@ public class ProjectController {
     @GetMapping("project/project")
     public String project(@ModelAttribute ProjectDTO projectDTO, Model model) {
         
+        // String uid = (String) session.getAttribute("uid"); 
         // userid 세션 값으로 변경 
         String uid = "user1";
         
@@ -68,6 +69,7 @@ public class ProjectController {
     @PostMapping("project/addProject")
     public String addProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
 
+        // String uid = (String) session.getAttribute("uid"); 
         // userid 세션 값으로 변경 
         String uid = "user1";
         
@@ -90,6 +92,13 @@ public class ProjectController {
     public String projectDetails(@PathVariable Long pid, Model model) {
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         model.addAttribute("project", projectDTO);
+        
+        
+        // String uid = (String) session.getAttribute("uid"); 
+        String uid = "user1";
+        boolean right = projectService.hasRight(uid, pid);  // 권한 확인 
+        model.addAttribute("right", right); 
+    
         return "project/projectDetails";
     }
 
@@ -108,14 +117,16 @@ public class ProjectController {
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 수정 실패했습니다.");
         }
+        
+        return "redirect:/project/project";
 
-        // 업데이트된 프로젝트 정보 가져오기
-        ProjectDTO updatedProject = projectService.getProjectDetails(projectDTO.getPid());
-
-        // 수정된 프로젝트 정보 모델에 추가
-        attrs.addFlashAttribute("updatedProject", updatedProject);
-
-        return String.format("redirect:/project/projectDetails/pid=%d", projectDTO.getPid());
+//        // 업데이트된 프로젝트 정보 가져오기
+//        ProjectDTO updatedProject = projectService.getProjectDetails(projectDTO.getPid());
+//
+//        // 수정된 프로젝트 정보 모델에 추가
+//        attrs.addFlashAttribute("updatedProject", updatedProject);
+//
+//        return String.format("redirect:/project/projectDetails/pid=%d", projectDTO.getPid());
     }
     
     /**
