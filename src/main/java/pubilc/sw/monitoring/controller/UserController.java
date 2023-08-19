@@ -6,11 +6,11 @@ package pubilc.sw.monitoring.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.dto.UserDTO;
@@ -36,15 +36,21 @@ public class UserController {
         return "login";
     }
     
+    @GetMapping("/update")
+    public String updateUser(Model model){
+        model.addAttribute("user", userService.getUserInfo());
+        return "update";
+    }
+    
     /**
-     * 
+     * 로그인을 진행하는 함수
      * @param userDTO 로그인을 원하는 사용자의 입력
      * @param attrs
      * @return 로그인 성공 여부에 따른 URL 전송
      */
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public String signIn(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
-        if(userService.signIn(userDTO)){
+        if(userService.login(userDTO)){
             attrs.addFlashAttribute("msg", "로그인에 성공하였습니다.");
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
@@ -53,14 +59,14 @@ public class UserController {
     }
     
     /**
-     * 
+     * 회원가입을 진행하는 함수
      * @param userDTO 회원 가입을 원하는 사용자의 입력
      * @param attrs
      * @return 회원가입 성공 여부에 따른 URL 전송
      */
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public String signUp(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
-        if(userService.signUp(userDTO)){
+        if(userService.register(userDTO)){
             attrs.addFlashAttribute("msg", "회원가입에 성공하였습니다.");
         }else{
             attrs.addFlashAttribute("msg", "회원가입에 실패하였습니다.");
@@ -69,12 +75,33 @@ public class UserController {
     }
     
     /**
-     * 
+     * 기존 아이디를 확인하는 함수
      * @param id 아이디 중복 검사를 위해 사용자가 입력한 정보
      * @return 아이디의 존재 여부 아이디가 존재하면 true, 없으면 false
      */
     @PostMapping("/idcheck/{id}")
-    public @ResponseBody Boolean idCheck(@PathVariable String id){
+    public @ResponseBody boolean idCheck(@PathVariable String id){
         return userService.idExists(id);
+    }
+    
+    /**
+     * 비밀번호 확인 함수
+     * @param id
+     * @param pw
+     * @return 
+     */
+    @PostMapping("/pwcheck/{id}/{pw}")
+    public @ResponseBody boolean pwCheck(@PathVariable String id, @PathVariable String pw){
+        return userService.pwCheck(id, pw);
+    }
+    
+    @PostMapping("/update/{id}")
+    public String updateUser(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
+        if(userService.updateUserInfo(userDTO)){
+            attrs.addFlashAttribute("msg","정보 수정을 완료하였습니다.");
+        }else{
+            attrs.addFlashAttribute("msg","정보 수정에 실패하였습니다.");
+        }
+        return "redirect:/";
     }
 }

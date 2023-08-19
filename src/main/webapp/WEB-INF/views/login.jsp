@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>로그인</h1>
-    <form action="signin" method="POST">
+    <form action="login" method="POST">
         <label for="id">아이디:</label>
         <input type="text" id="id" name="id" required>
         <br><br>

@@ -31,7 +31,7 @@ public class UserService {
      * @param userDTO 로그인을 원하는 사용자의 입력
      * @return 로그인 성공 여부 - 성공하면 true, 실패하면 false
      */
-    public boolean signIn(UserDTO userDTO){
+    public boolean login(UserDTO userDTO){
         Optional<UserEntity> userEntity = userRepository.findById(userDTO.getId());
         if(!userEntity.isPresent() || !userDTO.getPw().equals(userEntity.get().getPw())){
             return false;
@@ -52,7 +52,7 @@ public class UserService {
      * @param userDTO 회원 가입을 원하는 사용자의 입력
      * @return 회원가입 성공 여부 - 성공하면 true, 실패하면 false
      */
-    public boolean signUp(UserDTO userDTO){
+    public boolean register(UserDTO userDTO){
         if(idExists(userDTO.getId())){
             return false;
         }else{
@@ -75,5 +75,26 @@ public class UserService {
      */
     public boolean idExists(String id){
         return userRepository.existsById(id);
+    }
+    
+    public boolean pwCheck(String id, String pw){
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        return userEntity.isPresent() && pw.equals(userEntity.get().getPw());
+    }
+    
+    public UserDTO getUserInfo(){
+        UserDTO user = (UserDTO)session.getAttribute("user");
+        Optional<UserEntity> userEntity = userRepository.findById(user.getId());
+        return UserDTO.builder()
+                    .id(userEntity.get().getId())
+                    .name(userEntity.get().getName())
+                    .email(userEntity.get().getEmail())
+                    .phone(userEntity.get().getPhone())
+                    .birth(userEntity.get().getBirth())
+                    .build();
+    }
+    
+    public boolean updateUserInfo(UserDTO userDTO){
+        return userRepository.updateUserInfo(userDTO.getId(), userDTO.getName(), userDTO.getEmail(), userDTO.getPhone(), userDTO.getBirth()) >=0;
     }
 }

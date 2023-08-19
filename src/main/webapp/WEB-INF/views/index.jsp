@@ -28,5 +28,8 @@
         </c:if>
         <a href="register">회원가입</a>
         <a href="login">로그인</a>
+        <c:if test="${!empty sessionScope.user}">
+            <a href="update">회원정보 수정</a>
+        </c:if>
     </body>
 </html>
