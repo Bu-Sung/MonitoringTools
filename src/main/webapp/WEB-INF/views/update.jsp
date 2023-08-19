@@ -38,5 +38,12 @@
 
             <input type="submit" value="변경하기">
         </form>
+            <h2>회원 탈퇴</h2>
+            <form action="delete/${user.getId()}">
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" name="pw" required>
+                <input type="submit" value="탈퇴하기">
+            </form>
+            
     </body>
 </html>

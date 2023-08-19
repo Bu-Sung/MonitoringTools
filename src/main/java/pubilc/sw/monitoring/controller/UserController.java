@@ -4,6 +4,7 @@
  */
 package pubilc.sw.monitoring.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +43,7 @@ public class UserController {
         return "update";
     }
     
+    
     /**
      * 로그인을 진행하는 함수
      * @param userDTO 로그인을 원하는 사용자의 입력
@@ -52,10 +54,11 @@ public class UserController {
     public String signIn(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
         if(userService.login(userDTO)){
             attrs.addFlashAttribute("msg", "로그인에 성공하였습니다.");
+            return "redirect:/";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
+            return "redirect:/login";
         }
-        return "redirect:/";
     }
     
     /**
@@ -103,5 +106,11 @@ public class UserController {
             attrs.addFlashAttribute("msg","정보 수정에 실패하였습니다.");
         }
         return "redirect:/";
+    }
+    
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable String id, HttpServletRequest request){
+        userService.deleteUser(id, request.getParameter("pw"));
+        return "redirect:/login";
     }
 }

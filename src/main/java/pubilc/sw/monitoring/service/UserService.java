@@ -33,7 +33,7 @@ public class UserService {
      */
     public boolean login(UserDTO userDTO){
         Optional<UserEntity> userEntity = userRepository.findById(userDTO.getId());
-        if(!userEntity.isPresent() || !userDTO.getPw().equals(userEntity.get().getPw())){
+        if(!userEntity.isPresent() || !userDTO.getPw().equals(userEntity.get().getPw()) || userEntity.get().getState() != 0){
             return false;
         }else{
             session.setAttribute("user", UserDTO.builder()
@@ -96,5 +96,14 @@ public class UserService {
     
     public boolean updateUserInfo(UserDTO userDTO){
         return userRepository.updateUserInfo(userDTO.getId(), userDTO.getName(), userDTO.getEmail(), userDTO.getPhone(), userDTO.getBirth()) >=0;
+    }
+    
+    public boolean deleteUser(String id, String pw){
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        if(userEntity.isPresent() && pw.equals(userEntity.get().getPw())){
+            return userRepository.deleteUser(userEntity.get().getId()) > 0;
+        }else {
+            return false;
+        }
     }
 }
