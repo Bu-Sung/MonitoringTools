@@ -5,6 +5,7 @@
 package pubilc.sw.monitoring.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,6 +99,12 @@ public class UserController {
         return userService.pwCheck(id, pw);
     }
     
+    /**
+     * 사용자 기본 정보 변경
+     * @param userDTO
+     * @param attrs
+     * @return 
+     */
     @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
         if(userService.updateUserInfo(userDTO)){
@@ -108,9 +115,23 @@ public class UserController {
         return "redirect:/";
     }
     
+    /**
+     * 사용자 정보 삭제
+     * @param id
+     * @param request
+     * @return 
+     */
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable String id, HttpServletRequest request){
         userService.deleteUser(id, request.getParameter("pw"));
+        return "redirect:/login";
+    }
+    
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, RedirectAttributes attrs){
+        HttpSession session = request.getSession();
+        session.invalidate();
+         attrs.addFlashAttribute("msg","로그아웃 하였습니다.");
         return "redirect:/login";
     }
 }

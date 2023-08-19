@@ -30,6 +30,7 @@
         <a href="login">로그인</a>
         <c:if test="${!empty sessionScope.user}">
             <a href="update">회원정보 수정</a>
+            <a href="logout">로그아웃</a>
         </c:if>
     </body>
 </html>
