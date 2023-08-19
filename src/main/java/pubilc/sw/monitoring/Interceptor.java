@@ -22,7 +22,7 @@ public class Interceptor implements HandlerInterceptor {
 
         if (user == null) {
             // 세션에 'user' 속성이 없는 경우 로그인 페이지로 리다이렉트
-            response.sendRedirect("redirect:/");
+            response.sendRedirect("/monitoring/login?session_expired=true");
             return false;
         }
 

@@ -16,20 +16,27 @@
                 alert("${msg}");
             </c:if>
         </script>
+        <script>
+            const urlParams = new URL(location.href).searchParams;
+            if (urlParams.get('session_expired') === "true") {
+                alert("로그인 세션이 만료되었습니다.");
+                history.replaceState({}, document.title, window.location.pathname);
+            }
+        </script>
     </head>
     <body>
         <h1>로그인</h1>
-    <form action="login" method="POST">
-        <label for="id">아이디:</label>
-        <input type="text" id="id" name="id" required>
-        <br><br>
-        
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" name="pw" required>
-        <br><br>
-        
-        <input type="submit" value="로그인">
-    </form>
-    <p>아직 회원이 아니신가요? <a href="/signup">회원 가입하기</a></p>
+        <form action="login" method="POST">
+            <label for="id">아이디:</label>
+            <input type="text" id="id" name="id" required>
+            <br><br>
+
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="pw" required>
+            <br><br>
+
+            <input type="submit" value="로그인">
+        </form>
+        <p>아직 회원이 아니신가요? <a href="/signup">회원 가입하기</a></p>
     </body>
 </html>
