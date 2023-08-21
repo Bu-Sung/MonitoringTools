@@ -1,6 +1,6 @@
 <%-- 
     Document   : index
-    Created on : 2023. 7. 28., 오전 7:07:25
+    Created on : 2023. 8. 20., 오전 7:24:37
     Author     : qntjd
 --%>
 
@@ -13,6 +13,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>프로젝트</h1>
+        <a href="projectMeeting/meeting">회의록</a>
     </body>
 </html>
