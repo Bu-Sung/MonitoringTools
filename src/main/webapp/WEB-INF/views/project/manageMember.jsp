@@ -61,7 +61,7 @@
         <br> <br> <br> 
         
         <!-- 팀원 추가 --> 
-<!--        <form action="/monitoring/project/addMember/${memberDetails[0].pid}" method="post">
+        <form action="/monitoring/project/addMember/${memberDetails[0].pid}" method="post">
             <input type="text" name="addUid" placeholder="아이디를 입력하세요." required />
             <select name="right">
                 <option value="1" ${member.right == 1 ? 'selected' : ''}>마스터 권한</option>
@@ -69,7 +69,7 @@
                 <option value="3" ${member.right == 3 ? 'selected' : ''}>보기 권한</option>
             </select>
             <button type="submit" ${editright ? '' : 'disabled'}>팀원 추가</button> 
-        </form>-->
+        </form>
 
     </body>
 

@@ -18,7 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.entity.MemberEntity;
+import pubilc.sw.monitoring.entity.UserEntity;
 import pubilc.sw.monitoring.repository.MemberRepository;
+import pubilc.sw.monitoring.repository.UserRepository;
 
 /**
  *
@@ -30,42 +32,50 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
 
     /**
      * 프로젝트 추가 함수 (project 테이블 및 member 테이블에 정보 추가)
      * 
      * @param projectDTO 프로젝트 정보를 담은 ProjectDTO 객체
      * @param uid 사용자 아이디 
-     * @return 추가 성공 여부 (true : 추가 성공, false : 추가 실패)
+     * @return (0 : 날짜 비교 실패, 1 : 추가 성공, 2 : 추가 실패)
      */
-    public boolean addProject(ProjectDTO projectDTO, String uid) {
+    public int addProject(ProjectDTO projectDTO, String uid) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(projectDTO.getStart(), formatter);
+        LocalDate endDate = LocalDate.parse(projectDTO.getEnd(), formatter);
 
-        ProjectEntity addEntity = ProjectEntity.builder()
-                .name(projectDTO.getName())
-                .content(projectDTO.getContent())
-                .start(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getStart(), formatter)))
-                .end(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getEnd(), formatter)))
-                .category(projectDTO.getCategory())
-                .build();
-
-        addEntity = projectRepository.save(addEntity);
-        
-        if (addEntity != null) {
-            // member 테이블에 정보 추가
-            MemberEntity memberEntity = MemberEntity.builder()
-                    .uid(uid) 
-                    .pid(addEntity.getId()) // 새로 추가된 프로젝트 아이디
-                    .right(1) // 권한 정보 
+        if (startDate.isBefore(endDate)) {
+            ProjectEntity addEntity = ProjectEntity.builder()
+                    .name(projectDTO.getName())
+                    .content(projectDTO.getContent())
+                    .start(java.sql.Date.valueOf(startDate))
+                    .end(java.sql.Date.valueOf(endDate))
+                    .category(projectDTO.getCategory())
                     .build();
 
-            memberRepository.save(memberEntity);
-        }
+            addEntity = projectRepository.save(addEntity);
 
-        return addEntity != null;
+            if (addEntity != null) {
+                // member 테이블에 정보 추가
+                MemberEntity memberEntity = MemberEntity.builder()
+                        .uid(uid) 
+                        .pid(addEntity.getId()) // 새로 추가된 프로젝트 아이디
+                        .right(1) // 권한 정보 
+                        .build();
+
+                memberRepository.save(memberEntity);
+                return 1; // 추가 성공
+            } else {
+                return 2; // 추가 실패
+            }
+        } else {
+            return 0; // 날짜 비교 실패
+        }
     }
 
-    
+
     /**
      * 본인이 해당하는 프로젝트 얻기 위한 함수 
      * 
@@ -165,9 +175,9 @@ public class ProjectService {
      * 프로젝트 정보 수정 함수
      * 
      * @param projectDTO 수정할 프로젝트 정보를 담은 ProjectDTO 객체 
-     * @return 수정 성공 여부 (true : 수정 성공, false : 수정 실패 또는 수정할 프로젝트가 존재하지 않음)
+     * @return 수정 성공 여부 (0 : 날짜 비교 실패, 1 : 수정 성공, 2 : 수정 실패 또는 수정할 프로젝트가 존재하지 않음)
      */  
-    public boolean updateProject(ProjectDTO projectDTO) {
+    public int updateProject(ProjectDTO projectDTO) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // 프로젝트 아이디를 기반으로 프로젝트 조회 
@@ -175,25 +185,31 @@ public class ProjectService {
 
         if (projectEntityOptional.isPresent()) {  // 조회한 엔티티 존재 여부 확인 
             ProjectEntity projectEntity = projectEntityOptional.get();
+            LocalDate startDate = LocalDate.parse(projectDTO.getStart(), formatter);
+            LocalDate endDate = LocalDate.parse(projectDTO.getEnd(), formatter);
 
-            // 엔티티 정보를 업데이트하여 새로운 엔티티 생성
-            ProjectEntity updateEntity = ProjectEntity.builder()
-                    .id(projectEntity.getId())
-                    .name(projectDTO.getName())
-                    .content(projectDTO.getContent())
-                    .start(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getStart(), formatter)))
-                    .end(java.sql.Date.valueOf(LocalDate.parse(projectDTO.getEnd(), formatter)))
-                    .category(projectDTO.getCategory())
-                    .build();
+            if (startDate.isBefore(endDate)) {  // 날짜 비교
+                // 엔티티 정보를 업데이트하여 새로운 엔티티 생성
+                ProjectEntity updateEntity = ProjectEntity.builder()
+                        .id(projectEntity.getId())
+                        .name(projectDTO.getName())
+                        .content(projectDTO.getContent())
+                        .start(java.sql.Date.valueOf(startDate))
+                        .end(java.sql.Date.valueOf(endDate))
+                        .category(projectDTO.getCategory())
+                        .build();
 
-            updateEntity = projectRepository.save(updateEntity);
-            return updateEntity != null;  // 수정 성공 시 true, 실패 시 false 반환
+                updateEntity = projectRepository.save(updateEntity);
+                return updateEntity != null ? 1 : 2;  // 수정 성공 시 1, 실패 시 2 반환
+            } else {
+                return 0; // 날짜 비교 실패
+            }
         } else {
-            return false; // 수정할 프로젝트가 존재하지 않는 경우
+            return 2; // 수정할 프로젝트가 존재하지 않는 경우
         }
-    } 
+    }
+ 
     
-
     /**
      * 프로젝트 삭제 함수 
      * 
@@ -244,6 +260,17 @@ public class ProjectService {
     
     
     /**
+     * 추가할 멤버가 회원가입 된 아이디인지 판별 
+     * 
+     * @param uid 추가할 멤버 아이디 
+     * @return 회원가입 된 아이디인지 판별 여부 (true : 회원가입 된 아이디, false : 회원가입이 되지 않은 아이디) 
+     */
+    public boolean isRegisteredUser(String uid) {
+        return userRepository.existsById(uid);
+    }
+    
+    
+    /**
      * 해당 프로젝트에 이미 참여중인 멤버인지 판별 
      * 
      * @param memberDTO 멤버 정보를 담은 MemberDTO 객체
@@ -254,7 +281,7 @@ public class ProjectService {
         return memberRepository.existsByUidAndPid(addUid, memberDTO.getPid());
     }
     
-
+    
     /**
      * 프로젝트 멤버 추가 함수 
      * 

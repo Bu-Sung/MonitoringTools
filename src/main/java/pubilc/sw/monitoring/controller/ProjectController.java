@@ -74,9 +74,11 @@ public class ProjectController {
         // String uid = (String) session.getAttribute("uid"); 
         // userid 세션 값으로 변경 
         String uid = "user1";
-        
-        if (projectService.addProject(projectDTO, uid)) {
+
+        if (projectService.addProject(projectDTO, uid) == 1) {
             attrs.addFlashAttribute("msg", "프로젝트 등록 성공했습니다.");
+        } else if (projectService.addProject(projectDTO, uid) == 0) {
+            attrs.addFlashAttribute("msg", "시작 기간이 종료 기간보다 늦거나 같습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 등록 실패했습니다.");
         }
@@ -116,24 +118,18 @@ public class ProjectController {
      */
     @PostMapping("project/updateProject")
     public String updateProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
-        
-        if (projectService.updateProject(projectDTO)) {
-            attrs.addFlashAttribute("msg", "프로젝트 수정 성공했습니다.");
-        } else {
-            attrs.addFlashAttribute("msg", "프로젝트 수정 실패했습니다.");
-        }
-        
-        return "redirect:/project/project";
 
-//        // 업데이트된 프로젝트 정보 가져오기
-//        ProjectDTO updatedProject = projectService.getProjectDetails(projectDTO.getPid());
-//
-//        // 수정된 프로젝트 정보 모델에 추가
-//        attrs.addFlashAttribute("updatedProject", updatedProject);
-//
-//        return String.format("redirect:/project/projectDetails/pid=%d", projectDTO.getPid());
+        if (projectService.updateProject(projectDTO) == 1) {
+            attrs.addFlashAttribute("msg", "프로젝트 수정 성공했습니다.");
+        } else if (projectService.updateProject(projectDTO) == 2) {
+            attrs.addFlashAttribute("msg", "프로젝트 수정 실패했습니다.");
+        } else {
+            attrs.addFlashAttribute("msg", "시작 기간이 종료 기간보다 늦거나 같습니다.");
+        }
+
+        return "redirect:/project/projectDetails/" + projectDTO.getPid();
     }
-    
+
     /**
      * 프로젝트 삭제 
      * 
@@ -187,7 +183,9 @@ public class ProjectController {
     @PostMapping("/project/addMember/{pid}")
     public String addMember(@ModelAttribute MemberDTO memberDTO, @PathVariable Long pid, @RequestParam String addUid, @RequestParam int right, RedirectAttributes attrs) {
 
-        if (projectService.isMember(memberDTO, addUid)) {
+        if (!projectService.isRegisteredUser(addUid)) {
+            attrs.addFlashAttribute("msg", "존재하지 않는 아이디입니다.");
+        } else if (projectService.isMember(memberDTO, addUid)) {
             attrs.addFlashAttribute("msg", "이미 참여 중인 팀원입니다.");
         } else if (projectService.addMember(memberDTO, addUid, right)) {
             attrs.addFlashAttribute("msg", "팀원 추가 성공했습니다.");
@@ -195,9 +193,9 @@ public class ProjectController {
             attrs.addFlashAttribute("msg", "팀원 추가 실패했습니다.");
         }
 
-        return "redirect:/project/manageMember/" + pid;
-    }
-    
+    return "redirect:/project/manageMember/" + pid;
+}
+
     
     /**
      * 팀원 권한 수정 
