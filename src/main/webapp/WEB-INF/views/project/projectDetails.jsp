@@ -14,11 +14,11 @@
         <title>프로젝트 상세 페이지</title>
         <script>
             <c:if test="${!empty msg}">
-                alert("${msg}");
+            alert("${msg}");
             </c:if>
         </script>
     </head>
-    
+
     <body>
 
         <h1>프로젝트 상세 정보 확인, 수정 및 삭제</h1>
@@ -41,8 +41,15 @@
             <form action="/monitoring/project/deleteProject/${project.pid}" method="post">
                 <input type="hidden" name="pid" value="${project.pid}" />
                 <button type="submit" ${right ? '' : 'disabled'}>삭제</button>
-
             </form>
+
+            <br> <br> 
+
+            <form action="/monitoring/project/manageMember/${project.pid}" method="get">
+                <input type="hidden" name="pid" value="${project.pid}" />
+                <input type="submit" value="팀원 관리" />
+            </form>
+                
         </c:if>
 
     </body>

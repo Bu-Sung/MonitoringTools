@@ -16,6 +16,7 @@ import pubilc.sw.monitoring.entity.ProjectEntity;
 import pubilc.sw.monitoring.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.entity.MemberEntity;
 import pubilc.sw.monitoring.repository.MemberRepository;
 
@@ -204,11 +205,126 @@ public class ProjectService {
         Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(pid);
         
         if (projectEntityOptional.isPresent()) { // 조회한 엔티티 존재 여부 확인 
+            
+            // 해당 프로젝트의 멤버 데이터 조회
+            List<MemberEntity> members = memberRepository.findByPid(pid);
+            // 조회한 멤버 삭제
+            memberRepository.deleteAll(members);
+        
             projectRepository.delete(projectEntityOptional.get());
             return true; // 삭제 성공
         } else {
             return false; // 삭제할 프로젝트가 존재하지 않는 경우
         }
     }
+    
+    
+    /**
+     * 해당 프로젝트에 대한 멤버 리스트 정보 얻기 위한 함수 
+     * 
+     * @param pid 프로젝트 아이디
+     * @return 프로젝트 멤버 정보를 담은 MemberDTO 객체 리스트
+     */
+    public List<MemberDTO> getMember(Long pid) {
+       List<MemberEntity> memberEntities = memberRepository.findByPid(pid);
+       List<MemberDTO> memberDTOs = new ArrayList<>();
 
+        for (MemberEntity memberEntity : memberEntities) {
+            MemberDTO memberDTO = MemberDTO.builder()
+                    .mid(memberEntity.getMid())
+                    .uid(memberEntity.getUid())
+                    .pid(memberEntity.getPid())
+                    .right(memberEntity.getRight())
+                    .build();
+
+            memberDTOs.add(memberDTO);
+        }
+        return memberDTOs;
+    }
+    
+    
+    /**
+     * 해당 프로젝트에 이미 참여중인 멤버인지 판별 
+     * 
+     * @param memberDTO 멤버 정보를 담은 MemberDTO 객체
+     * @param addUid 참여중인지 판별할 유저 아이디 
+     * @return 해당 프로젝트에 대한 참여 여부 (true : 이미 프로젝트에 참여 중인 아이디, false : 해당 프로젝트에 참여 중이 아닌 아이디)
+     */
+    public boolean isMember(MemberDTO memberDTO, String addUid) {
+        return memberRepository.existsByUidAndPid(addUid, memberDTO.getPid());
+    }
+    
+
+    /**
+     * 프로젝트 멤버 추가 함수 
+     * 
+     * @param memberDTO 멤버 정보를 담은 MemberDTO 객체 
+     * @param addUid 추가할 멤버 아이디
+     * @param right 추가할 멤버의 권한 
+     * @return 맴보 추가 성공 여부 (true : 멤버 추가 성공, false : 멤버 추가 실패)
+     */
+    public boolean addMember(MemberDTO memberDTO, String addUid, int right) {
+         
+        MemberEntity addEntity = MemberEntity.builder()
+                .uid(addUid)
+                .pid(memberDTO.getPid())
+                .right(right)
+                .build();
+
+        addEntity = memberRepository.save(addEntity);
+        
+        return addEntity != null;
+    }
+
+
+    /**
+     * 해당 프로젝트의 멤버 권한 수정 함수 
+     * 
+     * @param uid 권한 수정할 멤버 아이디 
+     * @param pid 프로젝트 아이디 
+     * @param right 수정할 권한 
+     * @return 권한 수정 여부 (true : 권한 수정 성공, false : 권한 수정 실패) 
+     */
+    public boolean updateMemberRight( String uid, Long pid, int right) {
+        // 프로젝트 아이디와 유저 아이디를 기반으로 멤버 엔티티 조회
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+
+        if (memberEntity != null) { // 멤버 엔티티가 존재하는 경우
+            // 새로운 멤버 엔티티 생성
+            MemberEntity updatedMember = MemberEntity.builder()
+                .mid(memberEntity.getMid())
+                .uid(uid)
+                .pid(pid)
+                .right(right)
+                .build();
+
+            updatedMember = memberRepository.save(updatedMember);
+            return updatedMember != null; // 권한 수정 성공 시 true, 실패 시 false 반환
+        } else {
+            return false; // 수정할 멤버가 존재하지 않는 경우
+        }
+    } 
+    
+  
+    /**
+     * 프로젝트 멤버 삭제 함수 
+     * 
+     * @param selectedMember 선택된 삭제 멤버 아이디 
+     * @param pid 프로젝트 아이디 
+     * @return 삭제 성공 여부 (true : 삭제 성공, false : 삭제 실패, 선택된 삭제 멤버가 없음) 
+     */
+    public boolean deleteMember(List<String> selectedMember, Long pid) {
+        boolean delete = false;  // 삭제할 멤버 선택 여부 확인 
+
+        for (String uid : selectedMember) {
+            MemberEntity deleteMember = memberRepository.findByUidAndPid(uid, pid);
+            if (deleteMember != null) {
+                memberRepository.delete(deleteMember);
+                delete = true;
+            }
+        }
+        return delete; // 하나 이상의 멤버가 삭제된 경우 true 반환
+    }
+
+    
 }

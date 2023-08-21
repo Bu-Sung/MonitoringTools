@@ -6,6 +6,7 @@ package pubilc.sw.monitoring.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import pubilc.sw.monitoring.entity.MemberEntity;
@@ -22,4 +23,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     
     MemberEntity findByUidAndPid(String uid, Long pid);
     
+    List<MemberEntity> findByPid(Long pid);
+   
+    boolean existsByUidAndPid(String uid, Long pid);
 }
