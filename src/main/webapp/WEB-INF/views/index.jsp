@@ -1,6 +1,6 @@
 <%-- 
     Document   : index
-    Created on : 2023. 7. 28., 오전 7:07:25
+    Created on : 2023. 8. 20., 오전 7:24:37
     Author     : qntjd
 --%>
 
@@ -19,6 +19,10 @@
         </script>
     </head>
     <body>
+
+        <h1>프로젝트</h1>
+        <a href="projectMeeting/meeting">회의록</a>
+
         <c:if test="${!empty sessionScope.user}">
             <p>${sessionScope.user.getId()}</p>
             <p>${sessionScope.user.getName()}</p>
@@ -32,5 +36,6 @@
             <a href="update">회원정보 수정</a>
             <a href="logout">로그아웃</a>
         </c:if>
+
     </body>
 </html>
