@@ -5,18 +5,22 @@
 package pubilc.sw.monitoring.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
+import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.ProjectService;
 
 /**
@@ -26,10 +30,13 @@ import pubilc.sw.monitoring.service.ProjectService;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/project")
 public class ProjectController {
 
     private final ProjectService projectService;
     
+    @Autowired
+    private HttpSession session;
 
     /**
      * 프로젝트 리스트 조회
@@ -38,14 +45,12 @@ public class ProjectController {
      * @param model
      * @return project 프로젝트 리스트 조회 페이지 
      */
-    @GetMapping("project/project")
+    @GetMapping("/project")
     public String project(@ModelAttribute ProjectDTO projectDTO, Model model) {
         
-        // String uid = (String) session.getAttribute("uid"); 
-        // userid 세션 값으로 변경 
-        String uid = "user1";
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
         
-        List<ProjectDTO> projects = projectService.getProjectsByUserId(uid);
+        List<ProjectDTO> projects = projectService.getProjectsByUserId(user.getId());
         model.addAttribute("projects", projects);
         
         return "project/project";
@@ -56,7 +61,7 @@ public class ProjectController {
      * 
      * @return projectSave 프로젝트 정보 입력 페이지 
      */
-    @PostMapping("project/projectSave")
+    @GetMapping("/projectSave")
     public String projectSave(){
         return "project/projectSave";
     }
@@ -68,7 +73,7 @@ public class ProjectController {
      * @param attrs
      * @return project 프로젝트 추가 후 프로젝트 리스트 조회 페이지로 이동 
      */
-    @PostMapping("project/addProject")
+    @PostMapping("/addProject")
     public String addProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
 
         // String uid = (String) session.getAttribute("uid"); 
@@ -92,7 +97,7 @@ public class ProjectController {
      * @param model
      * @return projectDetails 프로젝트 상세 정보 페이지 
      */
-    @GetMapping("project/projectDetails/{pid}")
+    @GetMapping("/projectDetails/{pid}")
     public String projectDetails(@PathVariable Long pid, Model model) {
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         model.addAttribute("project", projectDTO);
@@ -116,7 +121,7 @@ public class ProjectController {
      * @param attrs
      * @return 수정된 프로젝트 상세 정보 페이지 
      */
-    @PostMapping("project/updateProject")
+    @PostMapping("/updateProject")
     public String updateProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
 
         if (projectService.updateProject(projectDTO) == 1) {
@@ -137,7 +142,7 @@ public class ProjectController {
      * @param attrs
      * @return project 프로젝트 삭제 후 프로젝트 리스트 조회 페이지로 이동 
      */
-    @PostMapping("project/deleteProject/{pid}")
+    @PostMapping("/deleteProject/{pid}")
     public String deleteProject(@PathVariable Long pid, RedirectAttributes attrs) {
         if (projectService.deleteProject(pid)) {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 성공했습니다.");
@@ -155,7 +160,7 @@ public class ProjectController {
      * @param model
      * @return manageMember 프로젝트 멤버 관리 페이지 
      */
-    @GetMapping("/project/manageMember/{pid}")
+    @GetMapping("/manageMember/{pid}")
     public String manageMember(@PathVariable Long pid, Model model) {
     
         List<MemberDTO> memberDTO = projectService.getMember(pid);
@@ -180,7 +185,7 @@ public class ProjectController {
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지 
      */
-    @PostMapping("/project/addMember/{pid}")
+    @PostMapping("/addMember/{pid}")
     public String addMember(@ModelAttribute MemberDTO memberDTO, @PathVariable Long pid, @RequestParam String addUid, @RequestParam int right, RedirectAttributes attrs) {
 
         if (!projectService.isRegisteredUser(addUid)) {
@@ -206,7 +211,7 @@ public class ProjectController {
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지 
      */
-    @PostMapping("/project/updateRight/{pid}")
+    @PostMapping("/updateRight/{pid}")
     public String updateRight(@RequestParam List<String> uids, @RequestParam Long pid, @RequestParam List<Integer> rights, RedirectAttributes attrs) {
         for (int i = 0; i < uids.size(); i++) {
             projectService.updateMemberRight(uids.get(i), pid, rights.get(i));
@@ -226,7 +231,7 @@ public class ProjectController {
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지 
      */
-    @PostMapping("/project/deleteMember/{pid}")
+    @PostMapping("/deleteMember/{pid}")
     public String removeMember(@RequestParam(value = "selectedMember", required = false) List<String> selectedMember, @RequestParam Long pid, RedirectAttributes attrs) {
         if (selectedMember != null && !selectedMember.isEmpty()) {
             

@@ -1,41 +1,51 @@
 <%-- 
-    Document   : index
-    Created on : 2023. 8. 20., 오전 7:24:37
-    Author     : qntjd
+    Document   : project
+    Created on : 2023. 8. 6., 오전 2:08:58
+    Author     : parkchaebin
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>JSP Page</title>
+        <title>프로젝트 리스트 페이지</title>
         <script>
             <c:if test="${!empty msg}">
                 alert("${msg}");
             </c:if>
         </script>
     </head>
+    
     <body>
 
-        <h1>프로젝트</h1>
-        <a href="projectMeeting/meeting">회의록</a>
+        <h1>Project List</h1>
 
-        <c:if test="${!empty sessionScope.user}">
-            <p>${sessionScope.user.getId()}</p>
-            <p>${sessionScope.user.getName()}</p>
-            <p>${sessionScope.user.getEmail()}</p>
-            <p>${sessionScope.user.getPhone()}</p>
-            <p>${sessionScope.user.getBirth()}</p>
-        </c:if>
-        <a href="register">회원가입</a>
-        <a href="login">로그인</a>
-        <c:if test="${!empty sessionScope.user}">
-            <a href="update">회원정보 수정</a>
-            <a href="logout">로그아웃</a>
-        </c:if>
+        <table>
+            <tr>
+                <th>프로젝트 이름</th>
+                <th>프로젝트 설명</th>
+                <th>프로젝트 시작 기간</th>
+                <th>프로젝트 마감 기간</th>
+                <th>게시글 카테고리</th>
+            </tr>
+            <c:forEach var="project" items="${projects}">
+                <tr>
 
+                    <td><a href="projectDetails/${project.pid}"><c:out value="${project.name}" /></a></td>
+                    <td><c:out value="${project.content}" /></td>
+                    <td><c:out value="${project.start}" /></td>
+                    <td><c:out value="${project.end}" /></td>
+                    <td><c:out value="${project.category}" /></td>
+                </tr>
+            </c:forEach>
+        </table> 
+
+        <form action="project/projectSave" >
+            <button type="submit">프로젝트 추가</button>
+        </form>
     </body>
 </html>

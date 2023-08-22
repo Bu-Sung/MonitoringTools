@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pubilc.sw.monitoring.dto.MeetingDTO;
 import pubilc.sw.monitoring.entity.MeetingEntity;
-import pubilc.sw.monitoring.repsitory.MeetingRepository;
+import pubilc.sw.monitoring.repository.MeetingRepository;
 
 /**
  *
