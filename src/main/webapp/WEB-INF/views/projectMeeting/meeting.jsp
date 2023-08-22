@@ -23,17 +23,17 @@
     <table>
         <thead>
             <tr>
-                <th>회의 번호</th>
                 <th>제목</th>
+                <th>작성자</th>
                 <th>작성일</th>
             </tr>
         </thead>
         <tbody>
-        <c:forEach var="meeting" items="${meetings}">
+        <c:forEach var="meeting" items="${meetingList}">
             <tr>
-                <td><c:out value="${meeting.id}"/></td>
-                <td><c:out value="${meeting.title}"/></td>
-                <td><c:out value="${meeting.date}"/></td>
+                <td><a href="${meeting.getId()}"><c:out value="${meeting.getTitle()}"/></a></td>
+                <td><c:out value="${meeting.getWriter()}"/></td>
+                <td><c:out value="${meeting.getDate()}"/></td>
             </tr>
         </c:forEach>
         </tbody>

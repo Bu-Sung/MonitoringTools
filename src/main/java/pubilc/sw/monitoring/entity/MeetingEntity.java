@@ -31,7 +31,7 @@ public class MeetingEntity {
     @Id // Primary Key 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="meeting_id")
-    private int id;
+    private Long id;
     
     @Column(name="project_id")
     private int projectId;

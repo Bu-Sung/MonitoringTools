@@ -94,9 +94,10 @@ public class FileService {
     }
     
     //폴더 안에 파일 목록을 검색한다.
-    public List<String> searchFile(String realpath, String lecid){
+    public List<String> searchFile(String path, String id){
+        String realPath = ctx.getRealPath(path);
         List<String> fileNameList = new ArrayList<>();
-        File[] fileList = new File(String.format("%s/%s", realpath, lecid)).listFiles();
+        File[] fileList = new File(String.format("%s/%s", realPath, id)).listFiles();
         for(File file : fileList){
                 fileNameList.add(file.getName());
         }

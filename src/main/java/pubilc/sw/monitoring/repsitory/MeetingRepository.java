@@ -4,6 +4,8 @@
  */
 package pubilc.sw.monitoring.repsitory;
 
+import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pubilc.sw.monitoring.entity.MeetingEntity;
@@ -14,5 +16,5 @@ import pubilc.sw.monitoring.entity.MeetingEntity;
  */
 @Repository
 public interface MeetingRepository extends JpaRepository<MeetingEntity, Long>{
-    
+    List<MeetingEntity> findByProjectId(int num, Pageable pageable );
 }

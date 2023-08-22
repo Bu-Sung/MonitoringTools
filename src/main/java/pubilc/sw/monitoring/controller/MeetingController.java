@@ -7,8 +7,10 @@ package pubilc.sw.monitoring.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,13 +31,20 @@ public class MeetingController {
     private final meetingService meetingService; // UserService 클래스 사용을 위한 변수
     
     @GetMapping("/meeting")
-    public String meeting(){
+    public String meeting(@RequestParam(value = "page", defaultValue = "1") int nowPage,Model model){
+        model.addAttribute("meetingList", meetingService.getMeetingList(nowPage));
         return "projectMeeting/meeting";
     }
     
     @GetMapping("/meetingSave")
     public String meetingRegister(){
         return "projectMeeting/meetingSave";
+    }
+    
+    @GetMapping("/{id}")
+    public String meetingDetail(@PathVariable Long id, Model model){
+        model.addAttribute("meeting", meetingService.getMeeting(id));
+        return "projectMeeting/meetingDetail";
     }
     
     @PostMapping("/addMeeting")

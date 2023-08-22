@@ -6,9 +6,13 @@ package pubilc.sw.monitoring.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pubilc.sw.monitoring.dto.MeetingDTO;
@@ -26,15 +30,17 @@ public class meetingService {
     private final MeetingRepository meetingRepository;
     private final FileService fileService;
     
-    @Value("${meeting.folder}")
-    private String meetingFolderPath; // meeting폴더
     @Value("${meeting.attachment.folder}")
     private String attachmentFolderPath; // meeting안 회의록 첨부 파일 폴더 명
     @Value("${date.input.format}")
-    private String dateFormatter;
+    private String dateInputFormatter;
+    @Value("${date.output.format}")
+    private String dateOutFormatter;
+     @Value("${page.limit}")
+    private int pageLimit;
     
     public boolean addMeeting(MeetingDTO meetingDTO, List<MultipartFile> files){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateInputFormatter);
         
         MeetingEntity newEntity = meetingRepository.save(MeetingEntity.builder()
                 .projectId(1)
@@ -51,10 +57,48 @@ public class meetingService {
         if(newEntity !=  null){
             if(newEntity.getFilecheck() == 1){
                 for(MultipartFile file : files){
-                    fileService.saveFile(attachmentFolderPath, Integer.toString(newEntity.getId()), file);
+                    fileService.saveFile(attachmentFolderPath, Long.toString(newEntity.getId()), file);
                 }
             }
         }
         return true;
+    }
+    
+    public List<MeetingDTO> getMeetingList(int nowPage){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutFormatter);
+        List<MeetingDTO> meetingDTO = new ArrayList();
+        
+        List<MeetingEntity> meetingEntity = meetingRepository.findByProjectId(1, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
+        for(MeetingEntity entity : meetingEntity){
+            meetingDTO.add(MeetingDTO.builder()
+                    .id(entity.getId())
+                    .projectId(entity.getProjectId())
+                    .title(entity.getTitle())
+                    .writer(entity.getWriter())
+                    .date(entity.getDate().format(formatter))
+                    .build());
+        }
+        return meetingDTO;
+    }
+    
+    public MeetingDTO getMeeting(Long id){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutFormatter);
+        Optional<MeetingEntity> meetingEntity = meetingRepository.findById(id);
+        if(meetingEntity != null){
+            return MeetingDTO.builder()
+                    .id(meetingEntity.get().getId())
+                    .projectId(meetingEntity.get().getProjectId())
+                    .title(meetingEntity.get().getTitle())
+                    .writer(meetingEntity.get().getWriter())
+                    .start(meetingEntity.get().getStart().format(formatter))
+                    .end(meetingEntity.get().getEnd().format(formatter))
+                    .content(meetingEntity.get().getContent())
+                    .place(meetingEntity.get().getPlace())
+                    .files(fileService.searchFile(attachmentFolderPath, Long.toString(meetingEntity.get().getId())))
+                    .date(meetingEntity.get().getDate().format(formatter))
+                    .build();
+        }else{
+            return null;
+        }
     }
 }
