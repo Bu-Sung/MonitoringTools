@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.entity.UserEntity;
@@ -25,7 +26,8 @@ public class UserService {
     
     @Autowired
     private HttpSession session;
-    
+    @Value("${server.servlet.session.timeout}")
+    private int sessionTimeout;
     /**
      * 
      * @param userDTO 로그인을 원하는 사용자의 입력
@@ -39,10 +41,8 @@ public class UserService {
             session.setAttribute("user", UserDTO.builder()
                     .id(userEntity.get().getId())
                     .name(userEntity.get().getName())
-                    .email(userEntity.get().getEmail())
-                    .phone(userEntity.get().getPhone())
-                    .birth(userEntity.get().getBirth())
                     .build());
+            session.setMaxInactiveInterval(sessionTimeout);
             return true;
         }
     }

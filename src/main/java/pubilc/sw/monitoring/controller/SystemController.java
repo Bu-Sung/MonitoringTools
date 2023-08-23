@@ -4,10 +4,14 @@
  */
 package pubilc.sw.monitoring.controller;
 
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import pubilc.sw.monitoring.service.ProjectService;
 
 /**
  *
@@ -17,8 +21,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Slf4j
 public class SystemController {
+
+    private final ProjectService projectService;
+
+    @Autowired
+    private HttpSession session;
+
     @GetMapping("/")
-    public String index(){
-        return "index";
+    public String index(Model model) {
+        return "login";
+       
     }
 }

@@ -55,10 +55,10 @@ public class UserController {
     public String signIn(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
         if(userService.login(userDTO)){
             attrs.addFlashAttribute("msg", "로그인에 성공하였습니다.");
-            return "redirect:/";
+            return "redirect:/project/list";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
-            return "redirect:/login";
+            return "redirect:/";
         }
     }
     

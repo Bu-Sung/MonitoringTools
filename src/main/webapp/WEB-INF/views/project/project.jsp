@@ -20,31 +20,12 @@
     </head>
     
     <body>
-
-        <h1>Project List</h1>
-
-        <table>
-            <tr>
-                <th>프로젝트 이름</th>
-                <th>프로젝트 설명</th>
-                <th>프로젝트 시작 기간</th>
-                <th>프로젝트 마감 기간</th>
-                <th>게시글 카테고리</th>
-            </tr>
-            <c:forEach var="project" items="${projects}">
-                <tr>
-
-                    <td><a href="projectDetails/${project.pid}"><c:out value="${project.name}" /></a></td>
-                    <td><c:out value="${project.content}" /></td>
-                    <td><c:out value="${project.start}" /></td>
-                    <td><c:out value="${project.end}" /></td>
-                    <td><c:out value="${project.category}" /></td>
-                </tr>
-            </c:forEach>
-        </table> 
-
-        <form action="projectSave" method="post">
-            <button type="submit">프로젝트 추가</button>
-        </form>
+        <h1>${project.name}</h1>
+        <a href="project/${project.pid}">프로젝트 정보 수정</a>
+        <a href="#">회의록관리</a>
+        <a href="#">스프린트 관리</a>
+        <a href="#">요구사항 관리</a>
+        <a href="#">일정 관리</a>
+        <a href="#">공지사항 관리</a>
     </body>
 </html>

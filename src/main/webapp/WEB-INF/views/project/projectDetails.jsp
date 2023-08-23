@@ -42,7 +42,7 @@
                 <input type="hidden" name="pid" value="${project.pid}" />
                 <button type="submit" ${right ? '' : 'disabled'}>삭제</button>
             </form>
-
+ 
             <br> <br> 
 
             <form action="/monitoring/project/manageMember/${project.pid}" method="get">

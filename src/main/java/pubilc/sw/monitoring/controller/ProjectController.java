@@ -39,21 +39,34 @@ public class ProjectController {
     private HttpSession session;
 
     /**
-     * 프로젝트 리스트 조회
+     * 프로젝트 조회
      * 
-     * @param projectDTO 프로젝트 정보 객체 
+     * @param pid 선택한 프로젝트 아이디
      * @param model
      * @return project 프로젝트 리스트 조회 페이지 
      */
-    @GetMapping("/project")
-    public String project(@ModelAttribute ProjectDTO projectDTO, Model model) {
+    @GetMapping("/{pid}")
+    public String project(@PathVariable Long pid, Model model) {
         
-        UserDTO user = (UserDTO) session.getAttribute("user"); 
-        
+        ProjectDTO projectDTO = projectService.getProjectDetails(pid);
+        model.addAttribute("project", projectDTO);
+        return "project";
+    }
+    
+    /**
+     * 로그인한 사용자가 속한 프로젝트 목록을 보여준다.
+     * @param model 아이디에 해당하는 프로젝트 아이디 값을 보내기 위한 모델
+     * @return 프로젝트 리스트 페이지
+     */
+    @GetMapping("/list")
+    public String getAllProject(Model model){
+        UserDTO user = (UserDTO) session.getAttribute("user");
         List<ProjectDTO> projects = projectService.getProjectsByUserId(user.getId());
         model.addAttribute("projects", projects);
-        
-        return "project/project";
+        /*
+            초대 받은 목록 있으면 리스트 받아오기 추가
+        */
+        return "project/list";
     }
     
     /**
@@ -75,15 +88,15 @@ public class ProjectController {
      */
     @PostMapping("/addProject")
     public String addProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
-
+        System.out.println("추가");
         UserDTO user = (UserDTO) session.getAttribute("user"); 
-
+        
         if (projectService.addProject(projectDTO, user.getId())) {
             attrs.addFlashAttribute("msg", "프로젝트 등록 성공했습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 등록 실패했습니다.");
         }
-        return "redirect:/project/project";
+        return "redirect:/project/list";
     }
 
     /**
