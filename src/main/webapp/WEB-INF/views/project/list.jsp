@@ -35,7 +35,7 @@
             <c:forEach var="project" items="${projects}">
                 <tr>
 
-                    <td><a href="project/${project.pid}"><c:out value="${project.name}" /></a></td>
+                    <td><a href="${project.pid}"><c:out value="${project.name}" /></a></td>
                     <td><c:out value="${project.content}" /></td>
                     <td><c:out value="${project.start}" /></td>
                     <td><c:out value="${project.end}" /></td>
@@ -44,7 +44,7 @@
             </c:forEach>
         </table> 
 
-        <form action="projectSave" >
+        <form action="save" >
             <button type="submit">프로젝트 추가</button>
         </form>
     </body>

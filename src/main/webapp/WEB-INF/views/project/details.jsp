@@ -38,7 +38,7 @@
 
             </form>
 
-            <form action="/monitoring/project/deleteProject/${project.pid}" method="post">
+            <form action="delete/${project.pid}" method="post">
                 <input type="hidden" name="pid" value="${project.pid}" />
                 <button type="submit" ${right ? '' : 'disabled'}>삭제</button>
             </form>

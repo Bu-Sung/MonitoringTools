@@ -58,7 +58,7 @@ public class UserController {
             return "redirect:/project/list";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
-            return "redirect:/";
+            return "redirect:/login";
         }
     }
     
@@ -75,7 +75,7 @@ public class UserController {
         }else{
             attrs.addFlashAttribute("msg", "회원가입에 실패하였습니다.");
         }
-        return "redirect:/";
+        return "redirect:/login";
     }
     
     /**

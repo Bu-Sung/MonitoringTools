@@ -19,7 +19,7 @@
 </head>
 <body>
     <h1>회의록 목록</h1>
-    <a href="meetingSave">회의록 등록하기</a>
+    <a href="save">회의록 등록하기</a>
     <table>
         <thead>
             <tr>
@@ -31,7 +31,7 @@
         <tbody>
         <c:forEach var="meeting" items="${meetingList}">
             <tr>
-                <td><a href="${meeting.getId()}"><c:out value="${meeting.getTitle()}"/></a></td>
+                <td><a href="${meeting.id}"><c:out value="${meeting.title}"/></a></td>
                 <td><c:out value="${meeting.getWriter()}"/></td>
                 <td><c:out value="${meeting.getDate()}"/></td>
             </tr>

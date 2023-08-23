@@ -43,11 +43,9 @@ public class meetingService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateInputFormatter);
         
         MeetingEntity newEntity = meetingRepository.save(MeetingEntity.builder()
-                .projectId(1)
-                //.projectId(meetingDTO.getProjectId())
+                .projectId(meetingDTO.getProjectId())
                 .title(meetingDTO.getTitle())
-                .writer("asd")
-                //.writer(meetingDTO.getWriter())
+                .writer(meetingDTO.getWriter())
                 .start(LocalDateTime.parse(meetingDTO.getStart(),formatter))
                 .end(LocalDateTime.parse(meetingDTO.getEnd(),formatter))
                 .place(meetingDTO.getPlace())
@@ -64,11 +62,11 @@ public class meetingService {
         return true;
     }
     
-    public List<MeetingDTO> getMeetingList(int nowPage){
+    public List<MeetingDTO> getMeetingList(Long pid, int nowPage){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutFormatter);
         List<MeetingDTO> meetingDTO = new ArrayList();
         
-        List<MeetingEntity> meetingEntity = meetingRepository.findByProjectId(1, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
+        List<MeetingEntity> meetingEntity = meetingRepository.findByProjectId(pid.intValue(), PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
         for(MeetingEntity entity : meetingEntity){
             meetingDTO.add(MeetingDTO.builder()
                     .id(entity.getId())
@@ -94,7 +92,7 @@ public class meetingService {
                     .end(meetingEntity.get().getEnd().format(formatter))
                     .content(meetingEntity.get().getContent())
                     .place(meetingEntity.get().getPlace())
-                    .files(fileService.searchFile(attachmentFolderPath, Long.toString(meetingEntity.get().getId())))
+                    .files(meetingEntity.get().getFilecheck() == 1? fileService.searchFile(attachmentFolderPath, Long.toString(meetingEntity.get().getId())): null)
                     .date(meetingEntity.get().getDate().format(formatter))
                     .build();
         }else{

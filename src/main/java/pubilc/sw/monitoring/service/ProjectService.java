@@ -107,7 +107,6 @@ public class ProjectService {
                         .end(endDate.format(formatter))
                         .category(projectEntity.getCategory())
                         .build();
-
                 projectDTOs.add(projectDTO);
             }
         }

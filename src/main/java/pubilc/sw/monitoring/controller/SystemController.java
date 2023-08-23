@@ -22,11 +22,6 @@ import pubilc.sw.monitoring.service.ProjectService;
 @Slf4j
 public class SystemController {
 
-    private final ProjectService projectService;
-
-    @Autowired
-    private HttpSession session;
-
     @GetMapping("/")
     public String index(Model model) {
         return "login";

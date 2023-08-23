@@ -49,8 +49,10 @@ public class ProjectController {
     public String project(@PathVariable Long pid, Model model) {
         
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
+        session.setAttribute("pid", projectDTO.getPid());
+        session.setMaxInactiveInterval(-1);
         model.addAttribute("project", projectDTO);
-        return "project";
+        return "project/project";
     }
     
     /**
@@ -74,9 +76,9 @@ public class ProjectController {
      * 
      * @return projectSave 프로젝트 정보 입력 페이지 
      */
-    @GetMapping("/projectSave")
+    @GetMapping("/save")
     public String projectSave(){
-        return "project/projectSave";
+        return "project/save";
     }
     
     /**
@@ -100,13 +102,13 @@ public class ProjectController {
     }
 
     /**
-     * 프로젝트 상세 정보 조회
+     * 프로젝트 정보수정을 위한 상세정보 조회
      * 
      * @param pid 상세 정보를 조회할 프로젝트 아이디 
      * @param model
      * @return projectDetails 프로젝트 상세 정보 페이지 
      */
-    @GetMapping("/projectDetails/{pid}")
+    @GetMapping("/update/{pid}")
     public String projectDetails(@PathVariable Long pid, Model model) {
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         model.addAttribute("project", projectDTO);
@@ -118,7 +120,7 @@ public class ProjectController {
         List<MemberDTO> memberDetails = projectService.getMember(pid);  // 멤버 상세 정보 가져오기
         model.addAttribute("memberDetails", memberDetails);
 
-        return "project/projectDetails";
+        return "project/details";
     }
 
     /**
@@ -137,7 +139,7 @@ public class ProjectController {
             attrs.addFlashAttribute("msg", "프로젝트 수정 실패했습니다.");
         }
 
-        return "redirect:/project/projectDetails/" + projectDTO.getPid();
+        return "redirect:/project/" + projectDTO.getPid();
     }
 
     /**
@@ -147,14 +149,14 @@ public class ProjectController {
      * @param attrs
      * @return project 프로젝트 삭제 후 프로젝트 리스트 조회 페이지로 이동 
      */
-    @PostMapping("/deleteProject/{pid}")
+    @PostMapping("update/delete/{pid}")
     public String deleteProject(@PathVariable Long pid, RedirectAttributes attrs) {
         if (projectService.deleteProject(pid)) {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 성공했습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 실패했습니다.");
         }
-        return "redirect:/project/project";
+        return "redirect:/project/list";
     }
     
     

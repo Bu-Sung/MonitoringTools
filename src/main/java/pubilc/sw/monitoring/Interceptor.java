@@ -33,9 +33,7 @@ public class Interceptor implements HandlerInterceptor {
             session.invalidate();
             return false;
         } else {
-            
             session.setMaxInactiveInterval(sessionTimeout); // 세션의 만료 시간을 30분(1800초)으로 설정
-            
             return true; // 세션에 'user' 속성이 있는 경우 요청 처리 계속 진행
         }
     }
