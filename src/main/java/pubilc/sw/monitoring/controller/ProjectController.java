@@ -76,14 +76,10 @@ public class ProjectController {
     @PostMapping("/addProject")
     public String addProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
 
-        // String uid = (String) session.getAttribute("uid"); 
-        // userid 세션 값으로 변경 
-        String uid = "user1";
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
 
-        if (projectService.addProject(projectDTO, uid) == 1) {
+        if (projectService.addProject(projectDTO, user.getId())) {
             attrs.addFlashAttribute("msg", "프로젝트 등록 성공했습니다.");
-        } else if (projectService.addProject(projectDTO, uid) == 0) {
-            attrs.addFlashAttribute("msg", "시작 기간이 종료 기간보다 늦거나 같습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 등록 실패했습니다.");
         }
@@ -101,11 +97,9 @@ public class ProjectController {
     public String projectDetails(@PathVariable Long pid, Model model) {
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         model.addAttribute("project", projectDTO);
-        
-        
-        // String uid = (String) session.getAttribute("uid"); 
-        String uid = "user1";
-        boolean right = projectService.hasRight(uid, pid);  // 권한 확인 
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
+
+        boolean right = projectService.hasRight(user.getId(), pid);  // 권한 확인 
         model.addAttribute("right", right); 
     
         List<MemberDTO> memberDetails = projectService.getMember(pid);  // 멤버 상세 정보 가져오기
@@ -124,12 +118,10 @@ public class ProjectController {
     @PostMapping("/updateProject")
     public String updateProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
 
-        if (projectService.updateProject(projectDTO) == 1) {
+        if (projectService.updateProject(projectDTO)) {
             attrs.addFlashAttribute("msg", "프로젝트 수정 성공했습니다.");
-        } else if (projectService.updateProject(projectDTO) == 2) {
+        } else if (projectService.updateProject(projectDTO)) {
             attrs.addFlashAttribute("msg", "프로젝트 수정 실패했습니다.");
-        } else {
-            attrs.addFlashAttribute("msg", "시작 기간이 종료 기간보다 늦거나 같습니다.");
         }
 
         return "redirect:/project/projectDetails/" + projectDTO.getPid();
@@ -166,9 +158,9 @@ public class ProjectController {
         List<MemberDTO> memberDTO = projectService.getMember(pid);
         model.addAttribute("memberDetails", memberDTO);
         
-        // String uid = (String) session.getAttribute("uid"); 
-        String uid = "user1";
-        boolean editright = projectService.hasRight(uid, pid);  // 편집 권한 확인 
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
+        
+        boolean editright = projectService.hasRight(user.getId(), pid);  // 편집 권한 확인 
         model.addAttribute("editright", editright); 
 
         return "project/manageMember";
@@ -227,7 +219,7 @@ public class ProjectController {
      * 프로젝트 팀원 삭제 
      * 
      * @param selectedMember 삭제할 팀원 리스트 
-     * @param pids 프로젝트 아이디 
+     * @param pid 프로젝트 아이디 
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지 
      */

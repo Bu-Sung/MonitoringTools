@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.entity.MemberEntity;
-import pubilc.sw.monitoring.entity.UserEntity;
 import pubilc.sw.monitoring.repository.MemberRepository;
 import pubilc.sw.monitoring.repository.UserRepository;
 
@@ -41,39 +40,36 @@ public class ProjectService {
      * @param uid 사용자 아이디 
      * @return (0 : 날짜 비교 실패, 1 : 추가 성공, 2 : 추가 실패)
      */
-    public int addProject(ProjectDTO projectDTO, String uid) {
+    public boolean addProject(ProjectDTO projectDTO, String uid) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(projectDTO.getStart(), formatter);
         LocalDate endDate = LocalDate.parse(projectDTO.getEnd(), formatter);
 
-        if (startDate.isBefore(endDate)) {
-            ProjectEntity addEntity = ProjectEntity.builder()
-                    .name(projectDTO.getName())
-                    .content(projectDTO.getContent())
-                    .start(java.sql.Date.valueOf(startDate))
-                    .end(java.sql.Date.valueOf(endDate))
-                    .category(projectDTO.getCategory())
+        ProjectEntity addEntity = ProjectEntity.builder()
+                .name(projectDTO.getName())
+                .content(projectDTO.getContent())
+                .start(java.sql.Date.valueOf(startDate))
+                .end(java.sql.Date.valueOf(endDate))
+                .category(projectDTO.getCategory())
+                .build();
+
+        addEntity = projectRepository.save(addEntity);
+
+        if (addEntity != null) {
+            // member 테이블에 정보 추가
+            MemberEntity memberEntity = MemberEntity.builder()
+                    .uid(uid) 
+                    .pid(addEntity.getId()) // 새로 추가된 프로젝트 아이디
+                    .right(1) // 권한 정보 
                     .build();
 
-            addEntity = projectRepository.save(addEntity);
-
-            if (addEntity != null) {
-                // member 테이블에 정보 추가
-                MemberEntity memberEntity = MemberEntity.builder()
-                        .uid(uid) 
-                        .pid(addEntity.getId()) // 새로 추가된 프로젝트 아이디
-                        .right(1) // 권한 정보 
-                        .build();
-
-                memberRepository.save(memberEntity);
-                return 1; // 추가 성공
-            } else {
-                return 2; // 추가 실패
-            }
+            memberRepository.save(memberEntity);
+            return true; // 추가 성공
         } else {
-            return 0; // 날짜 비교 실패
+            return false; // 추가 실패
         }
-    }
+    } 
+    
 
 
     /**
@@ -177,7 +173,7 @@ public class ProjectService {
      * @param projectDTO 수정할 프로젝트 정보를 담은 ProjectDTO 객체 
      * @return 수정 성공 여부 (0 : 날짜 비교 실패, 1 : 수정 성공, 2 : 수정 실패 또는 수정할 프로젝트가 존재하지 않음)
      */  
-    public int updateProject(ProjectDTO projectDTO) {
+    public boolean updateProject(ProjectDTO projectDTO) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // 프로젝트 아이디를 기반으로 프로젝트 조회 
@@ -188,7 +184,7 @@ public class ProjectService {
             LocalDate startDate = LocalDate.parse(projectDTO.getStart(), formatter);
             LocalDate endDate = LocalDate.parse(projectDTO.getEnd(), formatter);
 
-            if (startDate.isBefore(endDate)) {  // 날짜 비교
+            
                 // 엔티티 정보를 업데이트하여 새로운 엔티티 생성
                 ProjectEntity updateEntity = ProjectEntity.builder()
                         .id(projectEntity.getId())
@@ -200,12 +196,9 @@ public class ProjectService {
                         .build();
 
                 updateEntity = projectRepository.save(updateEntity);
-                return updateEntity != null ? 1 : 2;  // 수정 성공 시 1, 실패 시 2 반환
-            } else {
-                return 0; // 날짜 비교 실패
-            }
+                return updateEntity != null;  // 수정 성공 시 true, 실패 시 false 반환
         } else {
-            return 2; // 수정할 프로젝트가 존재하지 않는 경우
+            return false; // 수정할 프로젝트가 존재하지 않는 경우
         }
     }
  

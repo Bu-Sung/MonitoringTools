@@ -131,7 +131,7 @@ public class UserController {
     public String logout(HttpServletRequest request, RedirectAttributes attrs){
         HttpSession session = request.getSession();
         session.invalidate();
-         attrs.addFlashAttribute("msg","로그아웃 하였습니다.");
+        attrs.addFlashAttribute("msg","로그아웃 하였습니다.");
         return "redirect:/login";
     }
 }
