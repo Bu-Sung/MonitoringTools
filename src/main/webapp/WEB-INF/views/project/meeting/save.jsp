@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <button type="sumit" >저장하기</button>
+            <button type="submit" >저장하기</button>
         </form>
     </div>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->

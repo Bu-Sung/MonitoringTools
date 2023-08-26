@@ -5,9 +5,12 @@
 package pubilc.sw.monitoring.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +46,14 @@ public class MeetingController {
     }
     
     @GetMapping("/save")
-    public String meetingRegister(){
+    public String addMeeting(){
         return "project/meeting/save";
+    }
+    
+    @GetMapping("/details/{mid}")
+    public String meetingDetails(@PathVariable Long mid, Model model){
+        model.addAttribute("meeting", meetingService.getMeeting(mid));
+        return "project/meeting/details";
     }
     
     @GetMapping("/{mid}")
@@ -66,4 +75,21 @@ public class MeetingController {
         }
         return "redirect:/project/meeting/list";
     }
+    
+    // 첨부파일 다운로드
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(HttpServletRequest request){
+        return meetingService.downloadFile(request.getParameter("filename"), request.getParameter("mid"));
+    }
+    
+    @PostMapping("details/update")
+    public String updateMeeting(@ModelAttribute MeetingDTO meetingDTO, @RequestParam(name="file", required=false) List<MultipartFile> files, HttpServletRequest request, Model model){
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        meetingDTO.setWriter(user.getName());
+        System.out.println(request.getParameter("dellist"));
+        MeetingDTO meeting = meetingService.updateMeeting(meetingDTO, files, request.getParameter("dellist"), Integer.parseInt(request.getParameter("fileExist")));
+        return "redirect:/project/meeting/"+ meeting.getId();
+    }
+    
+    
 }
