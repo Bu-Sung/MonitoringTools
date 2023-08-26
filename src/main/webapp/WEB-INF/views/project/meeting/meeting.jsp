@@ -39,19 +39,22 @@
                         <div>${meeting.place}</div>
                     </td>
                 </tr>
-                        
+
             </table>
-  
-                        <c:forEach var="file" items="${meeting.files}">
-                            <a href="download?filename=${file}&mid=${meeting.id}">${file}</a>
+
+            <c:forEach var="file" items="${meeting.files}">
+                <a href="download?filename=${file}&mid=${meeting.id}">${file}</a>
             </c:forEach>
 
-                    
+
             <div id="content" class="meeting-content">
                 ${meeting.content}
             </div>
-    </div>
+        </div>
+        <c:if test="${editRight}">
             <a href="update/${meeting.id}">수정하기</a>
             <a href="delete/${meeting.id}">삭제</a>
+        </c:if>
+
     </body>
 </html>

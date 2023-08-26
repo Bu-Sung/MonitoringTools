@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.dto.MeetingDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
+import pubilc.sw.monitoring.service.ProjectService;
 import pubilc.sw.monitoring.service.meetingService;
 
 /**
@@ -37,11 +38,14 @@ public class MeetingController {
     @Autowired
     private HttpSession session;
     
-    private final meetingService meetingService; // UserService 클래스 사용을 위한 변수
+    private final meetingService meetingService;
+    private final ProjectService projectService;
     
     @GetMapping("/list")
     public String meeting(@RequestParam(value = "page", defaultValue = "1") int nowPage,Model model){
         model.addAttribute("meetingList", meetingService.getMeetingList((Long)session.getAttribute("pid"), nowPage));
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
+        model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long)session.getAttribute("pid"))); 
         return "project/meeting/list";
     }
     
@@ -59,6 +63,9 @@ public class MeetingController {
     @GetMapping("/{mid}")
     public String meetingDetail(@PathVariable Long mid, Model model){
         model.addAttribute("meeting", meetingService.getMeeting(mid));
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
+       
+        model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long) session.getAttribute("pid"))); 
         return "project/meeting/meeting";
     }
     
