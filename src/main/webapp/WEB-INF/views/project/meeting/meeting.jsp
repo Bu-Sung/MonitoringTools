@@ -51,7 +51,7 @@
                 ${meeting.content}
             </div>
     </div>
-            <a href="details/${meeting.id}">수정하기</a>
-            <a>삭제</a>
+            <a href="update/${meeting.id}">수정하기</a>
+            <a href="delete/${meeting.id}">삭제</a>
     </body>
 </html>

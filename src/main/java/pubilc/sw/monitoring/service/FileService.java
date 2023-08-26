@@ -135,8 +135,8 @@ public class FileService {
     public void deleteFile(String path, String id){
         path = String.format("%s%s%s", ctx.getRealPath(path),File.separator,id);
         File file = new File(path);
-        File[] fileList = file.listFiles();
         if(file.exists()){ // 해당 경로의 폴더가 존재할 때 실행
+            File[] fileList = file.listFiles();
             if(fileList != null){ 
                 for(File f : fileList){ 
                     if(f.isFile()){ // 파일이면 그대로 삭제

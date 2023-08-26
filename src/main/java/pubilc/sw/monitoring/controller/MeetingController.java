@@ -50,7 +50,7 @@ public class MeetingController {
         return "project/meeting/save";
     }
     
-    @GetMapping("/details/{mid}")
+    @GetMapping("/update/{mid}")
     public String meetingDetails(@PathVariable Long mid, Model model){
         model.addAttribute("meeting", meetingService.getMeeting(mid));
         return "project/meeting/details";
@@ -82,7 +82,7 @@ public class MeetingController {
         return meetingService.downloadFile(request.getParameter("filename"), request.getParameter("mid"));
     }
     
-    @PostMapping("details/update")
+    @PostMapping("update/update")
     public String updateMeeting(@ModelAttribute MeetingDTO meetingDTO, @RequestParam(name="file", required=false) List<MultipartFile> files, HttpServletRequest request, Model model){
         UserDTO user = (UserDTO) session.getAttribute("user");
         meetingDTO.setWriter(user.getName());
@@ -91,5 +91,13 @@ public class MeetingController {
         return "redirect:/project/meeting/"+ meeting.getId();
     }
     
-    
+    @GetMapping("delete/{mid}")
+    public String meetingDelette(@PathVariable Long mid, Model model, RedirectAttributes attrs){
+        if(meetingService.deleteMeeintg(mid)){
+            attrs.addFlashAttribute("msg", "회의록이 삭제되었습니다.");
+        }else{
+            attrs.addFlashAttribute("msg", "회의록 삭제에 실패하였습니다.");
+        }
+        return "redirect:/project/meeting/list";
+    }
 }

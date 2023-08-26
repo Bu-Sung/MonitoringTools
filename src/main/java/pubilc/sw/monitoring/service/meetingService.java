@@ -150,4 +150,15 @@ public class meetingService {
                 .date(newEntity.getDate().format(outputFormatter))
                 .build();
     }
+    
+    public boolean deleteMeeintg(Long mid){
+        
+        if(meetingRepository.existsById(mid)){
+            fileService.deleteFile(meetingFolderPath, mid.toString());
+            meetingRepository.deleteById(mid);
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
