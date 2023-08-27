@@ -15,51 +15,46 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  *
  * @author qntjd
+ * 게시글과 DB를 연결하기 위한 Entity 클래스
  */
 @Data
 @Entity
-@Table(name="meeting")
+@Table(name="board")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MeetingEntity {
+public class BoardEntity {
     @Id // Primary Key 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="meeting_id")
-    private Long id;
+    @Column(name="board_id")
+    private Long bid; // 게시물 아이디
     
     @Column(name="project_id")
-    private int projectId;
+    private int pid; // 프로젝트 아이디
     
-    @Column(name="meeting_title")
-    private String title;
+    @Column(name="board_title")
+    private String title; // 제목
     
-    @Column(name="meeting_writer")
-    private String writer;
+    @Column(name="board_category")
+    private String category; // 카테고리
     
-    @Column(name="meeting_start")
-    private LocalDateTime start;
+    @Column(name="board_content")
+    private String content; // 본문 내용
     
-    @Column(name="meeting_end")
-    private LocalDateTime end;
+    @Column(name="board_writer")
+    private String writer; // 작성자
     
-    @Column(name="meeting_place")
-    private String place;
-
-    @Column(name="meeting_content")
-    private String content;
-
-    @Column(name="meeting_filecheck")
-    private int fileCheck;
-    
-    @Column(name="meeting_date")
+    @Column(name="board_date")
     @CreationTimestamp
-    private LocalDateTime date;
+    private LocalDateTime date; // 작성 날짜
     
+    @Column(name="board_filecheck")
+    @ColumnDefault("0")
+    private int fileCheck; 
 }

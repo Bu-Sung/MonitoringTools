@@ -5,7 +5,7 @@
 function createDiv(eventDiv) { 
     const content = $("<div>", {
         contenteditable: "true"
-    }).addClass("meeting-content-div");
+    }).addClass("document-content-div");
 
     content.on("focusin", function (event) {  // focusin시 placeholder 속성 적용
         focusing(event.target);
@@ -15,7 +15,7 @@ function createDiv(eventDiv) {
        unfocusing(event.target);
     });
 
-    if(eventDiv.classList.contains("meeting-content")){
+    if(eventDiv.classList.contains("document-content")){
         eventDiv.innerHTML="";
         $(eventDiv).append(content);
     }else{
@@ -32,8 +32,8 @@ function deleteDiv(eventDiv, contentDiv) {
         eventDiv.remove();
         if(preDiv){
             preDiv.focus();
-        }else if(contentDiv.childNodes.length === 0){
-            contentDiv.innerHTML=`<div class="content-explanation">
+        }else if(contentDiv.children.length === 0){
+            contentDiv.innerHTML=`<div class="document-content-explanation">
                                                                     <h2>단축키 설명</h2>
                                                                     <div style="text-align: left;">
                                                                     # => h1<br>
@@ -42,7 +42,7 @@ function deleteDiv(eventDiv, contentDiv) {
                                                                     - => •<br>
                                                                     </div>
                                                                 </div>`;
-        }else{
+        }else if(nextDiv){
             nextDiv.focus();
         }
     }

@@ -72,32 +72,30 @@ public class FileService {
      * @param id 파일 소유 아이디
      * @param file 저장해야할 파일
      */
-    public void saveFile(String path, String id, MultipartFile file){
-        if(file.isEmpty() || "".equals(file.getOriginalFilename())){ //파일이 없거나 파일의 실제이름이 존재하지 않을 때 -> 저장할 파일이 없을 때
-
-        }else{
-            String realPath = ctx.getRealPath(path);
-            File baseidDir = new File(String.format("%s/%s", realPath, id));// 각 파일을 소유하는 폴더 경로
+    public void saveFile(String path, String id, List<MultipartFile> files){
+        if(!files.isEmpty()){ // 저장할 파일이 있을 때
+            path = String.format("%s%s%s", ctx.getRealPath(path),File.separator,id);
+            File baseidDir = new File(path);// 각 파일을 소유하는 폴더 경로
 
             if(!baseidDir.exists()){ // 각 파일의 소유자 폴더가 존재하지 않을 시 폴더를 생성
                 baseidDir.mkdir();
             }
-           
-            File f = new File(String.format("%s/%s", baseidDir, file.getOriginalFilename())); // 저장할 파일을 생성
-            try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f))){
-                bos.write(file.getBytes()); //파일을 저장
+           for(MultipartFile file : files){
+                File f = new File(String.format("%s%s%s", baseidDir,File.separator,file.getOriginalFilename())); // 저장할 파일을 생성
+                try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f))){
+                    bos.write(file.getBytes()); //파일을 저장
 
-            }catch(IOException e){
+                }catch(IOException e){
 
-            }
+                }
+           }
         }
     }
     
     //폴더 안에 파일 목록을 검색한다.
     public List<String> searchFile(String path, String id){
-        String realPath = ctx.getRealPath(path);
         List<String> fileNameList = new ArrayList<>();
-        File[] fileList = new File(String.format("%s/%s", realPath, id)).listFiles();
+        File[] fileList = new File(String.format("%s%s%s", ctx.getRealPath(path),File.separator,id)).listFiles();
         for(File file : fileList){
                 fileNameList.add(file.getName());
         }
@@ -108,7 +106,7 @@ public class FileService {
     public ResponseEntity<Resource> downloadFile(String url, String filename){
         HttpHeaders headers = new HttpHeaders();
         //파일의 Content-Type 찾기
-        Path path = Paths.get(url + File.separator + filename);
+        Path path = Paths.get(ctx.getRealPath(url) + File.separator + filename);
         String contentType = null;
         try {
             contentType = Files.probeContentType(path);
@@ -133,34 +131,34 @@ public class FileService {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
     
-    //폴더 삭제
-    public void delFile(String path){
+    //폴더 전체를 삭제
+    public void deleteFile(String path, String id){
+        path = String.format("%s%s%s", ctx.getRealPath(path),File.separator,id);
+        File file = new File(path);
+        if(file.exists()){ // 해당 경로의 폴더가 존재할 때 실행
+            File[] fileList = file.listFiles();
+            if(fileList != null){ 
+                for(File f : fileList){ 
+                    if(f.isFile()){ // 파일이면 그대로 삭제
+                        f.delete();
+                    }else{ // 재귀함수를 통해 폴더들 삭제
+                        deleteFile(f.getAbsolutePath(), id);
+                    }
+                }
+            }
+            file.delete(); // 해당 경로의 폴더 삭제
+        }
+    }
+    
+    // 파일 부분 삭제
+    public void deleteFile(String path, String id ,String list){
+        path = String.format("%s%s%s", ctx.getRealPath(path),File.separator,id);
         File file = new File(path);
         File[] fileList = file.listFiles();
         if(fileList != null){
             for(File f : fileList){
-                if(f.isFile()){
+                if(f.getName().indexOf(list) != 0){ // 삭제 리스트에서 파일이름이 포함되어 있으면 삭제
                     f.delete();
-                }else{
-                    delFile(f.getAbsolutePath());
-                }
-            }
-            file.delete();
-        }
-    }
-    
-    //게시물을 수정할 때 삭제한 첨부파일 삭제
-    public void updateFile(String path, String list, String remainlist){
-        if(remainlist.equals("0")){
-            delFile(path);
-        }else{
-            File file = new File(path);
-            File[] fileList = file.listFiles();
-            if(fileList != null){
-                for(File f : fileList){
-                    if(f.getName().equals(list)){
-                        f.delete();
-                    }
                 }
             }
         }

@@ -5,9 +5,12 @@
 package pubilc.sw.monitoring.controller;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.dto.MeetingDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
+import pubilc.sw.monitoring.service.ProjectService;
 import pubilc.sw.monitoring.service.meetingService;
 
 /**
@@ -34,22 +38,34 @@ public class MeetingController {
     @Autowired
     private HttpSession session;
     
-    private final meetingService meetingService; // UserService 클래스 사용을 위한 변수
+    private final meetingService meetingService;
+    private final ProjectService projectService;
     
     @GetMapping("/list")
     public String meeting(@RequestParam(value = "page", defaultValue = "1") int nowPage,Model model){
         model.addAttribute("meetingList", meetingService.getMeetingList((Long)session.getAttribute("pid"), nowPage));
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
+        model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long)session.getAttribute("pid"))); 
         return "project/meeting/list";
     }
     
     @GetMapping("/save")
-    public String meetingRegister(){
+    public String addMeeting(){
         return "project/meeting/save";
+    }
+    
+    @GetMapping("/update/{mid}")
+    public String meetingDetails(@PathVariable Long mid, Model model){
+        model.addAttribute("meeting", meetingService.getMeeting(mid));
+        return "project/meeting/details";
     }
     
     @GetMapping("/{mid}")
     public String meetingDetail(@PathVariable Long mid, Model model){
         model.addAttribute("meeting", meetingService.getMeeting(mid));
+        UserDTO user = (UserDTO) session.getAttribute("user"); 
+       
+        model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long) session.getAttribute("pid"))); 
         return "project/meeting/meeting";
     }
     
@@ -63,6 +79,31 @@ public class MeetingController {
             attrs.addFlashAttribute("msg", "회의록이 등록되었습니다.");
         }else{
             attrs.addFlashAttribute("msg", "회의록 등록에 실패하였습니다.");
+        }
+        return "redirect:/project/meeting/list";
+    }
+    
+    // 첨부파일 다운로드
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(HttpServletRequest request){
+        return meetingService.downloadFile(request.getParameter("filename"), request.getParameter("mid"));
+    }
+    
+    @PostMapping("update/update")
+    public String updateMeeting(@ModelAttribute MeetingDTO meetingDTO, @RequestParam(name="file", required=false) List<MultipartFile> files, HttpServletRequest request, Model model){
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        meetingDTO.setWriter(user.getName());
+        System.out.println(request.getParameter("dellist"));
+        MeetingDTO meeting = meetingService.updateMeeting(meetingDTO, files, request.getParameter("dellist"), Integer.parseInt(request.getParameter("fileExist")));
+        return "redirect:/project/meeting/"+ meeting.getId();
+    }
+    
+    @GetMapping("delete/{mid}")
+    public String meetingDelette(@PathVariable Long mid, Model model, RedirectAttributes attrs){
+        if(meetingService.deleteMeeintg(mid)){
+            attrs.addFlashAttribute("msg", "회의록이 삭제되었습니다.");
+        }else{
+            attrs.addFlashAttribute("msg", "회의록 삭제에 실패하였습니다.");
         }
         return "redirect:/project/meeting/list";
     }
