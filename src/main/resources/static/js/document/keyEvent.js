@@ -32,7 +32,7 @@ function deleteDiv(eventDiv, contentDiv) {
         eventDiv.remove();
         if(preDiv){
             preDiv.focus();
-        }else if(contentDiv.childNodes.length === 0){
+        }else if(contentDiv.children.length === 0){
             contentDiv.innerHTML=`<div class="document-content-explanation">
                                                                     <h2>단축키 설명</h2>
                                                                     <div style="text-align: left;">
@@ -42,7 +42,7 @@ function deleteDiv(eventDiv, contentDiv) {
                                                                     - => •<br>
                                                                     </div>
                                                                 </div>`;
-        }else{
+        }else if(nextDiv){
             nextDiv.focus();
         }
     }

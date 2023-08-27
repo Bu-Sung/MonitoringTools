@@ -12,9 +12,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>마크다운 에디터</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/meeting.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/document.css">
     <script>
-        function saveMeeting() {
+        function saveDocument() {
             const formDiv = document.getElementById("meetingForm");
             const text = document.getElementById("content");
             const content = document.createElement('input');
@@ -61,9 +61,9 @@
     <h1>회의록 작성 페이지</h1>
     <hr>
     <div id="meeting">
-        <form id="meetingForm" method="POST" action="update" enctype="multipart/form-data" onsubmit="saveMeeting()" >
+        <form id="documentForm" method="POST" action="update" enctype="multipart/form-data" onsubmit="saveDocument()" >
             <input type="text" name="id" value="${meeting.id}" hidden>
-            <input type="text" id="title" class="meeting-title" placeholder="제목을 입력하세요" name="title" value="${meeting.title}">
+            <input type="text" id="title" class="document-title" placeholder="제목을 입력하세요" name="title" value="${meeting.title}">
             <table style="width: 100%;">
                 <tr class="row">
                     <th colspan="2" rowspan="2">날짜</th>
@@ -96,16 +96,16 @@
                 </ul>
             </div>
             <input type="file" id="file" name="file"  multiple>
-            <div id="content" class="meeting-content">
+            <div id="content" class="document-content">
                 ${meeting.content}
             </div>
             <button type="submit">저장하기</button>
         </form>
     </div>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
-    <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/meeting.js"></script>
-    <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/keyEvent.js"></script>
-    <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/mdFunction.js"></script>
+            <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/document.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/keyEvent.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/mdFunction.js"></script>
 </body>
 
 </html>

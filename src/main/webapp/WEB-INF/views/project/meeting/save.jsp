@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>마크다운 에디터</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/meeting.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/document.css">
     <script>
         function saveDocument(){
             const formDiv = document.getElementById("documentForm");
@@ -68,9 +68,9 @@
         </form>
     </div>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
-    <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/meeting.js"></script>
-    <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/keyEvent.js"></script>
-    <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/mdFunction.js"></script>
+            <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/document.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/keyEvent.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/mdFunction.js"></script>
 </body>
 
 </html>

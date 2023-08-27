@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <title>공지사항 작성</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/meeting.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/document.css">
         <script>
             function saveDocument() {
                 const formDiv = document.getElementById("documentForm");
@@ -52,9 +52,9 @@
             </div>
             <button type="submit" >저장하기</button>
         </form>
-        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/meeting.js"></script>
-        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/keyEvent.js"></script>
-        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/meeting/mdFunction.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/document.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/keyEvent.js"></script>
+        <script charset="UTF-8" src="${pageContext.request.contextPath}/js/document/mdFunction.js"></script>
     </body>
 
 </html>
