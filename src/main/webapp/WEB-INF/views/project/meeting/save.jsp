@@ -13,8 +13,8 @@
     <title>마크다운 에디터</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/meeting.css">
     <script>
-        function saveMeeting(){
-            const formDiv = document.getElementById("meetingForm");
+        function saveDocument(){
+            const formDiv = document.getElementById("documentForm");
             const text = document.getElementById("content");
             const content = document.createElement('input');
 
@@ -31,8 +31,8 @@
     <h1>회의록 작성 페이지</h1>
     <hr>
     <div id="meeting">
-        <form id="meetingForm" method="POST" action="addMeeting" enctype="multipart/form-data" onsubmit="saveMeeting()" >
-            <input type="text" id="title" class="meeting-title" placeholder="제목을 입력하세요" name="title">
+        <form id="documentForm" method="POST" action="addMeeting" enctype="multipart/form-data" onsubmit="saveDocument()" >
+            <input type="text" id="title" class="document-title" placeholder="제목을 입력하세요" name="title">
             <table style="width: 100%;">
                 <tr class="row">
                     <th>날짜</th>
@@ -53,8 +53,8 @@
                 </tr>
             </table>
             <input type="file" name="file"  multiple>
-            <div id="content" class="meeting-content">
-                <div class="content-explanation">
+            <div id="content" class="document-content">
+                <div class="document-content-explanation">
                     <h2>단축키 설명</h2>
                     <div style="text-align: left;">
                         # => h1<br>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <button type="sumit" >저장하기</button>
+            <button type="submit" >저장하기</button>
         </form>
     </div>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->

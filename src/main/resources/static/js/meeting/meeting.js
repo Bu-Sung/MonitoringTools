@@ -32,7 +32,7 @@ contentDiv.addEventListener("keyup", function (event) {
 //본문 시작
 contentDiv.addEventListener("click", function (event) {
     const innerDiv = contentDiv.querySelector('div');
-    if (innerDiv && innerDiv.classList.contains('content-explanation')) {
+    if (innerDiv && innerDiv.classList.contains('document-content-explanation')) {
         createDiv(event.currentTarget);
     }
 });

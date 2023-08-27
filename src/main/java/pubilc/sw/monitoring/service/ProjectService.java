@@ -345,5 +345,7 @@ public class ProjectService {
         return delete; // 하나 이상의 멤버가 삭제된 경우 true 반환
     }
 
-    
+    public String[] getProjectCategory(Long pid){
+        return projectRepository.findCategoryByProjectId(pid).get().split(",");
+    }
 }

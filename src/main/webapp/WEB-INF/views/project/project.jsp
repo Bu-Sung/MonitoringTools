@@ -27,6 +27,6 @@
         <a href="#">스프린트 관리</a>
         <a href="#">요구사항 관리</a>
         <a href="#">일정 관리</a>
-        <a href="#">공지사항 관리</a>
+        <a href="board/list">공지사항 관리</a>
     </body>
 </html>
