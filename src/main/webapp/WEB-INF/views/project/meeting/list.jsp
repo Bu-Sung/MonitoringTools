@@ -19,7 +19,10 @@
 </head>
 <body>
     <h1>회의록 목록</h1>
-    <a href="save">회의록 등록하기</a>
+    <c:if test="${editRight}">
+            <a href="save">회의록 등록하기</a>
+        </c:if>
+    
     <table>
         <thead>
             <tr>

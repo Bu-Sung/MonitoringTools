@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  *
@@ -55,7 +56,7 @@ public class MeetingEntity {
     private String content;
 
     @Column(name="meeting_filecheck")
-    private int filecheck;
+    private int fileCheck;
     
     @Column(name="meeting_date")
     @CreationTimestamp

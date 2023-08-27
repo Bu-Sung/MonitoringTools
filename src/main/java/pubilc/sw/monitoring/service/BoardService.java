@@ -73,7 +73,7 @@ public class BoardService {
         if (newEntity != null) {
             if (newEntity.getFileCheck() == 1) {
                 for (MultipartFile file : files) {
-                    fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), file);
+                    fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
                 }
             }
         }
@@ -101,7 +101,7 @@ public class BoardService {
     public boolean deleteBoard(Long bid) {
         if (boardRepository.existsById(bid)) {
             boardRepository.deleteById(bid);
-            //fileService.deleteFile(boardFolderPath, bid.toString());
+            fileService.deleteFile(boardFolderPath, bid.toString());
             return true;
         } else {
             return false;
@@ -120,10 +120,10 @@ public class BoardService {
         BoardEntity newEntity = boardRepository.save(oldMeeting);
  if (newEntity.getFileCheck() == 1) {
             if (!dellist.equals("")) { // 삭제할 파일이 있으면 삭제를 진행
-                //fileService.deleteFile(boardFolderPath, boardDTO.getBid().toString(), dellist);
+                fileService.deleteFile(boardFolderPath, boardDTO.getBid().toString(), dellist);
             }
             if (files != null) { // 새로 추가할 파일이 있다면 추가
-                //fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
+                fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
             }
         }
 

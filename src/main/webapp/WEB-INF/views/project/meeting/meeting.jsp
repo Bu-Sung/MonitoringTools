@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,40 +16,45 @@
     </head>
     <body>
         <div id="meeting">
-            <div class="meeing-title">${meeting.getTitle()}</div>
+            <div class="meeing-title">${meeting.title}</div>
             <table style="width: 100%;">
                 <tr class="row">
-                    <th>날짜</th>
+                    <th colspan="2" rowspan="2">날짜</th>
                     <td>
-                        <div class="horizontal-container">
-                            <span>시작</span>
-                            <div>${meeting.getStart()}</div>
-                        </div>
-                        <div class="horizontal-container">
-                            <span>종료</span>
-                            <div>${meeting.getEnd()}</div>
-                        </div>
+                        <span>시작</span>
+                        <div>${meeting.start}</div>
+                    </td>
+                    <th>작성자</th>
+                    <td>
+                        <div>${meeting.writer}</div>
+                    </td>
+                </tr>
+                <tr class="row">
+                    <td>
+                        <span>종료</span>
+                        <div>${meeting.end}</div>
                     </td>
                     <th>장소</th>
                     <td>
-                        <div>${meeting.getPlace()}</div>
+                        <div>${meeting.place}</div>
                     </td>
                 </tr>
+
             </table>
-            <input type="file" name="file"  multiple>
+
+            <c:forEach var="file" items="${meeting.files}">
+                <a href="download?filename=${file}&mid=${meeting.id}">${file}</a>
+            </c:forEach>
+
+
             <div id="content" class="meeting-content">
-                <div class="content-explanation">
-                    <h2>단축키 설명</h2>
-                    <div style="text-align: left;">
-                        # => h1<br>
-                        ## => h2<br>
-                        ### => h3<br>
-                        - => •<br>
-                    </div>
-                </div>
+                ${meeting.content}
             </div>
-            <button type="sumit" >저장하기</button>
-        </form>
-    </div>
+        </div>
+        <c:if test="${editRight}">
+            <a href="update/${meeting.id}">수정하기</a>
+            <a href="delete/${meeting.id}">삭제</a>
+        </c:if>
+
     </body>
 </html>
