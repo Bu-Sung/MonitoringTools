@@ -12,19 +12,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>마크다운 에디터</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/document.css">
-    <script>
-        function saveDocument(){
-            const formDiv = document.getElementById("documentForm");
-            const text = document.getElementById("content");
-            const content = document.createElement('input');
-
-            content.setAttribute("type", "hidden");
-            content.setAttribute("name", "content");
-            content.setAttribute("value", text.innerHTML);
-            
-            formDiv.appendChild(content);
-        }
-    </script>
 </head>
 
 <body>

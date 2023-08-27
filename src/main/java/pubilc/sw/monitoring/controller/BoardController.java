@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,6 +122,11 @@ public class BoardController {
         BoardDTO board = boardService.updateBoard(boardDTO, files, request.getParameter("dellist"), Integer.parseInt((String)request.getParameter("fileExist")));
         model.addAttribute("board", board);
         return "redirect:/project/board/"+ boardDTO.getBid();
+    }
+    
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(HttpServletRequest request){
+        return boardService.downloadFile(request.getParameter("filename"), request.getParameter("mid"));
     }
     
 }

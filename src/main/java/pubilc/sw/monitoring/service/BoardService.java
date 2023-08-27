@@ -4,15 +4,18 @@
  */
 package pubilc.sw.monitoring.service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pubilc.sw.monitoring.dto.BoardDTO;
@@ -93,7 +96,7 @@ public class BoardService {
                     .category(boardEntity.getCategory())
                     .files(boardEntity.getFileCheck() == 1 ? fileService.searchFile(boardFolderPath, Long.toString(boardEntity.getBid())) : null)
                     .build();
-        }else{
+        } else {
             return null;
         }
     }
@@ -107,22 +110,22 @@ public class BoardService {
             return false;
         }
     }
-    
-    public BoardDTO updateBoard(BoardDTO boardDTO, List<MultipartFile> files, String dellist, int fileExist){
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
 
-        BoardEntity oldMeeting = boardRepository.findById(boardDTO.getBid()).get();
-        oldMeeting.setTitle(boardDTO.getTitle());
-        oldMeeting.setWriter(boardDTO.getWriter());
-        oldMeeting.setContent(boardDTO.getContent());
-        oldMeeting.setFileCheck(files != null ? 1 : fileExist);
-        
-        BoardEntity newEntity = boardRepository.save(oldMeeting);
- if (newEntity.getFileCheck() == 1) {
+    public BoardDTO updateBoard(BoardDTO boardDTO, List<MultipartFile> files, String dellist, int fileExist) {
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
+        BoardEntity oldBoard = boardRepository.findById(boardDTO.getBid()).get();
+        oldBoard.setTitle(boardDTO.getTitle());
+        oldBoard.setWriter(boardDTO.getWriter());
+        oldBoard.setContent(boardDTO.getContent());
+        oldBoard.setCategory(boardDTO.getCategory());
+        oldBoard.setFileCheck(!files.get(0).isEmpty() ? 1 : fileExist);
+
+        BoardEntity newEntity = boardRepository.save(oldBoard);
+        if (newEntity.getFileCheck() == 1) {
             if (!dellist.equals("")) { // 삭제할 파일이 있으면 삭제를 진행
                 fileService.deleteFile(boardFolderPath, boardDTO.getBid().toString(), dellist);
             }
-            if (files != null) { // 새로 추가할 파일이 있다면 추가
+            if (!files.get(0).isEmpty()) { // 새로 추가할 파일이 있다면 추가
                 fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
             }
         }
@@ -141,5 +144,9 @@ public class BoardService {
                 .files(newEntity.getFileCheck() == 1 ? fileService.searchFile(boardFolderPath, Long.toString(newEntity.getBid())) : null)
                 .date(newEntity.getDate().format(outputFormatter))
                 .build();
+    }
+    
+    public ResponseEntity<Resource> downloadFile(String filename, String mid) {
+        return fileService.downloadFile(boardFolderPath + File.separator + mid, filename);
     }
 }

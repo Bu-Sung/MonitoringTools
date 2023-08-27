@@ -13,11 +13,11 @@ contentDiv.addEventListener("keydown", function (event) {
         cursorFocusDown(event.target);
     } else if (event.key === "Backspace") { // 지우기
         deleteDiv(event.target, contentDiv);
-    } else if (event.key === 'Tab'){
+    } else if (event.key === 'Tab') {
         event.preventDefault();
         if (!event.shiftKey) {
-            insertTab(event.target);          
-        }else{
+            insertTab(event.target);
+        } else {
             deleteTab(event.target);
         }
     }
@@ -36,3 +36,50 @@ contentDiv.addEventListener("click", function (event) {
         createDiv(event.currentTarget);
     }
 });
+
+
+/* 정보 전송을 위한 스크립트 */
+function saveDocument() {
+    const formDiv = document.getElementById("documentForm");
+    const text = document.getElementById("content");
+    const content = document.createElement('input');
+
+    content.setAttribute("type", "hidden");
+    content.setAttribute("name", "content");
+    content.setAttribute("value", text.innerHTML);
+
+    formDiv.appendChild(content);
+}
+
+function updateDocument() {
+    saveDocument();
+    checkupdatefile();
+}
+
+let delfile = [];
+
+function removefile(event) {
+    const listItem = event.target.parentElement;
+    delfile.push(listItem.getAttribute(`data-filename`));
+    listItem.remove();
+}
+
+function checkupdatefile() {
+    const newfile = document.getElementById('file');
+    const container = document.getElementById('file-container');
+    //삭제할 파일
+    const delinput = document.createElement('input');
+    delinput.type = 'hidden';
+    delinput.name = 'dellist';
+    delinput.value = delfile;
+    container.appendChild(delinput);
+    //남아있는 파일
+    const remaininput = document.createElement('input');
+    remaininput.type = 'hidden';
+    remaininput.name = 'fileExist';
+    remaininput.value = 0;
+    if (document.getElementById("ulfile").getElementsByTagName("li") > 0 || newfile.files.length !== 0) {
+        remaininput.value = 1;
+    }
+    container.appendChild(remaininput);
+}

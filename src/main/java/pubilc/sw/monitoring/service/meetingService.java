@@ -117,7 +117,7 @@ public class meetingService {
         oldMeeting.setEnd(LocalDateTime.parse(meetingDTO.getEnd(), inputFormatter));
         oldMeeting.setPlace(meetingDTO.getPlace());
         oldMeeting.setContent(meetingDTO.getContent());
-        oldMeeting.setFileCheck(files != null ? 1 : fileExist);
+        oldMeeting.setFileCheck(!files.get(0).isEmpty() ? 1 : fileExist);
         
         MeetingEntity newEntity = meetingRepository.save(oldMeeting);
 
@@ -126,7 +126,7 @@ public class meetingService {
             if (!dellist.equals("")) { // 삭제할 파일이 있으면 삭제를 진행
                 fileService.deleteFile(meetingFolderPath, meetingDTO.getId().toString(), dellist);
             }
-            if (files != null) { // 새로 추가할 파일이 있다면 추가
+            if (!files.get(0).isEmpty()) { // 새로 추가할 파일이 있다면 추가
                 fileService.saveFile(meetingFolderPath, Long.toString(newEntity.getId()), files);
             }
         }
