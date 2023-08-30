@@ -4,11 +4,18 @@
  */
 package pubilc.sw.monitoring.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +50,9 @@ public class RequestController {
         List<RequestDTO> requestDTOs = requestService.getRequests((Long) session.getAttribute("pid"));
         model.addAttribute("requestDTOs", requestDTOs);
 
+        List<String> excelNames = requestService.getExcelNames((Long) session.getAttribute("pid"));  // 엑셀 파일 리스트 
+        model.addAttribute("excelNames", excelNames); 
+        
         return "project/request/request";
     }
     
@@ -98,6 +108,29 @@ public class RequestController {
         
         return "redirect:/project/request/request";
     }
+
+
+    // 요구사항 엑셀 파일 생성 
+    @GetMapping("/createExcel")
+    public @ResponseBody void createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
+        List<RequestDTO> requestDTOs = requestService.getRequests((Long) session.getAttribute("pid"));  // 요구사항 목록 
+
+        if (requestService.createRequestExcel(requestDTOs)) {
+            attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 성공하였습니다.");
+        } else {
+            attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 실패하였습니다.");
+        }
+
+    }
+
+    
+    // 요구사항 엑셀 다운 
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(HttpServletRequest request){
+        return requestService.downloadFile(request.getParameter("filename"), String.valueOf((Long) session.getAttribute("pid")));
+    }
+
+    
 
 
 }
