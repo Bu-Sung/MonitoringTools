@@ -29,15 +29,15 @@ import lombok.NoArgsConstructor;
 public class ProjectEntity {
     @Id // Primary Key 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
-    @Column(name="project_id")
+    @Column(name="project_id", nullable = false)
     private Long id; // 프로젝트 아이디
-    @Column(name="project_name")
+    @Column(name="project_name", nullable = false)
     private String name;  // 프로젝트 이름
     @Column(name="project_content")
     private String content;  // 프로젝트 설명
-    @Column(name="project_start")
+    @Column(name="project_start", nullable = false)
     private Date start;  // 프로젝트 시작 기간
-    @Column(name="project_end")
+    @Column(name="project_end", nullable = false)
     private Date end;  // 프로젝트 종료 기간
     @Column(name="project_category")
     private String category;  // 게시글 카테고리
