@@ -57,9 +57,9 @@
                 </c:forEach>
             </table>
 
-            <button type="submit" ${editright ? '' : 'disabled'} formaction="/monitoring/project/updateRight/${memberDetails[0].pid}" >권한 수정</button>
+            <button type="submit" ${editright == 1? '' : 'disabled'} formaction="/monitoring/project/updateRight/${memberDetails[0].pid}" >권한 수정</button>
 
-            <button type="submit" ${editright ? '' : 'disabled'} formaction="/monitoring/project/deleteMember/${memberDetails[0].pid}" formmethod="post">팀원 삭제</button>
+            <button type="submit" ${editright == 1? '' : 'disabled'} formaction="/monitoring/project/deleteMember/${memberDetails[0].pid}" formmethod="post">팀원 삭제</button>
         </form>
 
         <br> <br> <br> 
@@ -72,7 +72,7 @@
                 <option value="2" ${member.right == 2 ? 'selected' : 'selected'}>게시물 작성 및 편집 권한</option>
                 <option value="3" ${member.right == 3 ? 'selected' : ''}>보기 권한</option>
             </select>
-            <button type="submit" ${editright ? '' : 'disabled'}>팀원 추가</button> 
+            <button type="submit" ${editright == 1 ? '' : 'disabled'}>팀원 추가</button> 
         </form>
 
         
