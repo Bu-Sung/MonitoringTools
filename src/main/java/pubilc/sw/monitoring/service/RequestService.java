@@ -7,11 +7,13 @@ package pubilc.sw.monitoring.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -145,7 +147,7 @@ public class RequestService {
     
     
     /**
-     * 요구사항 엑셀 생성
+     * 요구사항 엑셀 생성 (생성 후 폴더에 파일 저장) 
      * 
      * @param requestDTOs
      * @return 엑셀 파일 생성 성공 여부 
@@ -182,7 +184,7 @@ public class RequestService {
             }
 
             LocalDateTime now = LocalDateTime.now();
-            String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd_HHmmss")) + ".xlsx";
+            String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd")) + ".xlsx";
             File file = new File(ctx.getRealPath(requestFolderPath)  + File.separator + requestDTOs.get(0).getPid(), fileName);
 
             saveFile(workbook, file.getParentFile().getAbsolutePath(), file.getName());  // 파일 저장 
@@ -245,7 +247,58 @@ public class RequestService {
      * @return 
      */
     public ResponseEntity<Resource> downloadFile(String filename, String pid) {
-        return fileService.downloadFile(ctx.getRealPath(requestFolderPath) + File.separator + pid, filename);
+        return fileService.downloadFile((requestFolderPath) + File.separator + pid, filename);
     }
+    
+    
+    /**
+     * 현재 요구사항 엑셀 파일 생성 후 다운 (폴더에 저장하지 않음) 
+     * 
+     * @param requestDTOs
+     * @param response
+     * @throws IOException 
+     */
+    public void createDownRequestExcel(List<RequestDTO> requestDTOs, HttpServletResponse response) throws IOException {
+
+        Workbook workbook = new XSSFWorkbook();  // 엑셀 파일 생성
+        Sheet sheet = workbook.createSheet("요구사항 목록");  // 시트 생성
+
+        // 헤더 생성
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"요구사항ID", "요구사항명", "상세설명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
+
+        for (int i = 0; i < headers.length; i++) {
+            Cell headerCell = headerRow.createCell(i);
+            headerCell.setCellValue(headers[i]);
+        }
+
+        // 데이터 생성
+        int rowNum = 1;
+        for (RequestDTO requestDTO : requestDTOs) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(requestDTO.getRid());
+            row.createCell(1).setCellValue(requestDTO.getName());
+            row.createCell(2).setCellValue(requestDTO.getContent());
+            row.createCell(3).setCellValue(requestDTO.getDate());
+            row.createCell(4).setCellValue(requestDTO.getRank());
+            row.createCell(5).setCellValue(requestDTO.getStage());
+            row.createCell(6).setCellValue(requestDTO.getTarget());
+            row.createCell(7).setCellValue(requestDTO.getUid());
+            row.createCell(8).setCellValue(requestDTO.getNote());
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd_HHmmss")) + ".xlsx";
+
+        // 파일 스트림 설정
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        try (OutputStream outputStream = response.getOutputStream()) {
+            workbook.write(outputStream);
+        } 
+    }
+    
+    
 
 }
