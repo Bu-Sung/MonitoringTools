@@ -32,7 +32,13 @@
                 <p><b>프로젝트 설명 :</b> <input type="text" name="content" value="${project.content}" /></p>
                 <p><b>프로젝트 시작 기간 :</b> <input type="date" name="start" value="${project.start}" required/></p>
                 <p><b>프로젝트 종료 기간 :</b> <input type="date" name="end" value="${project.end}" required/></p>
-                <p><b>게시글 카테고리 :</b> <input type="text" name="category" value="${project.category}" /></p>
+                <p><b>게시글 카테고리 : <input type="text" name="category" value="${project.category}" required/></p> 
+                카테고리 리스트 = <br>
+                    <c:forEach var="cat" items="${project.categoryList}">
+                        ${cat} <br>
+                    </c:forEach>
+                
+                <p><b>스프린트 주기 :</b> <input type="number" name="cycle" value="${project.cycle}" /></p>
 
                 <button type="submit" ${right ? '' : 'disabled'}>수정</button>
 

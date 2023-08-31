@@ -50,7 +50,8 @@ public class ProjectService {
                 .content(projectDTO.getContent())
                 .start(java.sql.Date.valueOf(startDate))
                 .end(java.sql.Date.valueOf(endDate))
-                .category(projectDTO.getCategory())
+                .category("공지사항")
+                .cycle(projectDTO.getCycle())
                 .build();
 
         addEntity = projectRepository.save(addEntity);
@@ -106,6 +107,7 @@ public class ProjectService {
                         .start(startDate.format(formatter))
                         .end(endDate.format(formatter))
                         .category(projectEntity.getCategory())
+                        .cycle(projectEntity.getCycle())
                         .build();
                 projectDTOs.add(projectDTO);
             }
@@ -145,7 +147,19 @@ public class ProjectService {
                     .start(startDate.format(formatter))
                     .end(endDate.format(formatter))
                     .category(projectEntity.getCategory())
+                    .cycle(projectEntity.getCycle())
                     .build();
+            
+            // 카테고리 콤마로 나눠서 카테고리 리스트에 저장
+            String category = projectEntity.getCategory();
+            if(category != null & !category.isEmpty()){
+                String[] categories = category.split(",");
+                List<String> categoryList = new ArrayList<>();
+                for(String cat : categories) {
+                    categoryList.add(cat.trim());
+                }
+                projectDTO.setCategoryList(categoryList);
+            }
 
             return projectDTO;
         } else {
@@ -192,6 +206,7 @@ public class ProjectService {
                         .start(java.sql.Date.valueOf(startDate))
                         .end(java.sql.Date.valueOf(endDate))
                         .category(projectDTO.getCategory())
+                        .cycle(projectDTO.getCycle())
                         .build();
 
                 updateEntity = projectRepository.save(updateEntity);
