@@ -51,4 +51,7 @@ public class CommentEntity {
     @Column(name="comment_date")
     @CreationTimestamp
     private LocalDateTime date; // 작성 날짜
+    
+    @Column(name="comment_delete")
+    private int delete;
 }

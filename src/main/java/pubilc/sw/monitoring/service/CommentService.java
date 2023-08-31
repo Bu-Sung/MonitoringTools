@@ -30,7 +30,7 @@ public class CommentService {
     public List<CommentDTO> getCommentList(String sort, int sid){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
         List<CommentDTO> commentDTOList = new ArrayList();
-        List<CommentEntity> commentEntityList = commentRepository.findBySortAndSidOrderByDateDesc(sort,sid);
+        List<CommentEntity> commentEntityList = commentRepository.findBySortAndSidOrderByDateAsc(sort,sid);
         for(CommentEntity entity : commentEntityList){
             commentDTOList.add(CommentDTO.builder()
                     .cid(entity.getCid())
@@ -38,6 +38,7 @@ public class CommentService {
                     .content(entity.getContent())
                     .writer(entity.getWriter())
                     .date(entity.getDate().format(formatter))
+                    .delete(entity.getDelete())
                     .build());
         }
         return commentDTOList;
@@ -51,5 +52,9 @@ public class CommentService {
                 .sort(commentDTO.getSort())
                 .writer(commentDTO.getWriter())
                 .build()) != null;
+    }
+    
+    public boolean deleteComment(Long cid){
+        return commentRepository.deleteComment(cid) == 1;
     }
 }

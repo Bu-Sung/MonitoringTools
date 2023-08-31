@@ -25,4 +25,5 @@ public class CommentDTO {
     private String content;
     private String writer;
     private String date;
+    private int delete;
 }
