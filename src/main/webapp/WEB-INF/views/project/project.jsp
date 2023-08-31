@@ -25,7 +25,7 @@
         <a href="update/${project.pid}">프로젝트 정보 수정</a>
         <a href="meeting/list">회의록관리</a>
         <a href="#">스프린트 관리</a>
-        <a href="#">요구사항 관리</a>
+        <a href="request/request">요구사항 관리</a>
         <a href="#">일정 관리</a>
         <a href="board/list">공지사항 관리</a>
     </body>
