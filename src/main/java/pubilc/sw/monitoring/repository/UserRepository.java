@@ -4,6 +4,7 @@
  */
 package pubilc.sw.monitoring.repository;
 
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,4 +31,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String>{
     @Modifying
     @Query(value="update UserEntity u set u.state=1 where u.id=:id")
     int deleteUser(@Param("id") String id);
+    
+    // 입력한 아이디가 포함되어 있는 모든 멤버 정보를 대소문자 무시하고 검색
+    List<UserEntity> findByIdContainingIgnoreCase(String id);
 }

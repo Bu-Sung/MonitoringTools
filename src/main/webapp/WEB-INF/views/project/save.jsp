@@ -41,8 +41,8 @@
                     <td><input type="date" name="end" required></td>
                 </tr>
                 <tr>
-                    <td>게시글 카테고리 :</td>
-                    <td><input type="text" name="category"></td>
+                    <td>스프린트 주기 :</td>
+                    <td><input type="number" name="cycle"></td>
                 </tr>
 
 

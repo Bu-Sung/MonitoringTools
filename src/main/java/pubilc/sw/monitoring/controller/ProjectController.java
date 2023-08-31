@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
@@ -59,9 +60,10 @@ public class ProjectController {
     public String getAllProject(Model model){
         List<ProjectDTO> projects = projectService.getProjectsByUserId(sessionManager.getUserId());
         model.addAttribute("projects", projects);
-        /*
-            초대 받은 목록 있으면 리스트 받아오기 추가
-        */
+
+        // 초대 받은 목록 리스트
+        List<ProjectDTO> invitedProjects = projectService.getInvitedProjects(sessionManager.getUserId());
+        model.addAttribute("invitedProjects", invitedProjects);
         return "project/list";
     }
     
@@ -73,6 +75,28 @@ public class ProjectController {
     @GetMapping("/save")
     public String projectSave(){
         return "project/save";
+    }
+    
+    /**
+     * 프로젝트 초대 수락 
+     * 
+     * @param selectedPid 선택된 프로젝트 아이디 
+     * @param attrs
+     * @return 
+     */
+    @PostMapping("/acceptInvite")
+    public String acceptInvite(@RequestParam(value = "selectedPid", required = false) List<Long> selectedPid, RedirectAttributes attrs) {
+        if (selectedPid != null && !selectedPid.isEmpty()) {
+            if (projectService.acceptInvite(selectedPid, sessionManager.getUserId())) {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 수락하였습니다.");
+            } else {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 수락 실패하였습니다.");
+            }
+        } else {
+            attrs.addFlashAttribute("msg", "선택된 수락이 없습니다.");
+        }
+        
+        return "redirect:/project/list";
     }
     
     /**
@@ -193,9 +217,19 @@ public class ProjectController {
             attrs.addFlashAttribute("msg", "팀원 추가 실패했습니다.");
         }
 
-    return "redirect:/project/manageMember/" + pid;
-}
+        return "redirect:/project/manageMember/" + pid;
+    }
 
+    /**
+     * 멤버 초대 시 아이디 찾기
+     * @param uid 입력한 아이디 
+     * @return 
+     */
+    @GetMapping("/searchUsers")
+    public @ResponseBody List<String> searchUsers(@RequestParam String uid) {
+        return projectService.searchUsers(uid);
+    }
+    
     
     /**
      * 팀원 권한 수정 

@@ -41,4 +41,6 @@ public class ProjectEntity {
     private Date end;  // 프로젝트 종료 기간
     @Column(name="project_category")
     private String category;  // 게시글 카테고리
+    @Column(name="project_cycle")
+    private Long cycle;  // 스프린트 주기 
 }
