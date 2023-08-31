@@ -42,7 +42,7 @@ public class RequestController {
     public String request(Model model) {
         
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
-        model.addAttribute("requestDTOs", requestDTOs);
+        model.addAttribute("requestDTOs", requestDTOs);  // 요구사항 목록 
 
         List<String> excelNames = requestService.getExcelNames(sessionManager.getProjectId());  // 엑셀 파일 리스트 
         model.addAttribute("excelNames", excelNames); 
@@ -104,7 +104,7 @@ public class RequestController {
     }
 
 
-    // 요구사항 엑셀 파일 생성 
+    // 요구사항 엑셀 파일 생성 (엑셀 생성 후 폴더에 저장함) 
     @GetMapping("/createExcel")
     public @ResponseBody void createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());  // 요구사항 목록 
@@ -125,6 +125,12 @@ public class RequestController {
     }
 
     
+    // 요구사항 엑셀 파일 생성 후 다운 (엑셀 생성 후 폴더에 저장하지 않음) 
+    @GetMapping("/createDownRequestExcel")
+    public void createDownRequestExcel(HttpServletResponse response) throws IOException {
+        List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
+        requestService.createDownRequestExcel(requestDTOs, response);
+    }
 
 
 }
