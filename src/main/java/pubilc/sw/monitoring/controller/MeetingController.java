@@ -6,9 +6,7 @@ package pubilc.sw.monitoring.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MeetingDTO;
-import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.ProjectService;
 import pubilc.sw.monitoring.service.meetingService;
 
@@ -34,18 +32,15 @@ import pubilc.sw.monitoring.service.meetingService;
 @RequestMapping("/project/meeting")
 @RequiredArgsConstructor
 public class MeetingController {
-    
-    @Autowired
-    private HttpSession session;
-    
+
+    private final SessionManager sessionManager;
     private final meetingService meetingService;
     private final ProjectService projectService;
     
     @GetMapping("/list")
     public String meeting(@RequestParam(value = "page", defaultValue = "1") int nowPage,Model model){
-        model.addAttribute("meetingList", meetingService.getMeetingList((Long)session.getAttribute("pid"), nowPage));
-        UserDTO user = (UserDTO) session.getAttribute("user"); 
-        model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long)session.getAttribute("pid"))); 
+        model.addAttribute("meetingList", meetingService.getMeetingList(sessionManager.getProjectId(), nowPage));
+        model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId())); 
         return "project/meeting/list";
     }
     
@@ -63,18 +58,14 @@ public class MeetingController {
     @GetMapping("/{mid}")
     public String meetingDetail(@PathVariable Long mid, Model model){
         model.addAttribute("meeting", meetingService.getMeeting(mid));
-        UserDTO user = (UserDTO) session.getAttribute("user"); 
-       
-        model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long) session.getAttribute("pid"))); 
+        model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId())); 
         return "project/meeting/meeting";
     }
     
     @PostMapping("/addMeeting")
     public String addMeeting(@ModelAttribute MeetingDTO meetingDTO, @RequestParam(name="file", required=false) List<MultipartFile> file, RedirectAttributes attrs){
-        Long pid = (Long)session.getAttribute("pid");
-        UserDTO user = (UserDTO) session.getAttribute("user");
-        meetingDTO.setProjectId(pid.intValue());
-        meetingDTO.setWriter(user.getName());
+        meetingDTO.setProjectId(sessionManager.getProjectId().intValue());
+        meetingDTO.setWriter(sessionManager.getUserName());
         if(meetingService.addMeeting(meetingDTO, file)){
             attrs.addFlashAttribute("msg", "회의록이 등록되었습니다.");
         }else{
@@ -91,8 +82,7 @@ public class MeetingController {
     
     @PostMapping("update/update")
     public String updateMeeting(@ModelAttribute MeetingDTO meetingDTO, @RequestParam(name="file", required=false) List<MultipartFile> files, HttpServletRequest request, Model model){
-        UserDTO user = (UserDTO) session.getAttribute("user");
-        meetingDTO.setWriter(user.getName());
+        meetingDTO.setWriter(sessionManager.getUserName());
         System.out.println(request.getParameter("dellist"));
         MeetingDTO meeting = meetingService.updateMeeting(meetingDTO, files, request.getParameter("dellist"), Integer.parseInt(request.getParameter("fileExist")));
         return "redirect:/project/meeting/"+ meeting.getId();

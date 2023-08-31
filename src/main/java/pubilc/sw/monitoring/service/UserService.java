@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.entity.UserEntity;
 import pubilc.sw.monitoring.repository.UserRepository;
@@ -23,11 +24,8 @@ import pubilc.sw.monitoring.repository.UserRepository;
 public class UserService {
     
     private final UserRepository userRepository; // UserRepository 사용을 위한 변수
+    private final SessionManager sessionManager;
     
-    @Autowired
-    private HttpSession session;
-    @Value("${server.servlet.session.timeout}")
-    private int sessionTimeout;
     /**
      * 
      * @param userDTO 로그인을 원하는 사용자의 입력
@@ -38,11 +36,10 @@ public class UserService {
         if(!userEntity.isPresent() || !userDTO.getPw().equals(userEntity.get().getPw()) || userEntity.get().getState() != 0){
             return false;
         }else{
-            session.setAttribute("user", UserDTO.builder()
+            sessionManager.setUserSession(UserDTO.builder()
                     .id(userEntity.get().getId())
                     .name(userEntity.get().getName())
                     .build());
-            session.setMaxInactiveInterval(sessionTimeout);
             return true;
         }
     }
@@ -83,8 +80,7 @@ public class UserService {
     }
     
     public UserDTO getUserInfo(){
-        UserDTO user = (UserDTO)session.getAttribute("user");
-        Optional<UserEntity> userEntity = userRepository.findById(user.getId());
+        Optional<UserEntity> userEntity = userRepository.findById(sessionManager.getUserId());
         return UserDTO.builder()
                     .id(userEntity.get().getId())
                     .name(userEntity.get().getName())

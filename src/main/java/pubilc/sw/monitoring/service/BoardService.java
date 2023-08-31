@@ -5,7 +5,6 @@
 package pubilc.sw.monitoring.service;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +12,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pubilc.sw.monitoring.dto.BoardDTO;
-import pubilc.sw.monitoring.dto.MeetingDTO;
 import pubilc.sw.monitoring.entity.BoardEntity;
-import pubilc.sw.monitoring.entity.MeetingEntity;
 import pubilc.sw.monitoring.repository.BoardRepository;
-import pubilc.sw.monitoring.repository.ProjectRepository;
 
 /**
  *
@@ -33,14 +28,11 @@ import pubilc.sw.monitoring.repository.ProjectRepository;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final ProjectRepository projectRepository;
     private final BoardRepository boardRepository;
     private final FileService fileService;
 
     @Value("${board.folder}")
     private String boardFolderPath; // meeting안 회의록 첨부 파일 폴더 명
-    @Value("${date.input.format}")
-    private String dateInputFormatter;
     @Value("${date.output.format}")
     private String dateOutputFormatter;
     @Value("${page.limit}")
@@ -75,9 +67,7 @@ public class BoardService {
                 .build());
         if (newEntity != null) {
             if (newEntity.getFileCheck() == 1) {
-                for (MultipartFile file : files) {
-                    fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
-                }
+                fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
             }
         }
         return true;

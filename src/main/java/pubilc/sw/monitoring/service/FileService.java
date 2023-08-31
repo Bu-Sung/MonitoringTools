@@ -70,7 +70,7 @@ public class FileService {
      * 파일을 해당하는 폴더에 파일을 저장
      * @param path 파일 저장 위치
      * @param id 파일 소유 아이디
-     * @param file 저장해야할 파일
+     * @param files 저장해야할 파일 리스트
      */
     public void saveFile(String path, String id, List<MultipartFile> files){
         if(!files.isEmpty()){ // 저장할 파일이 있을 때
