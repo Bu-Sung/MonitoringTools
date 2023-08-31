@@ -5,10 +5,8 @@
 package pubilc.sw.monitoring.controller;
 
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
-import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.ProjectService;
 
 /**
@@ -34,9 +32,7 @@ import pubilc.sw.monitoring.service.ProjectService;
 public class ProjectController {
 
     private final ProjectService projectService;
-    
-    @Autowired
-    private HttpSession session;
+    private final SessionManager sessionManager;
 
     /**
      * 프로젝트 조회
@@ -49,8 +45,7 @@ public class ProjectController {
     public String project(@PathVariable Long pid, Model model) {
         
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
-        session.setAttribute("pid", projectDTO.getPid());
-        session.setMaxInactiveInterval(-1);
+        sessionManager.setProjectId(pid);
         model.addAttribute("project", projectDTO);
         return "project/project";
     }
@@ -62,8 +57,7 @@ public class ProjectController {
      */
     @GetMapping("/list")
     public String getAllProject(Model model){
-        UserDTO user = (UserDTO) session.getAttribute("user");
-        List<ProjectDTO> projects = projectService.getProjectsByUserId(user.getId());
+        List<ProjectDTO> projects = projectService.getProjectsByUserId(sessionManager.getUserId());
         model.addAttribute("projects", projects);
         /*
             초대 받은 목록 있으면 리스트 받아오기 추가
@@ -90,10 +84,7 @@ public class ProjectController {
      */
     @PostMapping("/addProject")
     public String addProject(@ModelAttribute ProjectDTO projectDTO, RedirectAttributes attrs) {
-        System.out.println("추가");
-        UserDTO user = (UserDTO) session.getAttribute("user"); 
-        
-        if (projectService.addProject(projectDTO, user.getId())) {
+        if (projectService.addProject(projectDTO, sessionManager.getUserId())) {
             attrs.addFlashAttribute("msg", "프로젝트 등록 성공했습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 등록 실패했습니다.");
@@ -110,14 +101,13 @@ public class ProjectController {
      */
     @GetMapping("/update/{pid}")
     public String projectDetails(@PathVariable Long pid, Model model) {
-        ProjectDTO projectDTO = projectService.getProjectDetails(pid);
+        ProjectDTO projectDTO = projectService.getProjectDetails(sessionManager.getProjectId());
         model.addAttribute("project", projectDTO);
-        UserDTO user = (UserDTO) session.getAttribute("user"); 
-
-        boolean right = projectService.hasRight(user.getId(), pid);  // 권한 확인 
+        
+        boolean right = projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId());  // 권한 확인 
         model.addAttribute("right", right); 
     
-        List<MemberDTO> memberDetails = projectService.getMember(pid);  // 멤버 상세 정보 가져오기
+        List<MemberDTO> memberDetails = projectService.getMember(sessionManager.getProjectId());  // 멤버 상세 정보 가져오기
         model.addAttribute("memberDetails", memberDetails);
 
         return "project/details";
@@ -173,9 +163,7 @@ public class ProjectController {
         List<MemberDTO> memberDTO = projectService.getMember(pid);
         model.addAttribute("memberDetails", memberDTO);
         
-        UserDTO user = (UserDTO) session.getAttribute("user"); 
-        
-        boolean editright = projectService.hasRight(user.getId(), pid);  // 편집 권한 확인 
+        boolean editright = projectService.hasRight(sessionManager.getUserId(), pid);  // 편집 권한 확인 
         model.addAttribute("editright", editright); 
 
         return "project/manageMember";

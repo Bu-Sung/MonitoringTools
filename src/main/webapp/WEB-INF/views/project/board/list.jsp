@@ -27,37 +27,39 @@
                     },
                     body: JSON.stringify(requestData)
                 })
-                        .then(response => response.json())
-                        .then(data => {
-                            let listElement = document.getElementById('list');
-                            listElement.innerHTML = '';
-                            for (let item of data) {
-                                let row = document.createElement('tr');
-                                let categoryCell = document.createElement('td');
-                                categoryCell.textContent = item.category;
-                                row.appendChild(categoryCell);
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        let listElement = document.getElementById('list');
+                        listElement.innerHTML = '';
+                        for (let item of data) {
+                            let row = document.createElement('tr');
+                            let categoryCell = document.createElement('td');
+                            categoryCell.textContent = item.category;
+                            row.appendChild(categoryCell);
 
-                                let titleCell = document.createElement('td');
-                                let titleLink = document.createElement('a');
-                                titleLink.href = item.bid;
-                                titleLink.textContent = item.title;
+                            let titleCell = document.createElement('td');
+                            let titleLink = document.createElement('a');
+                            titleLink.href = item.bid;
+                            titleLink.textContent = item.title;
 
-                                titleCell.appendChild(titleLink);
-                                row.appendChild(titleCell);
+                            titleCell.appendChild(titleLink);
+                            row.appendChild(titleCell);
 
-                                let writerCell = document.createElement('td');
-                                writerCell.textContent = item.writer;
-                                row.appendChild(writerCell);
+                            let writerCell = document.createElement('td');
+                            writerCell.textContent = item.writer;
+                            row.appendChild(writerCell);
 
-                                let dateCell = document.createElement('td');
-                                dateCell.textContent = item.date;
+                            let dateCell = document.createElement('td');
+                            dateCell.textContent = item.date;
 
-                                row.appendChild(dateCell);
+                            row.appendChild(dateCell);
 
-                                listElement.appendChild(row);
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                            listElement.appendChild(row);
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
             }
             document.addEventListener('DOMContentLoaded', function () {
                 loadTableData(1);

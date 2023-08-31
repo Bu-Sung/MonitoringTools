@@ -7,9 +7,7 @@ package pubilc.sw.monitoring.controller;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.BoardDTO;
-import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.BoardService;
 import pubilc.sw.monitoring.service.ProjectService;
 
@@ -37,38 +35,33 @@ import pubilc.sw.monitoring.service.ProjectService;
 @RequestMapping("/project/board")
 @RequiredArgsConstructor
 public class BoardController {
-    
-    @Autowired
-    private HttpSession session;
-    
+
     private final ProjectService projectService;
     private final BoardService boardService;
+    private final SessionManager sessionManager;
     
     @GetMapping("/list")
     public String getProjectAllBoard(@RequestParam(value = "page", defaultValue = "1") int nowPage,Model model){
-        //Long pid = (Long)session.getAttribute("pid");
-        model.addAttribute("category", projectService.getProjectCategory((Long)session.getAttribute("pid")));
+        model.addAttribute("category", projectService.getProjectCategory(sessionManager.getProjectId()));
         //model.addAttribute("boardList",boardService.getProjectAllBoard(pid, nowPage));
         return "/project/board/list";
     }
     
     @PostMapping("/boards")
     public @ResponseBody List<BoardDTO> getProjectCategoryBoards(@RequestBody Map<Object, Object> request) {
-        return boardService.getProjectCategoryBoards((Long)session.getAttribute("pid"),(String) request.get("category"), (int) request.get("page"));
+        return boardService.getProjectCategoryBoards(sessionManager.getProjectId(),(String) request.get("category"), (int) request.get("page"));
     }
     
     @GetMapping("/save")
     public String addBoard(Model model){
-        model.addAttribute("category", projectService.getProjectCategory((Long)session.getAttribute("pid")));
+        model.addAttribute("category", projectService.getProjectCategory(sessionManager.getProjectId()));
         return "/project/board/save";
     }
     
     @PostMapping("/addBoard")
     public String addBoard(@ModelAttribute BoardDTO boardDTO, @RequestParam(name="file", required=false) List<MultipartFile> file, RedirectAttributes attrs){
-        Long pid = (Long)session.getAttribute("pid");
-        UserDTO user = (UserDTO) session.getAttribute("user");
-        boardDTO.setPid(pid.intValue());
-        boardDTO.setWriter(user.getName());
+        boardDTO.setPid(sessionManager.getProjectId().intValue());
+        boardDTO.setWriter(sessionManager.getUserName());
         if(boardService.addBoard(boardDTO, file)){
             attrs.addFlashAttribute("msg", "게시물이 등록되었습니다.");
         }else{
@@ -82,8 +75,7 @@ public class BoardController {
         BoardDTO board = boardService.getBoard(bid);
         if(board != null){
             model.addAttribute("board",board);
-            UserDTO user = (UserDTO) session.getAttribute("user"); 
-            model.addAttribute("editRight", projectService.hasRight(user.getId(), (Long) session.getAttribute("pid"))); 
+            model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId())); 
             return "/project/board/board";
         }else{
             attrs.addFlashAttribute("msg", "게시물이 존재하지 않습니다.");
@@ -107,7 +99,7 @@ public class BoardController {
         BoardDTO board = boardService.getBoard(bid);
         if(board != null){
             model.addAttribute("board",board);
-            model.addAttribute("category", projectService.getProjectCategory((Long)session.getAttribute("pid")));
+            model.addAttribute("category", projectService.getProjectCategory(sessionManager.getProjectId()));
             return "/project/board/details";
         }else{
             attrs.addFlashAttribute("msg", "게시물이 존재하지 않습니다.");
@@ -117,8 +109,7 @@ public class BoardController {
     
     @PostMapping("/update/update")
     public String updateBoard(@ModelAttribute BoardDTO boardDTO, @RequestParam(name="file", required=false) List<MultipartFile> files, HttpServletRequest request, Model model){
-        UserDTO user = (UserDTO) session.getAttribute("user");
-        boardDTO.setWriter(user.getName());
+        boardDTO.setWriter(sessionManager.getUserName());
         BoardDTO board = boardService.updateBoard(boardDTO, files, request.getParameter("dellist"), Integer.parseInt((String)request.getParameter("fileExist")));
         model.addAttribute("board", board);
         return "redirect:/project/board/"+ boardDTO.getBid();

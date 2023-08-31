@@ -4,16 +4,12 @@
  */
 package pubilc.sw.monitoring.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.RequestDTO;
 import pubilc.sw.monitoring.service.RequestService;
 
@@ -39,18 +36,15 @@ import pubilc.sw.monitoring.service.RequestService;
 public class RequestController {
 
     private final RequestService requestService;
-
-    @Autowired
-    private HttpSession session;
-
+    private final SessionManager sessionManager;
     
     @GetMapping("/request")
     public String request(Model model) {
         
-        List<RequestDTO> requestDTOs = requestService.getRequests((Long) session.getAttribute("pid"));
+        List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
         model.addAttribute("requestDTOs", requestDTOs);
 
-        List<String> excelNames = requestService.getExcelNames((Long) session.getAttribute("pid"));  // 엑셀 파일 리스트 
+        List<String> excelNames = requestService.getExcelNames(sessionManager.getProjectId());  // 엑셀 파일 리스트 
         model.addAttribute("excelNames", excelNames); 
         
         return "project/request/request";
@@ -60,7 +54,7 @@ public class RequestController {
     // 해당 프로젝트의 모든 요구사항 
     @GetMapping("/getRequests")   
     public @ResponseBody List<RequestDTO> getRequests() {
-        return requestService.getRequests((Long) session.getAttribute("pid"));
+        return requestService.getRequests(sessionManager.getProjectId());
     }
     
     
@@ -69,7 +63,7 @@ public class RequestController {
     public @ResponseBody String saveRequests(@RequestBody List<RequestDTO> requestDTOList, RedirectAttributes attrs) {
         
         for (RequestDTO requestDTO : requestDTOList) {
-            requestDTO.setPid((Long) session.getAttribute("pid"));
+            requestDTO.setPid(sessionManager.getProjectId());
         }
         
         if(requestService.saveRequests(requestDTOList)){
@@ -100,7 +94,7 @@ public class RequestController {
     @PostMapping("/deleteAll")
     public @ResponseBody String deleteRequestsByPid(RedirectAttributes attrs) {
 
-        if (requestService.deleteRequestsByPid((Long) session.getAttribute("pid"))) {
+        if (requestService.deleteRequestsByPid(sessionManager.getProjectId())) {
             attrs.addFlashAttribute("msg", "요구사항 전체 삭제 성공하였습니다.");
         } else {
             attrs.addFlashAttribute("msg", "요구사항 전체 삭제 실패하였습니다.");
@@ -113,7 +107,7 @@ public class RequestController {
     // 요구사항 엑셀 파일 생성 
     @GetMapping("/createExcel")
     public @ResponseBody void createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
-        List<RequestDTO> requestDTOs = requestService.getRequests((Long) session.getAttribute("pid"));  // 요구사항 목록 
+        List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());  // 요구사항 목록 
 
         if (requestService.createRequestExcel(requestDTOs)) {
             attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 성공하였습니다.");
@@ -127,7 +121,7 @@ public class RequestController {
     // 요구사항 엑셀 다운 
     @GetMapping("/download")
     public ResponseEntity<Resource> download(HttpServletRequest request){
-        return requestService.downloadFile(request.getParameter("filename"), String.valueOf((Long) session.getAttribute("pid")));
+        return requestService.downloadFile(request.getParameter("filename"), String.valueOf(sessionManager.getProjectId()));
     }
 
     
