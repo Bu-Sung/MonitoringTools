@@ -32,6 +32,7 @@
                         <th> </th>
                         <th>팀원</th>
                         <th>권한</th>
+                        <th>초대 수락 상태</th>
                     </tr>
                 </thead>
                 <c:forEach items="${memberDetails}" var="member">
@@ -48,6 +49,9 @@
                                 <option value="2" ${member.right == 2 ? 'selected' : ''}>게시물 작성 및 편집 권한</option>
                                 <option value="3" ${member.right == 3 ? 'selected' : ''}>보기 권한</option>
                             </select>
+                        </td>
+                        <td>
+                            ${member.state == 0 ? '생성자' : member.state == 1 ? '미수락' : member.state == 2 ? '수락' : ''}
                         </td>
                     </tr>
                 </c:forEach>
@@ -71,6 +75,12 @@
             <button type="submit" ${editright ? '' : 'disabled'}>팀원 추가</button> 
         </form>
 
+        
+        <form action="/monitoring/project/searchUsers" method="get">
+            <input type="text" name="uid" placeholder="아이디 입력" />
+            <button type="submit">Search</button>
+        </form>
+        
     </body>
 
 </html>

@@ -22,4 +22,5 @@ public class MemberDTO {
     private String uid;  // 유저 아이디 
     private Long pid;  // 프로젝트 아이디 
     private int right;  // 권한 
+    private int state;  // 초대 수락 여부 
 }

@@ -37,4 +37,6 @@ public class MemberEntity {
     private Long pid;  // 프로젝트 아이디 
     @Column(name="member_right")
     private int right;  // 권한 
+    @Column(name="member_state")
+    private int state;  // 멤버 초대 수락 여부 (0: 생성자, 1: 수락x, 2: 수락o)
 }

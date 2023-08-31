@@ -31,6 +31,7 @@
                 <th>프로젝트 시작 기간</th>
                 <th>프로젝트 마감 기간</th>
                 <th>게시글 카테고리</th>
+                <th>프로젝트 주기</th>
             </tr>
             <c:forEach var="project" items="${projects}">
                 <tr>
@@ -40,12 +41,43 @@
                     <td><c:out value="${project.start}" /></td>
                     <td><c:out value="${project.end}" /></td>
                     <td><c:out value="${project.category}" /></td>
+                    <td><c:out value="${project.cycle}" /></td>
                 </tr>
             </c:forEach>
         </table> 
 
         <form action="save" >
             <button type="submit">프로젝트 추가</button>
+        </form>
+
+        <br> <br>
+        초대 받은 목록
+        <form method="post">
+            <table>
+                <tr>
+                    <th> </th>
+                    <th>프로젝트 이름</th>
+                    <th>프로젝트 설명</th>
+                    <th>프로젝트 시작 기간</th>
+                    <th>프로젝트 마감 기간</th>
+                    <th>게시글 카테고리</th>
+                    <th>프로젝트 주기</th>
+                </tr>
+                <c:forEach var="invitedProject" items="${invitedProjects}">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selectedPid" value="${invitedProject.pid}" />
+                        </td>
+                        <td><c:out value="${invitedProject.name}" /></a></td>
+                        <td><c:out value="${invitedProject.content}" /></td>
+                        <td><c:out value="${invitedProject.start}" /></td>
+                        <td><c:out value="${invitedProject.end}" /></td>
+                        <td><c:out value="${invitedProject.category}" /></td>
+                        <td><c:out value="${invitedProject.cycle}" /></td>
+                    </tr>
+                </c:forEach>
+            </table> 
+            <button type="submit" formaction="/monitoring/project/acceptInvite">초대 수락</button>
         </form>
     </body>
 </html>

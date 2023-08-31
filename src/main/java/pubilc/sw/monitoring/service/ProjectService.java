@@ -20,6 +20,7 @@ import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.entity.MemberEntity;
 import pubilc.sw.monitoring.repository.MemberRepository;
 import pubilc.sw.monitoring.repository.UserRepository;
+import pubilc.sw.monitoring.entity.UserEntity;
 
 /**
  *
@@ -62,6 +63,7 @@ public class ProjectService {
                     .uid(uid) 
                     .pid(addEntity.getId()) // 새로 추가된 프로젝트 아이디
                     .right(1) // 권한 정보 
+                    .state(0)  // 프로젝트 생성자는 초대수락여부 0로 설정  
                     .build();
 
             memberRepository.save(memberEntity);
@@ -87,29 +89,31 @@ public class ProjectService {
         List<ProjectDTO> projectDTOs = new ArrayList<>();  // 프로젝트 엔티티 리스트 
 
         for (MemberEntity memberEntity : memberEntities) {
-            // 본인이 해당하는 프로젝트 아이디 
-            long pid = memberEntity.getPid();
-            ProjectEntity projectEntity = projectRepository.findById(pid);
+            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) {  // 초대 상태가 0(생성자)이거나 2(초대 수락)인 프로젝트
+                // 본인이 해당하는 프로젝트 아이디 
+                long pid = memberEntity.getPid();
+                ProjectEntity projectEntity = projectRepository.findById(pid);
 
-            if (projectEntity != null) {
-                // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환
-                Instant startInstant = projectEntity.getStart().toInstant();
-                Instant endInstant = projectEntity.getEnd().toInstant();
-                // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
-                LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+                if (projectEntity != null) {
+                    // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환
+                    Instant startInstant = projectEntity.getStart().toInstant();
+                    Instant endInstant = projectEntity.getEnd().toInstant();
+                    // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+                    LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
 
-                // 프로젝트 정보를 DTO로 변환하여 리스트에 추가
-                ProjectDTO projectDTO = ProjectDTO.builder()
-                        .pid(projectEntity.getId())
-                        .name(projectEntity.getName())
-                        .content(projectEntity.getContent())
-                        .start(startDate.format(formatter))
-                        .end(endDate.format(formatter))
-                        .category(projectEntity.getCategory())
-                        .cycle(projectEntity.getCycle())
-                        .build();
-                projectDTOs.add(projectDTO);
+                    // 프로젝트 정보를 DTO로 변환하여 리스트에 추가
+                    ProjectDTO projectDTO = ProjectDTO.builder()
+                            .pid(projectEntity.getId())
+                            .name(projectEntity.getName())
+                            .content(projectEntity.getContent())
+                            .start(startDate.format(formatter))
+                            .end(endDate.format(formatter))
+                            .category(projectEntity.getCategory())
+                            .cycle(projectEntity.getCycle())
+                            .build();
+                    projectDTOs.add(projectDTO);
+                }
             }
         }
 
@@ -258,11 +262,76 @@ public class ProjectService {
                     .uid(memberEntity.getUid())
                     .pid(memberEntity.getPid())
                     .right(memberEntity.getRight())
+                    .state(memberEntity.getState())
                     .build();
 
             memberDTOs.add(memberDTO);
         }
         return memberDTOs;
+    }
+    
+    
+    // 초대 받은 프로젝트 정보 
+    public List<ProjectDTO> getInvitedProjects(String uid) {
+        List<Long> invitedMembers = memberRepository.findPidByUidAndState(uid, 1);
+        List<ProjectDTO> invitedProjects = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (Long pid : invitedMembers) {
+            Optional<ProjectEntity> projectEntityOptional = projectRepository.findById(pid);
+            if (projectEntityOptional.isPresent()) {
+                ProjectEntity projectEntity = projectEntityOptional.get();
+
+                // 프로젝트의 시작 및 종료 기를 Instant 객체로 변환
+                Instant startInstant = projectEntity.getStart().toInstant();
+                Instant endInstant = projectEntity.getEnd().toInstant();
+                // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+                LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+                // ProjectDTO 객체 생성
+                ProjectDTO projectDTO = ProjectDTO.builder()
+                        .pid(projectEntity.getId())
+                        .name(projectEntity.getName())
+                        .content(projectEntity.getContent())
+                        .start(startDate.format(formatter))
+                        .end(endDate.format(formatter))
+                        .category(projectEntity.getCategory())
+                        .cycle(projectEntity.getCycle())
+                        .build();
+
+                // 카테고리 콤마로 나눠서 카테고리 리스트에 저장
+                String category = projectEntity.getCategory();
+                if (category != null && !category.isEmpty()) {
+                    String[] categories = category.split(",");
+                    List<String> categoryList = new ArrayList<>();
+                    for (String cat : categories) {
+                        categoryList.add(cat.trim());
+                    }
+                    projectDTO.setCategoryList(categoryList);
+                }
+
+                invitedProjects.add(projectDTO);
+            }
+        }
+
+        return invitedProjects;
+    }
+
+
+    // 받은 초대 수락 
+    public boolean acceptInvite(List<Long> selectedPid, String uid) {
+        boolean invite = false;  
+
+        for (Long pid : selectedPid) {
+            MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+            if (memberEntity != null) {
+                memberEntity.setState(2); // 상태를 2(수락)로 변경 
+                memberRepository.save(memberEntity); // 변경 사항 저장
+                invite = true;
+            }
+        }
+        return invite; // 하나 이상 수락된 경우 true 반환
     }
     
     
@@ -289,6 +358,19 @@ public class ProjectService {
     }
     
     
+    // 입력한 값이 들어간 아이디 찾기 
+    public List<String> searchUsers(String uid) {
+        List<UserEntity> searchResults = userRepository.findByIdContainingIgnoreCase(uid);
+        List<String> uidList = new ArrayList<>();
+
+        for (UserEntity user : searchResults) {
+            uidList.add(user.getId());
+        }
+
+       // System.out.println("User: " + uidList);
+        return uidList;
+    }
+    
     /**
      * 프로젝트 멤버 추가 함수 
      * 
@@ -303,14 +385,15 @@ public class ProjectService {
                 .uid(addUid)
                 .pid(memberDTO.getPid())
                 .right(right)
+                .state(1)
                 .build();
 
         addEntity = memberRepository.save(addEntity);
         
         return addEntity != null;
     }
-
-
+    
+    
     /**
      * 해당 프로젝트의 멤버 권한 수정 함수 
      * 

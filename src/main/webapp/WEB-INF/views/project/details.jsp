@@ -33,7 +33,7 @@
                 <p><b>프로젝트 시작 기간 :</b> <input type="date" name="start" value="${project.start}" required/></p>
                 <p><b>프로젝트 종료 기간 :</b> <input type="date" name="end" value="${project.end}" required/></p>
                 <p><b>게시글 카테고리 : <input type="text" name="category" value="${project.category}" required/></p> 
-                카테고리 리스트 = <br>
+                카테고리 리스트 : <br>
                     <c:forEach var="cat" items="${project.categoryList}">
                         ${cat} <br>
                     </c:forEach>
