@@ -40,13 +40,13 @@
                 
                 <p><b>스프린트 주기 :</b> <input type="number" name="cycle" value="${project.cycle}" /></p>
 
-                <button type="submit" ${right ? '' : 'disabled'}>수정</button>
+                <button type="submit" ${right == 1 ? '' : 'disabled'}>수정</button>
 
             </form>
 
             <form action="delete/${project.pid}" method="post">
                 <input type="hidden" name="pid" value="${project.pid}" />
-                <button type="submit" ${right ? '' : 'disabled'}>삭제</button>
+                <button type="submit" ${right == 1 ? '' : 'disabled'}>삭제</button>
             </form>
  
             <br> <br> 

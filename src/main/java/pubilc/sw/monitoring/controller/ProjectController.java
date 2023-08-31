@@ -128,7 +128,7 @@ public class ProjectController {
         ProjectDTO projectDTO = projectService.getProjectDetails(sessionManager.getProjectId());
         model.addAttribute("project", projectDTO);
         
-        boolean right = projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId());  // 권한 확인 
+        int right = projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId());  // 권한 확인 
         model.addAttribute("right", right); 
     
         List<MemberDTO> memberDetails = projectService.getMember(sessionManager.getProjectId());  // 멤버 상세 정보 가져오기
@@ -187,7 +187,7 @@ public class ProjectController {
         List<MemberDTO> memberDTO = projectService.getMember(pid);
         model.addAttribute("memberDetails", memberDTO);
         
-        boolean editright = projectService.hasRight(sessionManager.getUserId(), pid);  // 편집 권한 확인 
+        int editright = projectService.hasRight(sessionManager.getUserId(), pid);  // 편집 권한 확인 
         model.addAttribute("editright", editright); 
 
         return "project/manageMember";

@@ -176,13 +176,17 @@ public class ProjectService {
      * 
      * @param uid 사용자 아이디 
      * @param pid 프로젝트 아이디 
-     * @return 수정 및 삭제 권한 여부 (true : 수정 및 삭제 가능, false : 수정 및 삭제 불가능) 
+     * @return 권한 (1:마스터, 2:게시물 작성 및 편집, 3:보기권한) 
      */
-    public boolean hasRight(String uid, Long pid) {
+    public int hasRight(String uid, Long pid) {
         MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
-        return memberEntity != null && memberEntity.getRight() == 1;
+        return memberEntity.getRight();
     }
-    
+//    public boolean hasRight(String uid, Long pid) {
+//        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+//        return memberEntity != null && memberEntity.getRight() == 1;
+//    }
+
     
     /**
      * 프로젝트 정보 수정 함수
