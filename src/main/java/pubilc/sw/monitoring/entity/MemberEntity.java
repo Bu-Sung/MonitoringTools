@@ -38,5 +38,5 @@ public class MemberEntity {
     @Column(name="member_right")
     private int right;  // 권한 
     @Column(name="member_state")
-    private int state;  // 멤버 초대 수락 여부 (0: 생성자, 1: 수락x, 2: 수락o)
+    private int state;  // 멤버 초대 수락 여부 (-1: 거절, 0: 생성자, 1: 수락x, 2: 수락o)
 }

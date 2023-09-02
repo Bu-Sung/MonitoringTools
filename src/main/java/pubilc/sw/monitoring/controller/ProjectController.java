@@ -51,6 +51,17 @@ public class ProjectController {
         return "project/project";
     }
     
+    @GetMapping("/invite")
+    public String invite(@RequestParam("pid") Long pid, Model model) {
+        
+        model.addAttribute("pid", pid);  // 프로젝트 아이디 
+        model.addAttribute("inviteUserName", projectService.getInviteUserName(pid));  // 프로젝트 초대한사람 이름 
+        model.addAttribute("pName", projectService.getInviteName(pid));  // 초대받은 프로젝트 이름 
+
+        return "project/invite";
+    }
+    
+    
     /**
      * 로그인한 사용자가 속한 프로젝트 목록을 보여준다.
      * @param model 아이디에 해당하는 프로젝트 아이디 값을 보내기 위한 모델
@@ -98,6 +109,24 @@ public class ProjectController {
         
         return "redirect:/project/list";
     }
+    
+    
+    // 프로젝트 초대 거절 ㅓ 
+    @PostMapping("/refuseInvite")
+    public String refuseInvite(@RequestParam(value = "selectedPid", required = false) List<Long> selectedPid, RedirectAttributes attrs) {
+        if (selectedPid != null && !selectedPid.isEmpty()) {
+            if (projectService.refuseInvite(selectedPid, sessionManager.getUserId())) {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 거절하였습니다.");
+            } else {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 거절 실패하였습니다.");
+            }
+        } else {
+            attrs.addFlashAttribute("msg", "선택된 초대 거절이 없습니다.");
+        }
+        
+        return "redirect:/project/list";
+    }
+    
     
     /**
      * 프로젝트 추가

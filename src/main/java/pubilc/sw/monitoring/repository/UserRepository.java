@@ -38,4 +38,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String>{
     List<UserEntity> findByNameContainingIgnoreCase(String name);
 
     UserEntity findByName(String name);
+
+    @Query("SELECT u.name FROM UserEntity u WHERE u.id = :id")
+    String findNameById(String id);
 }
