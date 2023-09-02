@@ -41,4 +41,6 @@ public class RequestDTO {
     
     private String note;  // 요구사항 비고 
     
+    private String username;  // 담당자 이름 
+    
 }

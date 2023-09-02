@@ -5,6 +5,7 @@
 package pubilc.sw.monitoring.repository;
 
 import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pubilc.sw.monitoring.entity.RequestEntity;
@@ -16,7 +17,11 @@ import pubilc.sw.monitoring.entity.RequestEntity;
 @Repository
 public interface RequestRepository extends JpaRepository<RequestEntity, Long> {
 
-    public List<RequestEntity> findByPid(Long pid);
+    List<RequestEntity> findByPid(Long pid);
 
-    
+    @Transactional
+    void deleteByFrid(Long frid);
+
+    void deleteByFridIn(List<Long> frids);
+
 }

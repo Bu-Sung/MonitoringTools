@@ -76,6 +76,13 @@ public class RequestController {
     }
     
     
+    // 프로젝트 멤버 중 입력한 값이 들어간 이름 검색
+    @GetMapping("/searchUserNames")
+    public @ResponseBody List<String> searchUserNames(@RequestParam String username) {
+        return requestService.searchUserNames(username,sessionManager.getProjectId());
+    }
+    
+    
     // 요구사항 삭제 
     @PostMapping("/delete")
     public @ResponseBody String deleteRequest(@RequestParam("frid") Long frid, RedirectAttributes attrs) {
@@ -86,6 +93,24 @@ public class RequestController {
             attrs.addFlashAttribute("msg", "요구사항 삭제 실패하였습니다.");
         }
         
+        return "redirect:/project/request/request";
+    }
+    
+    
+    // 요구사항 여러개 삭제 
+    @PostMapping("/deletes")
+    public @ResponseBody String deleteRequests(@RequestParam(value = "frids", required = false) List<Long> frids, RedirectAttributes attrs) {
+        if (frids != null && !frids.isEmpty()) {
+            
+            if (requestService.deleteRequestByFrids(frids)) {
+                attrs.addFlashAttribute("msg", "선택된 요구사항 삭제 성공했습니다.");
+            } else {
+                attrs.addFlashAttribute("msg", "선택된 요구사항 삭제 실패했습니다.");
+            }
+        } else {
+            attrs.addFlashAttribute("msg", "선택된 요구사항이 없습니다.");
+        }
+
         return "redirect:/project/request/request";
     }
     

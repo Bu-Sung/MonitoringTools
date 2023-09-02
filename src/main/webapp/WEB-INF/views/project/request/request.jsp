@@ -15,9 +15,15 @@
     <body>
         요구사항 목록 <br> 
         ${requestDTOs}
-        
+
         <br> <br> <br> <br> 
         
+        <!-- 요구사항 입력할 때 작성자 검색 --> 
+        <form action="/monitoring/project/request/searchUserNames" method="get">
+            <input type="text" name="username" placeholder="이름 입력" />
+            <button type="submit">Search</button>
+        </form>
+      
         <a href="createExcel">엑셀 파일 생성</a> <br> <br> 
         <a href="createDownRequestExcel">엑셀 파일 다운(폴더에 저장하지 않고 엑셀 파일 생성해서 바로 다운)</a> <br> <br> 
 
@@ -28,6 +34,6 @@
             </c:forEach>
         </c:if>
 
-    
+                
     </body>
 </html>

@@ -34,4 +34,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String>{
     
     // 입력한 아이디가 포함되어 있는 모든 멤버 정보를 대소문자 무시하고 검색
     List<UserEntity> findByIdContainingIgnoreCase(String id);
+    
+    List<UserEntity> findByNameContainingIgnoreCase(String name);
+
+    UserEntity findByName(String name);
 }
