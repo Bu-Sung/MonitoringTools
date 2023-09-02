@@ -29,4 +29,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     @Query("SELECT m.pid FROM MemberEntity m WHERE m.uid = :uid AND m.state = :state")
     List<Long> findPidByUidAndState(String uid, int state);
     
+    @Query("SELECT m FROM MemberEntity m WHERE m.pid = :pid AND m.state IN (0, 2)")
+    List<MemberEntity> findMembersByPid(Long pid);
+    
 }

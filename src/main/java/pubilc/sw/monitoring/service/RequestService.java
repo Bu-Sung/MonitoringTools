@@ -28,7 +28,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.repository.RequestRepository;
 import pubilc.sw.monitoring.dto.RequestDTO;
+import pubilc.sw.monitoring.entity.MemberEntity;
 import pubilc.sw.monitoring.entity.RequestEntity;
+import pubilc.sw.monitoring.entity.UserEntity;
+import pubilc.sw.monitoring.repository.MemberRepository;
+import pubilc.sw.monitoring.repository.UserRepository;
 
 /**
  *
@@ -40,6 +44,8 @@ import pubilc.sw.monitoring.entity.RequestEntity;
 public class RequestService {
     
     private final RequestRepository requestRepository;
+    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final FileService fileService;
     
     @Value("${request.folder}")
@@ -60,6 +66,10 @@ public class RequestService {
         List<RequestDTO> requestDTOs = new ArrayList<>();
 
         for (RequestEntity requestEntity : requestEntities) {
+            
+            UserEntity userEntity = userRepository.findById(requestEntity.getUid()).orElse(null);
+            String username = (userEntity != null) ? userEntity.getName() : null;
+        
             requestDTOs.add(RequestDTO.builder()
                     .frid(requestEntity.getFrid())
                     .pid(requestEntity.getPid())
@@ -72,6 +82,7 @@ public class RequestService {
                     .target(requestEntity.getTarget())
                     .uid(requestEntity.getUid())
                     .note(requestEntity.getNote())
+                    .username(username) // username 설정
                     .build());
         }
 
@@ -89,6 +100,11 @@ public class RequestService {
         List<RequestEntity> requestEntities = new ArrayList<>();
         
         for (RequestDTO requestDTO : requestDTOList) {
+            
+            String username = requestDTO.getUsername();
+            UserEntity userEntity = userRepository.findByName(username);
+            requestDTO.setUid(userEntity.getId());
+             
             RequestEntity requestEntity = RequestEntity.builder()
                 .frid(requestDTO.getFrid())
                 .pid(requestDTO.getPid())
@@ -112,6 +128,31 @@ public class RequestService {
     
     
     /**
+     * 입력한 이름을 기반으로 프로젝트 멤버 중 해당하는 이름 검색 
+     * 
+     * @param username
+     * @param pid
+     * @return 
+     */
+    public List<String> searchUserNames(String username, Long pid) {
+        // 해당 프로젝트의 멤버 조회
+        List<MemberEntity> projectMembers = memberRepository.findMembersByPid(pid);
+
+        // 프로젝트 멤버 중 입력한 값이 들어간 이름 검색
+        List<String> usernameList = new ArrayList<>();
+
+        for (MemberEntity member : projectMembers) {
+            UserEntity user = userRepository.findById(member.getUid()).orElse(null);
+            if (user != null && user.getName().toLowerCase().contains(username.toLowerCase())) {
+                usernameList.add(user.getName());
+            }
+        }
+
+        return usernameList;
+    }
+
+
+    /**
      * 요구사항 삭제 
      * 
      * @param frid 
@@ -119,12 +160,31 @@ public class RequestService {
      */
     public boolean deleteRequestByFrid(Long frid) {
         try {
-            requestRepository.deleteById(frid);
+            requestRepository.deleteByFrid(frid);
             return true;
         } catch (Exception ex) {
             log.error("deleteRequestByFrid() error: {} ", ex.getMessage());
             return false;
         }
+    }
+    
+    
+
+    // 요구사항 여러개 삭제 
+    public boolean deleteRequestByFrids(List<Long> frids) {
+        boolean delete = false;
+
+        for (Long frid : frids) {
+            try {
+                requestRepository.deleteByFrid(frid);
+                
+                delete = true;
+            } catch (Exception ex) {
+                log.error("deleteRequestByFrids() error: {}", ex.getMessage());
+            }
+        }
+
+        return delete;  // 하나 이상의 요구사항이 삭제된 경우 true 반환
     }
     
 
