@@ -68,7 +68,7 @@
                         <td>
                             <input type="checkbox" name="selectedPid" value="${invitedProject.pid}" />
                         </td>
-                        <td><c:out value="${invitedProject.name}" /></a></td>
+                        <td><a href="/monitoring/project/invite?pid=${invitedProject.pid}"><c:out value="${invitedProject.name}" /></a></td>
                         <td><c:out value="${invitedProject.content}" /></td>
                         <td><c:out value="${invitedProject.start}" /></td>
                         <td><c:out value="${invitedProject.end}" /></td>

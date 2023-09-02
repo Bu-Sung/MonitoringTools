@@ -21,4 +21,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     // 프로젝트에서 카테고리 가져오기
     @Query("SELECT p.category FROM ProjectEntity p WHERE p.id = :pid")
     Optional<String> findCategoryByProjectId(Long pid);
+
+    @Query("SELECT p.name FROM ProjectEntity p WHERE p.id = :id")
+    String findNameById(Long id);
 }

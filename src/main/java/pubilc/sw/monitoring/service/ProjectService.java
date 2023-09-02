@@ -322,6 +322,23 @@ public class ProjectService {
         return invitedProjects;
     }
 
+    
+    // 프로젝트 초대한 사람 이름 
+    public String getInviteUserName(Long pid) {
+        String inviteUid = memberRepository.findUidByPidAndState(pid, 0);
+
+        String inviteUserName = userRepository.findNameById(inviteUid);
+        return inviteUserName;
+    
+    }
+    
+    
+    // 초대받은 프로젝트 이름 
+    public String getInviteName(Long pid) {
+        String inviteName = projectRepository.findNameById(pid);
+        return inviteName;
+    }
+    
 
     // 받은 초대 수락 
     public boolean acceptInvite(List<Long> selectedPid, String uid) {
@@ -338,7 +355,22 @@ public class ProjectService {
         return invite; // 하나 이상 수락된 경우 true 반환
     }
     
-    
+    // 받은 초대 거절 
+    public boolean refuseInvite(List<Long> selectedPid, String uid) {
+        boolean invite = false;  
+
+        for (Long pid : selectedPid) {
+            MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+            if (memberEntity != null) {
+                memberEntity.setState(-1); // 상태를 -1(거절)로 변경 
+                memberRepository.save(memberEntity); // 변경 사항 저장
+                invite = true;
+            }
+        }
+        return invite; 
+    }
+
+
     /**
      * 추가할 멤버가 회원가입 된 아이디인지 판별 
      * 
