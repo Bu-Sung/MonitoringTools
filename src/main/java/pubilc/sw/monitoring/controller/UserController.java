@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping("/update")
     public String updateUser(Model model){
         model.addAttribute("user", userService.getUserInfo());
-        return "update";
+        return "details";
     }
     
     
@@ -55,7 +55,7 @@ public class UserController {
     public String signIn(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
         if(userService.login(userDTO)){
             attrs.addFlashAttribute("msg", "로그인에 성공하였습니다.");
-            return "redirect:/project/list";
+            return "redirect:/project/main";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
             return "redirect:/login";
@@ -72,10 +72,11 @@ public class UserController {
     public String signUp(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
         if(userService.register(userDTO)){
             attrs.addFlashAttribute("msg", "회원가입에 성공하였습니다.");
+            return "registerSuccess";
         }else{
             attrs.addFlashAttribute("msg", "회원가입에 실패하였습니다.");
+            return "redirect:/register";
         }
-        return "redirect:/login";
     }
     
     /**

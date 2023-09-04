@@ -1,3 +1,5 @@
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -16,24 +18,24 @@
         rel="stylesheet">
 
     <!-- CSS 파일 연결 -->
-    <link rel="stylesheet" href="kimleepark.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
 </head>
 
 <body class="bg-gray">
     <!-- navbar-->
     <nav class="navbar bg-white">
-        <div class="container-fluid col-lg-8 col-md-10">
-            <a class="navbar-brand" href="./index.html">
-                <div class="d-flex px-2 py-3">
-                    <!-- 로고 이미지 -->
-                    <img src="./asset/logo.png" alt="Logo" class="img-fluid me-3" width="60rem" height="auto">
-                    <!-- 프로젝트명 -->
-                    <h5 class="fw-900 m-auto">프로젝트명</h5>
-                </div>
-            </a>
-            <a href="index.html" class="text-gray fw-600">로그인</a>
-        </div>
-    </nav>
+            <div class="container-fluid col-lg-8 col-md-10">
+                <a class="navbar-brand" href="login">
+                    <div class="d-flex px-2 py-3">
+                        <!-- 로고 이미지 -->
+                        <img src="${pageContext.request.contextPath}/asset/logo.png" alt="Logo" class="img-fluid me-3" width="60rem" height="auto">
+                        <!-- 프로젝트명 -->
+                        <h5 class="fw-900 m-auto">프로젝트명</h5>
+                    </div>
+                </a>
+                <a href="login" class="text-gray fw-600">로그인</a>
+            </div>
+        </nav>
 
     <div class="row d-flex justify-content-center">
         <div class="flex-column accordion-header col-md-10"> <!-- 수직 정렬 -->
@@ -43,7 +45,7 @@
                 <h5 class="text-center fw-600 mt-6 mb-4">회원가입</h5>
                 <div class="d-flex justify-content-center align-items-center">
                     <div class="text-center">
-                        <img src="./asset/pencil_blue.png" width="40" height="auto">
+                        <img src="${pageContext.request.contextPath}/asset/pencil_blue.png" width="40" height="auto">
                         <p class="text-center mt-2 fw-500 text-gray">정보입력
                         <p>
                     </div>
@@ -53,7 +55,7 @@
                             stroke-dasharray="6 6" />
                     </svg>
                     <div class="text-center">
-                        <img src="./asset/check_blue.png" width="40" height="auto">
+                        <img src="${pageContext.request.contextPath}/asset/check_blue.png" width="40" height="auto">
                         <p class="text-center mt-2 fw-500">가입완료</p>
                     </div>
                 </div>
@@ -64,7 +66,7 @@
             <div class="card-body mt-3 text-center">
                 <h4 class="card-title fw-600 text-primary">회원가입이 완료되었습니다!</h4>
                 <p class="fw-300" style="font-size:small;">로그인하고 서비스를 이용해보세요<span>🎉</span></p>
-                <a href="index.html" class="btn btn-outline-primary mt-4 mb-3">로그인 페이지로 이동</a>
+                <a href="login" class="btn btn-outline-primary mt-4 mb-3">로그인 페이지로 이동</a>
             </div>
         </div>
     </div>

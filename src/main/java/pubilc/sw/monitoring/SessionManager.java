@@ -24,6 +24,7 @@ public class SessionManager {
     
     private final String userSession = "user";
     private final String projectIdSession = "pid";
+    private final String hasRightSession = "hasRight";
     
     public void setUserSession(UserDTO userDTO){
         session.setAttribute(userSession, userDTO);
@@ -51,5 +52,14 @@ public class SessionManager {
     
     public Long getProjectId(){
         return (Long) session.getAttribute(projectIdSession);
+    }
+    
+    public void setProjectRight(int right){
+        session.setAttribute(hasRightSession, right);
+        session.setMaxInactiveInterval(-1);
+    }
+    
+    public int getProjectRight(){
+        return (int) session.getAttribute(hasRightSession);
     }
 }
