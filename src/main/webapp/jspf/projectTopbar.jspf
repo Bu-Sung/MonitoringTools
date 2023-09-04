@@ -1,0 +1,67 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<nav class="navbar navbar-expand-lg pt-2 pb-4">
+    <div class="container-fluid d-flex justify-content-between">
+        <ol class="breadcrumb position-absolute d-block d-lg-none d-flex"
+            style="transform: translateY(-35px);">
+            <li class="breadcrumb-item"><a href="#"><img src="${pageContext.request.contextPath}/asset/logo.png" width="25rem;" class="me-2">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Project</li>
+        </ol>
+        <a href="${project.pid}" class="navbar-brand">
+            <h4 class="fw-600 mb-0">${project.name}</h4>
+        </a>
+        <div class="d-none d-lg-block">
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle d-flex align-items-center" id="profileDropdown"
+                   role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="${pageContext.request.contextPath}/asset/profile.png" alt="프로필 이미지" class="rounded-circle"
+                         style="width: 3.5rem; height: 3.5rem;">
+                    <div class="ps-3 pe-2">
+                        <h6 class="fw-400 mb-0 text-dark">${sessionScope.user.name}</h6>
+                        <small class="text-gray">${sessionScope.hasRight == 1 ? '관리자' : '팀원'}</small>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="main">프로젝트 나가기</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">로그아웃</a></li>
+                </ul>
+            </div>
+        </div>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#menuOffcanvas" aria-controls="menuOffcanvas">
+            <img src="${pageContext.request.contextPath}/asset/menu.png" width="25rem;">
+        </button>
+    </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="menuOffcanvas" aria-labelledby="menuOffcanvasLabel">
+    <div class="offcanvas-header mx-3">
+        <div class="d-flex align-items-center">
+            <!-- 프로필 이미지(동적으로 불러오기) -->
+            <img class="rounded-circle overflow-hidden my-3" style="width: 3.5rem; height: 3.5rem;"
+                 src="${pageContext.request.contextPath}/asset/profile.png" alt="profile image">
+            <!-- 사용자명(동적으로 불러오기) -->
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown"
+                   role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="ms-3 my-0 pe-2 text-center">
+                        <p class="fw-500 mb-0 text-dark">${sessionScope.user.name}<span>님</span></p>
+                        <small class="text-gray">${hasRight == 1 ? '관리자' : '팀원'}</small>
+                    </div>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">로그아웃</a>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr class="m-0 mx-auto" width="85%">
+    <div class="offcanvas-body ps-3 ms-3">
+        <div id="offcanvasDashboardMenu"></div>
+        <div class="position-absolute bottom-0 mb-4">
+            <a href="main" class="text-gray nav-link"><i class="bi bi-box-arrow-up-right me-2"></i>프로젝트 나가기</a>
+        </div>
+    </div>
+</div>

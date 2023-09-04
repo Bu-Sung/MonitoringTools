@@ -47,6 +47,7 @@ public class ProjectController {
         
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         sessionManager.setProjectId(pid);
+        sessionManager.setProjectRight(projectService.hasRight(sessionManager.getUserId(), pid));
         model.addAttribute("project", projectDTO);
         return "project/project";
     }
@@ -67,7 +68,7 @@ public class ProjectController {
      * @param model 아이디에 해당하는 프로젝트 아이디 값을 보내기 위한 모델
      * @return 프로젝트 리스트 페이지
      */
-    @GetMapping("/list")
+    @GetMapping("/main")
     public String getAllProject(Model model){
         List<ProjectDTO> projects = projectService.getProjectsByUserId(sessionManager.getUserId());
         model.addAttribute("projects", projects);
@@ -75,7 +76,7 @@ public class ProjectController {
         // 초대 받은 목록 리스트
         List<ProjectDTO> invitedProjects = projectService.getInvitedProjects(sessionManager.getUserId());
         model.addAttribute("invitedProjects", invitedProjects);
-        return "project/list";
+        return "project/main";
     }
     
     /**
@@ -142,7 +143,7 @@ public class ProjectController {
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 등록 실패했습니다.");
         }
-        return "redirect:/project/list";
+        return "redirect:/project/main";
     }
 
     /**
