@@ -11,19 +11,31 @@
         <ul class="nav flex-column" id="dashboardMenu">
             <li class="nav-item d-flex align-items-center py-2">
                 <a href="${pageContext.request.contextPath}/project/${sessionScope.pid}" class="mb-0 ps-0 text-dark nav-link"><img src="${pageContext.request.contextPath}/asset/dashboard.png"
-                                                                                   class="me-2">대시보드</a>
+                                                                                                                                   class="me-2">대시보드</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
                 <a href="${pageContext.request.contextPath}/project/update/${sessionScope.pid}" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/setting.png"
-                                                                                                      class="me-2">프로젝트 관리</a>
+                                                                                                                                                      class="me-2">프로젝트 관리</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
                 <a href="${pageContext.request.contextPath}/project/board/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/clip.png"
-                                                                                           class="me-2">게시판</a>
+                                                                                                                                      class="me-2">게시판</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
                 <a href="${pageContext.request.contextPath}/project/meeting/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/papaerPencil.png"
-                                                                                             class="me-2">회의록</a>
+                                                                                                                                        class="me-2">회의록</a>
+            </li>
+            <li class="nav-item d-flex align-items-center py-2">
+                <a href="${pageContext.request.contextPath}/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/papaerPencil.png"
+                                                                                                                                    class="me-2">일정</a>
+            </li>
+            <li class="nav-item d-flex align-items-center py-2">
+                <a href="${pageContext.request.contextPath}/project/request/request" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/papaerPencil.png"
+                                                                                                                                           class="me-2">요구사항</a>
+            </li>
+            <li class="nav-item d-flex align-items-center py-2">
+                <a href="${pageContext.request.contextPath}/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/papaerPencil.png"
+                                                                                                                                    class="me-2">스프린트</a>
             </li>
         </ul>
     </div>
