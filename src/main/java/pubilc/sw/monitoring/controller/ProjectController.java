@@ -7,6 +7,7 @@ package pubilc.sw.monitoring.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
+import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.GraphService;
 import pubilc.sw.monitoring.service.ProjectService;
 
@@ -310,6 +313,26 @@ public class ProjectController {
         return "redirect:/project/manageMember/" + pid;
     }
 
+
+    /**
+     * 초대된 멤버 중 아이디 찾기
+     * @param uid 입력한 아이디 
+     * @return 
+     */
+    @PostMapping("/searchMembers")
+    public @ResponseBody List<UserDTO> searchMembers(@RequestBody Map<String, Object> request) {
+        return projectService.searchMembers(sessionManager.getProjectId(),request.get("uid").toString(),(List<String>) request.get("memberList"));
+    }
+    
+    /**
+     * 프로젝트에 소속된 멤버가 맞는 지 확인
+     * @param uid 멤버인지 검색할 아이디
+     * @return 멤버가 맞으면 멤버의 정보 값을 반환하고 아니면 null을 반환
+     */
+    @GetMapping("/hasMember")
+    public @ResponseBody UserDTO hasMember(@RequestParam("uid") String uid) {
+        return projectService.hasMember(sessionManager.getProjectId(), uid);
+    }
     
 
     @GetMapping("/graph")
@@ -330,3 +353,4 @@ public class ProjectController {
     
 
 }
+
