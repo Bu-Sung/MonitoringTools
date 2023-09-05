@@ -9,12 +9,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.dto.ScheduleDTO;
+import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.entity.ScheduleEntity;
 import pubilc.sw.monitoring.repository.ScheduleRepository;
+import pubilc.sw.monitoring.repository.UserRepository;
 
 /**
  *
@@ -25,6 +28,7 @@ import pubilc.sw.monitoring.repository.ScheduleRepository;
 public class ScheduleService {
     
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
     
     @Value("${date.input.format}")
     private String dateInputFormatter;
@@ -69,5 +73,48 @@ public class ScheduleService {
                     .build());
         }
         return scheduleDTOList; 
+    }
+    
+    public boolean updateSchedule(ScheduleDTO scheduleDTO, Long pid){
+
+        DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
+
+        ScheduleEntity newEntity = scheduleRepository.save(ScheduleEntity.builder()
+                .sid(scheduleDTO.getSid())
+                .pid(pid)
+                .title(scheduleDTO.getTitle())
+                .allTime(scheduleDTO.getAllTime())
+                .content(scheduleDTO.getContent())
+                .color(scheduleDTO.getColor())
+                .start(LocalDateTime.parse(scheduleDTO.getStart(), InputFormatter))
+                .end(LocalDateTime.parse(scheduleDTO.getEnd(),InputFormatter))
+                .member(scheduleDTO.getMemberList().isEmpty()? "" : String.join(",", scheduleDTO.getMemberList()))
+                .build());
+        return newEntity != null;
+    }
+    
+    public boolean deleteSchedule(Long sid){
+        if(scheduleRepository.existsById(sid)){
+            scheduleRepository.deleteById(sid);
+            return true;
+        }
+        return false;
+    }
+    
+    public List<UserDTO> getScheduleMembers(Long sid) {
+        List<Map<String, Object>> members = userRepository.findUsersBySid(sid);
+
+        List<UserDTO> uidList = new ArrayList<>();
+
+        for (Map<String, Object> user : members) {
+            uidList.add(UserDTO.builder()
+                    .id(user.get("id").toString())
+                    .name(user.get("name").toString())
+                    .email(user.get("email").toString())
+                    .birth(user.get("birth").toString())
+                    .phone(user.get("phone").toString())
+                    .build());
+        }
+        return uidList;
     }
 }
