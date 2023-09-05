@@ -58,6 +58,15 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex p-1 m-1 rounded" style="border:1px solid #c4c4c4;">
+            <div class="d-flex flex-column align-items-center justify-content-center">
+                <img src="/monitoring/asset/profile.png" alt="프로필 이미지" class="rounded-circle" style="width: 2.0rem; height: 2.0rem;">
+            </div>
+            <div class="ps-1 d-flex flex-column justify-content-center">
+                <label class="text-dark">이름</label>
+                <small class="text-gray">id</small>
+            </div>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
@@ -131,8 +140,8 @@
                                 <td>
                                     <div id="addMemberDiv">
                                         <div class=" d-flex align-items-center w-100">
-                                            <div>
-                                                <input type="text" id="addMember" name="addMember" class="form-control">
+                                            <div style="position: relative; width: auto;">
+                                                <input type="text" id="addMember" name="addMember" class="form-control"  autocomplete="off">
                                                 <div id="searchMember" class="dropdown-menu">
                                                 </div>
                                             </div>
@@ -140,7 +149,10 @@
                                         </div>
                                     </div>
                                     <div id="memberListDiv" class="p-1">
-                                        <div class="p-1 rounded" style="border: 1px solid #c4c4c4;"></div>
+                                        <div class="p-1 rounded" style="border: 1px solid #c4c4c4;">
+                                            <img src="/monitoring/asset/profile.png" alt="프로필 이미지" class="rounded-circle">
+                                            <span class="bold">asd</span>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -160,7 +172,7 @@
             </div>
         </div>
 
-
+                        
 
         <script>
             const dashboardMenu = document.getElementById("dashboardMenu");

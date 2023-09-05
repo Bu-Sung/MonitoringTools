@@ -45,11 +45,27 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Modifying
     @Query("SELECT u.name FROM UserEntity u WHERE u.id = :id")
     String findNameById(String id);
-
-
+    
+    // 프로젝트 내 멤버 검색을 할 때 검색어와 비슷한 아이디를 가진 사용자 객체 정보를 Map의 형태로 반환하고 없으면 빈 리스트를 반환
     @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth "
             + "FROM userinfo u JOIN member m ON u.user_id = m.user_id "
             + "WHERE m.project_id=:pid AND m.user_id LIKE %:uid% AND (m.user_id NOT IN (:list) OR :list IS NULL)", nativeQuery = true)
     List<Map<String, Object>> findUsersByPidAndSimilarUid(@Param("pid") Long pid, @Param("uid") String uid, @Param("list") List<String> list);
+    
+    // 프로젝트내의 멤버인지 확인하고 맞으면 사용자 객체 정보를 Map의 형태로 반환하고 아니면 null을 반환
+    @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth "
+            + "FROM userinfo u JOIN member m ON u.user_id = m.user_id "
+            + "WHERE m.project_id=:pid AND m.user_id =:uid ", nativeQuery = true)
+    Map<String, Object> findUsersByPidAndUid(@Param("pid") Long pid, @Param("uid") String uid);
+    
+    @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth "
+            + "FROM userinfo u JOIN member m ON u.user_id = m.user_id "
+            + "WHERE m.project_id=:pid", nativeQuery = true)
+    List<Map<String, Object>> findUsersByPid(@Param("pid") Long pid);
+    
+    @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth " 
+            + "FROM userinfo u JOIN schedule s ON FIND_IN_SET(u.user_id, s.schedule_member) > 0 " 
+            + "WHERE s.schedule_id=:sid", nativeQuery = true)
+    List<Map<String, Object>> findUsersBySid(@Param("sid") Long sid);
 
 }

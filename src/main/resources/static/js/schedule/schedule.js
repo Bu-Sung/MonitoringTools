@@ -1,18 +1,10 @@
 var memberList = [];
-
 document.addEventListener('DOMContentLoaded', function () {
-    var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
-    
-    document.getElementById("addMember").addEventListener("keyup", function(){
+
+    document.getElementById("addMember").addEventListener("keyup", function () {
         searchProjectMember();
     });
-    
-//    //닫기버튼
-//    var closeModalSpan = document.getElementById("closeModal");
-//    closeModalSpan.addEventListener('click', function () {
-//        myModal.hide();
-//    });
-    
+
     var changeTypeBtn = document.getElementById("changeTypeBtn");
     changeTypeBtn.addEventListener("click", function () {
         if (startDate.type === "date") {
@@ -36,24 +28,29 @@ document.addEventListener('DOMContentLoaded', function () {
     colorSelect.addEventListener('change', function () {
         colorSelect.style.backgroundColor = colorSelect.value;
     });
-    
+
     //추가버튼
     var addMemberBtn = document.getElementById("addMemberBtn");
     addMemberBtn.addEventListener('click', function () {
-        if (addMember.value !== '') { // 입력 필드가 비어있지 않은 경우에만 추가
-            if (memberList[0] === '') {
-                memberList = [];
-            }
-            memberList.push(addMember.value);
-            addMember.value = ''; // 입력 필드를 비움
-            memberListDiv.innerHTML = '';
-            memberList.forEach(element => {
-                var newDiv = document.createElement("div");
-                newDiv.classList.add("p-1", "rounded");
-                newDiv.style.border = "1px solid #c4c4c4";
-                newDiv.innerText = element;
-                memberListDiv.appendChild(newDiv);
-            });
+        // 입력 필드가 비어있지 않은 경우에만 추가
+        if (addMember.value !== '') {
+            fetch('/monitoring/project/hasMember?uid=' + addMember.value, {
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.id != null) {
+                            if (memberList[0] === '') {
+                                memberList = [];
+                            }
+                            memberList.push(data);
+                            addMember.value = ''; // 입력 필드를 비움
+                            memberListDiv.innerHTML = '';
+                            editMemberList();
+                        } else {
+                            alert("검색 결과가 없습니다");
+                            addMember.value = '';
+                        }
+                    });
         }
     });
 
@@ -61,6 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var saveScheduleButton = document.getElementById("saveSchedule");
     saveScheduleButton.addEventListener("click", function () {
         if (confirm("저장하시겠습니까??") == true) {
+            var memberListId = [];
+            memberList.forEach(item => {
+                memberListId.push(item.id);
+            });
             var allTime = 1;
             var endDateValue = endDate.value;
             if (startDate.type === "date" && endDate.type === "date") {
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 color: colorSelect.value,
                 start: startDate.value,
                 end: endDateValue,
-                memberList: memberList
+                memberList: memberListId
             };
             fetch("schedule/addSchedule", {
                 method: 'POST',
@@ -107,6 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var updateScheduleButton = document.getElementById("updateSchedule");
     updateScheduleButton.addEventListener("click", function () {
         if (confirm("수정하시겠습니까??") == true) {
+            var memberListId = [];
+            memberList.forEach(item => {
+                memberListId.push(item.id);
+            });
             var allTime = 1;
             var endDateValue = endDate.value;
             if (startDate.type === "date" && endDate.type === "date") {
@@ -126,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 color: colorSelect.value,
                 start: startDate.value,
                 end: endDateValue,
-                memberList: memberList
+                memberList: memberListId
             };
             fetch("schedule/updateSchedule", {
                 method: 'POST',
@@ -191,7 +196,7 @@ function scheduleModal() {
     myModal.show();
 }
 
-function scheduleModalSetting(item) { // 일정 초기값 세팅
+async function scheduleModalSetting(item) { // 일정 초기값 세팅
     sid.value = item.sid;
     title.value = item.title;
     startDate.type = item.startDateType;
@@ -200,19 +205,13 @@ function scheduleModalSetting(item) { // 일정 초기값 세팅
     endDate.value = item.endDateValue;
     content.value = item.content;
     colorSelect.style.backgroundColor = item.color;
-    memberList = item.memberList;
-    if (memberList[0] === '') {
-        memberList = [];
-    }
+    memberList = await getScheduleMemberList(item.sid);
     memberListDiv.innerHTML = '';
     memberList.forEach(element => {
-        var newDiv = document.createElement("div");
-        newDiv.classList.add("p-1", "rounded");
-        newDiv.style.border = "1px solid #c4c4c4";
-        newDiv.innerText = element;
+        var newDiv = createProfileCard(element.name, element.id);
         memberListDiv.appendChild(newDiv);
     });
-    addMember.value='';
+    addMember.value = '';
 }
 
 function updateScheduleSetting() {
@@ -223,10 +222,60 @@ function updateScheduleSetting() {
     content.readOnly = false;
     colorSelectDiv.hidden = false;
     addMemberDiv.hidden = false;
+    memberListDiv.innerHTML = '';
+    editMemberList();
     saveSchedule.hidden = true;
     editSchedule.hidden = true;
     deleteSchedule.hidden = false;
     updateSchedule.hidden = false;
+}
+
+// 일정 관련 멤버들을 삭제할 수 있도록 프로필카드에 x 버튼 추가
+function editMemberList() {
+    memberList.forEach(element => {
+        var card = createProfileCard(element.name, element.id);
+        var cardDiv = document.createElement("div");
+        cardDiv.className = "d-flex flex-column col-11";
+        cardDiv.appendChild(card);
+
+        var outerDiv = document.createElement("div");
+        outerDiv.className = "d-flex";
+
+        // 'x' 버튼 생성
+
+        var closeBtn = document.createElement("span");
+        closeBtn.className = "text-gray";
+        closeBtn.textContent = 'x';
+
+        // Hover 이벤트 리스너 추가
+        outerDiv.addEventListener("mouseover", function () {
+            closeBtn.classList.remove('d-none');  // Hover 시 d-none 클래스 제거
+            closeBtn.classList.add('d-inline-block');  // d-inline-block 클래스 추가하여 보이게 함
+        });
+
+        outerDiv.addEventListener("mouseout", function () {
+            closeBtn.classList.add('d-none');  // Mouseout 시 다시 숨김
+            closeBtn.classList.remove('d-inline-block');
+        });
+
+        // 'x' 버튼에 클릭 이벤트 리스너 추가
+        closeBtn.addEventListener("click", function (e) {
+            memberList = memberList.filter(function (member) {
+                return member.id !== card.id;
+            });
+            memberListDiv.innerHTML = '';
+            editMemberList();
+        });
+
+        var closeDiv = document.createElement("div");
+        closeDiv.className = "flex-column col-1 d-flex align-items-center justify-content-center";
+        closeDiv.appendChild(closeBtn);
+
+
+        outerDiv.appendChild(cardDiv);
+        outerDiv.appendChild(closeDiv);
+        memberListDiv.appendChild(outerDiv);
+    });
 }
 
 function editScheduleSetting() {
@@ -288,4 +337,18 @@ function getScheduleList(callback) {
                 callback(eventList);
             })
             .catch((error) => console.error('Error:', error));
+}
+
+async function getScheduleMemberList(sid) {
+    var ScheduleMemberList = [];
+    try {
+        const response = await fetch("/monitoring/project/schedule/getScheduleMembers?sid=" + parseInt(sid));
+        const data = await response.json();
+        for (var item of data) {
+            ScheduleMemberList.push(item);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    return ScheduleMemberList;
 }

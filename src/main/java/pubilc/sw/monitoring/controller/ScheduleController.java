@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.ScheduleDTO;
+import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.ScheduleService;
 
 /**
@@ -59,6 +61,11 @@ public class ScheduleController {
     @PostMapping("/deleteSchedule")
     public @ResponseBody boolean deleteCaledar(@RequestBody ScheduleDTO scheduleDTO){
         return scheduleService.deleteSchedule(scheduleDTO.getSid());
+    }
+    
+    @GetMapping("/getScheduleMembers")
+    public @ResponseBody List<UserDTO> getMembers(@RequestParam("sid") Long sid){
+        return scheduleService.getScheduleMembers(sid);
     }
     
 }

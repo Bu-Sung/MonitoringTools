@@ -50,13 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 var tmp = new Date(end);
                 endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
             }
-
             var request = {
                 title: arg.event._def.title,
                 content: arg.event._def.extendedProps.content,
                 color: arg.event._def.ui.backgroundColor,
                 sid: arg.event._def.extendedProps.sid,
-                memberList: arg.event._def.extendedProps.memberList,
                 startDateType: startDateType,
                 endDateType: endDateType,
                 startDateValue: startDateValue,

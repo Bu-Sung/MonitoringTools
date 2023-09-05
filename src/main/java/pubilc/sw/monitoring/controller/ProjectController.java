@@ -316,6 +316,18 @@ public class ProjectController {
      */
     @PostMapping("/searchMembers")
     public @ResponseBody List<UserDTO> searchMembers(@RequestBody Map<String, Object> request) {
-        return projectService.searchMembers(sessionManager.getProjectId(),request.get("uid").toString(),(List<String>)  request.get("memberList"));
+        return projectService.searchMembers(sessionManager.getProjectId(),request.get("uid").toString(),(List<String>) request.get("memberList"));
     }
+    
+    /**
+     * 프로젝트에 소속된 멤버가 맞는 지 확인
+     * @param uid 멤버인지 검색할 아이디
+     * @return 멤버가 맞으면 멤버의 정보 값을 반환하고 아니면 null을 반환
+     */
+    @GetMapping("/hasMember")
+    public @ResponseBody UserDTO hasMember(@RequestParam("uid") String uid) {
+        return projectService.hasMember(sessionManager.getProjectId(), uid);
+    }
+
 }
+
