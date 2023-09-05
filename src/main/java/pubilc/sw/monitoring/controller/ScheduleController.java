@@ -35,13 +35,10 @@ public class ScheduleController {
     
     @PostMapping("/addSchedule")
     public @ResponseBody boolean addCaledar(@RequestBody ScheduleDTO scheduleDTO){
-        System.out.println(scheduleDTO);
         if(!scheduleDTO.getStart().contains("T") && !scheduleDTO.getEnd().contains("T")){
             scheduleDTO.setStart(scheduleDTO.getStart() + "T00:00");
             scheduleDTO.setEnd(scheduleDTO.getEnd() + "T00:00");
         }
-        System.out.println(scheduleDTO.getStart());
-        System.out.println(scheduleDTO.getEnd());
         return scheduleService.addSchedule(scheduleDTO, sessionManager.getProjectId());
     }
     
@@ -49,4 +46,19 @@ public class ScheduleController {
     public @ResponseBody List<ScheduleDTO> getScheduleList(){
         return scheduleService.getScheduleList(sessionManager.getProjectId());
     }
+    
+    @PostMapping("/updateSchedule")
+    public @ResponseBody boolean updateCaledar(@RequestBody ScheduleDTO scheduleDTO){
+        if(!scheduleDTO.getStart().contains("T") && !scheduleDTO.getEnd().contains("T")){
+            scheduleDTO.setStart(scheduleDTO.getStart() + "T00:00");
+            scheduleDTO.setEnd(scheduleDTO.getEnd() + "T00:00");
+        }
+        return scheduleService.updateSchedule(scheduleDTO, sessionManager.getProjectId());
+    }
+    
+    @PostMapping("/deleteSchedule")
+    public @ResponseBody boolean deleteCaledar(@RequestBody ScheduleDTO scheduleDTO){
+        return scheduleService.deleteSchedule(scheduleDTO.getSid());
+    }
+    
 }

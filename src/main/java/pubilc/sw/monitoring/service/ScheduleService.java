@@ -70,4 +70,30 @@ public class ScheduleService {
         }
         return scheduleDTOList; 
     }
+    
+    public boolean updateSchedule(ScheduleDTO scheduleDTO, Long pid){
+
+        DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
+
+        ScheduleEntity newEntity = scheduleRepository.save(ScheduleEntity.builder()
+                .sid(scheduleDTO.getSid())
+                .pid(pid)
+                .title(scheduleDTO.getTitle())
+                .allTime(scheduleDTO.getAllTime())
+                .content(scheduleDTO.getContent())
+                .color(scheduleDTO.getColor())
+                .start(LocalDateTime.parse(scheduleDTO.getStart(), InputFormatter))
+                .end(LocalDateTime.parse(scheduleDTO.getEnd(),InputFormatter))
+                .member(scheduleDTO.getMemberList().isEmpty()? "" : String.join(",", scheduleDTO.getMemberList()))
+                .build());
+        return newEntity != null;
+    }
+    
+    public boolean deleteSchedule(Long sid){
+        if(scheduleRepository.existsById(sid)){
+            scheduleRepository.deleteById(sid);
+            return true;
+        }
+        return false;
+    }
 }

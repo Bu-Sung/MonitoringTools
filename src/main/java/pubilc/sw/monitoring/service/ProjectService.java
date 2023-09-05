@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import pubilc.sw.monitoring.dto.ProjectDTO;
 import pubilc.sw.monitoring.entity.ProjectEntity;
@@ -17,6 +18,7 @@ import pubilc.sw.monitoring.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.dto.MemberDTO;
+import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.entity.MemberEntity;
 import pubilc.sw.monitoring.repository.MemberRepository;
 import pubilc.sw.monitoring.repository.UserRepository;
@@ -401,6 +403,25 @@ public class ProjectService {
 
         for (UserEntity user : searchResults) {
             uidList.add(user.getId());
+        }
+
+       // System.out.println("User: " + uidList);
+        return uidList;
+    }
+    
+    // 프로젝트 내의 멤버 찾기
+     public List<UserDTO> searchMembers(Long pid, String uid) {
+        List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndSimilarUid(pid, uid);
+        List<UserDTO> uidList = new ArrayList<>();
+
+        for (Map<String, Object> user : searchResults) {
+            uidList.add(UserDTO.builder()
+                    .id(user.get("id").toString())
+                    .name(user.get("name").toString())
+                    .email(user.get("email").toString())
+                    .birth(user.get("birth").toString())
+                    .phone(user.get("phone").toString())
+                    .build());
         }
 
        // System.out.println("User: " + uidList);

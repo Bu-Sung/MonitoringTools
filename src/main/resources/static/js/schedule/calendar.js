@@ -9,27 +9,29 @@ document.addEventListener('DOMContentLoaded', function () {
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
         },
         locale: 'ko',
-        initialDate: '2023-01-12',
+        initialDate:  new Date(),
         navLinks: true,
         selectable: true,
         selectMirror: false,
         select: function (arg) {
-            scheduleModal();
-            var request = {
-                title: '',
-                content: '',
-                color: '#43aef2',
-                sid: '',
-                memberList: [],
-                startDateType: "date",
-                endDateType: "date",
-                startDateValue: arg.startStr,
-                endDateValue: arg.startStr
-            };
+            if (hasRight.value !== 3) {
+                scheduleModal();
+                var request = {
+                    title: '',
+                    content: '',
+                    color: '#43aef2',
+                    sid: '',
+                    memberList: [],
+                    startDateType: "date",
+                    endDateType: "date",
+                    startDateValue: arg.startStr,
+                    endDateValue: arg.startStr
+                };
 
-            scheduleModalSetting(request);
-            editScheduleSetting();
-            calendar.unselect();
+                scheduleModalSetting(request);
+                editScheduleSetting();
+                calendar.unselect();
+            }
         },
         eventClick: function (arg) {
             scheduleModal();
@@ -59,8 +61,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 startDateValue: startDateValue,
                 endDateValue: endDateValue
             };
-
+            
             scheduleModalSetting(request);
+            readOnlyScheduleSetting();
+               
+            if (hasRight.value === 3) {
+                saveSchedule.hidden = true;
+                editSchedule.hidden = true;
+                deleteSchedule.hidden = true;
+                updateSchedule.hidden = true;
+            }
         },
         editable: true,
         dayMaxEvents: true, // allow "more" link when too many events

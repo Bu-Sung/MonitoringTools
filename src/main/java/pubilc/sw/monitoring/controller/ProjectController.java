@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
+import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.ProjectService;
 
 /**
@@ -306,5 +307,13 @@ public class ProjectController {
         return "redirect:/project/manageMember/" + pid;
     }
 
-
+    /**
+     * 초대된 멤버 중 아이디 찾기
+     * @param uid 입력한 아이디 
+     * @return 
+     */
+    @GetMapping("/searchMembers")
+    public @ResponseBody List<UserDTO> searchMembers(@RequestParam String uid) {
+        return projectService.searchMembers(sessionManager.getProjectId(),uid);
+    }
 }
