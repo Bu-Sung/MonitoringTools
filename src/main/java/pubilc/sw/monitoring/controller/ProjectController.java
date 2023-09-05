@@ -4,6 +4,8 @@
  */
 package pubilc.sw.monitoring.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
+import pubilc.sw.monitoring.service.GraphService;
 import pubilc.sw.monitoring.service.ProjectService;
 
 /**
@@ -36,6 +39,7 @@ import pubilc.sw.monitoring.service.ProjectService;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final GraphService graphService;
     private final SessionManager sessionManager;
 
     /**
@@ -51,7 +55,7 @@ public class ProjectController {
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         sessionManager.setProjectId(pid);
         sessionManager.setProjectRight(projectService.hasRight(sessionManager.getUserId(), pid));
-        model.addAttribute("project", projectDTO);
+        model.addAttribute("project", projectDTO); 
         return "project/project";
     }
     
@@ -309,6 +313,7 @@ public class ProjectController {
         return "redirect:/project/manageMember/" + pid;
     }
 
+
     /**
      * 초대된 멤버 중 아이디 찾기
      * @param uid 입력한 아이디 
@@ -328,6 +333,24 @@ public class ProjectController {
     public @ResponseBody UserDTO hasMember(@RequestParam("uid") String uid) {
         return projectService.hasMember(sessionManager.getProjectId(), uid);
     }
+    
+
+    @GetMapping("/graph")
+    public String graph(Model model) throws JsonProcessingException {
+
+        // JSON 문자열로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        model.addAttribute("allData", objectMapper.writeValueAsString(graphService.getData(sessionManager.getProjectId())));  // 전체 요구사항 데이터 
+        model.addAttribute("memberData", objectMapper.writeValueAsString(graphService.getMemberData(sessionManager.getProjectId())));  // 멤버 요구사항 데이터 
+        
+        model.addAttribute("burnData", objectMapper.writeValueAsString(graphService.burnMemberData(sessionManager.getProjectId())));  // 번다운 데이터
+
+        model.addAttribute("projectDate", graphService.getProjectDate(sessionManager.getProjectId()));  // 프로젝트 시작, 마감 날짜 
+        
+        return "project/graph";
+    }
+    
 
 }
 

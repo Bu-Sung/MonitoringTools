@@ -152,17 +152,33 @@ a.text-gray:hover {
 .memo-yellow {
     background-color: #ffee90;
     padding: 0.5rem;
-    max-height: 8rem;
-    overflow-y: hidden;
+    margin-bottom: 1rem;
+    height: 8.3rem;
     text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
 }
 
-.memo-yellow::after {
-    content: '...';
-    /* ... 표시를 가상 요소로 추가 */
-    display: inline;
-    color: #000;
-    /* 원하는 색상으로 설정 */
+.memo-list {
+    overflow: auto;
+    height: 60vh;
+}
+
+.modal-body {
+    /* 공백 및 줄바꿈 유지 */
+    white-space: pre-line;
+    /* 긴 단어 자동 줄넘김 */
+    word-wrap: break-word;
+    /* 단어 내에서 줄바꿈 방지 */
+    word-break: keep-all;
+}
+
+.modal-body:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
 }
 
 .form-control {
@@ -177,6 +193,11 @@ a.text-gray:hover {
     background: #EDF6FF;
     height: 2.5rem;
     border-style: none;
+}
+
+/* 파일 선택 버튼 */
+input[type="file"]::-webkit-file-upload-button {
+    height: 40px;
 }
 
 .border-gray {
@@ -435,6 +456,10 @@ a.text-gray:hover {
     margin-top: auto;
 }
 
+.mb-0 {
+    margin-bottom: 0;
+}
+
 .mb-1 {
     margin-bottom: 0.25rem;
 }
@@ -449,6 +474,42 @@ a.text-gray:hover {
 
 .mb-4 {
     margin-bottom: 2rem;
+}
+
+.mb-5 {
+    margin-bottom: 3rem;
+}
+
+.mb-6 {
+    margin-bottom: 5rem;
+}
+
+.mb-7 {
+    margin-bottom: 7rem;
+}
+
+.mb-8 {
+    margin-bottom: 10rem;
+}
+
+.mb-9 {
+    margin-bottom: 12rem;
+}
+
+.mb-10 {
+    margin-bottom: 14rem;
+}
+
+.mb-11 {
+    margin-bottom: 16rem;
+}
+
+.mb-12 {
+    margin-bottom: 18rem;
+}
+
+.mb-auto {
+    margin-bottom: auto;
 }
 
 /* margin x축 */
