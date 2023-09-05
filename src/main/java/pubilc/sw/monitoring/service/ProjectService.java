@@ -410,8 +410,8 @@ public class ProjectService {
     }
     
     // 프로젝트 내의 멤버 찾기
-     public List<UserDTO> searchMembers(Long pid, String uid) {
-        List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndSimilarUid(pid, uid);
+     public List<UserDTO> searchMembers(Long pid, String uid, List<String> memberList) {
+        List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndSimilarUid(pid, uid, memberList);
         List<UserDTO> uidList = new ArrayList<>();
 
         for (Map<String, Object> user : searchResults) {
@@ -423,8 +423,7 @@ public class ProjectService {
                     .phone(user.get("phone").toString())
                     .build());
         }
-
-       // System.out.println("User: " + uidList);
+         System.out.println("UserList" + uidList);
         return uidList;
     }
     

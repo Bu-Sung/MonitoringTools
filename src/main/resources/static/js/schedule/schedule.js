@@ -7,10 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
         searchProjectMember();
     });
     
-    var closeModalSpan = document.getElementById("closeModal");
-    closeModalSpan.addEventListener('click', function () {
-        myModal.hide();
-    });
+//    //닫기버튼
+//    var closeModalSpan = document.getElementById("closeModal");
+//    closeModalSpan.addEventListener('click', function () {
+//        myModal.hide();
+//    });
     
     var changeTypeBtn = document.getElementById("changeTypeBtn");
     changeTypeBtn.addEventListener("click", function () {
@@ -35,7 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
     colorSelect.addEventListener('change', function () {
         colorSelect.style.backgroundColor = colorSelect.value;
     });
-
+    
+    //추가버튼
     var addMemberBtn = document.getElementById("addMemberBtn");
     addMemberBtn.addEventListener('click', function () {
         if (addMember.value !== '') { // 입력 필드가 비어있지 않은 경우에만 추가

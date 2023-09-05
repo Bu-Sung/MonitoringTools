@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         navLinks: true,
         selectable: true,
         selectMirror: false,
+        contentHeight: 600,
         select: function (arg) {
             if (hasRight.value !== 3) {
                 scheduleModal();

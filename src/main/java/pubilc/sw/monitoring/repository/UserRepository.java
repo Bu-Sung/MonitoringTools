@@ -47,7 +47,9 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     String findNameById(String id);
 
 
-    @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth FROM userinfo u JOIN member m ON u.user_id = m.user_id WHERE m.project_id=:pid AND m.user_id LIKE %:uid%", nativeQuery = true)
-    List<Map<String, Object>> findUsersByPidAndSimilarUid(@Param("pid") Long pid, @Param("uid") String uid);
+    @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth "
+            + "FROM userinfo u JOIN member m ON u.user_id = m.user_id "
+            + "WHERE m.project_id=:pid AND m.user_id LIKE %:uid% AND (m.user_id NOT IN (:list) OR :list IS NULL)", nativeQuery = true)
+    List<Map<String, Object>> findUsersByPidAndSimilarUid(@Param("pid") Long pid, @Param("uid") String uid, @Param("list") List<String> list);
 
 }

@@ -5,6 +5,7 @@
 package pubilc.sw.monitoring.controller;
 
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -312,8 +314,8 @@ public class ProjectController {
      * @param uid 입력한 아이디 
      * @return 
      */
-    @GetMapping("/searchMembers")
-    public @ResponseBody List<UserDTO> searchMembers(@RequestParam String uid) {
-        return projectService.searchMembers(sessionManager.getProjectId(),uid);
+    @PostMapping("/searchMembers")
+    public @ResponseBody List<UserDTO> searchMembers(@RequestBody Map<String, Object> request) {
+        return projectService.searchMembers(sessionManager.getProjectId(),request.get("uid").toString(),(List<String>)  request.get("memberList"));
     }
 }

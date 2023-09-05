@@ -10,7 +10,17 @@ function searchProjectMember() {
 
     addMemberInput.addEventListener('keyup', function () {
         var searchText = addMemberInput.value;
-        fetch('/monitoring/project/searchMembers?uid=' + searchText)
+        var request = {
+            uid: searchText,
+            memberList: memberList
+        };
+        fetch('/monitoring/project/searchMembers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        })
                 .then(response => response.json())
                 .then(data => {
                     searchMemberDropdown.innerHTML = '';
@@ -18,9 +28,11 @@ function searchProjectMember() {
                         var newDiv = document.createElement("div");
                         newDiv.classList.add("dropdown-item");
                         newDiv.textContent = item.id;
-                        newDiv.addEventListener('click', function(){
+                        newDiv.addEventListener('click', function () {
                             addMemberInput.value = newDiv.innerText;
                             console.log(addMemberInput.value);
+                            // After setting the value, hide the dropdown menu
+                            searchMemberDropdown.classList.remove('show');
                         });
                         searchMemberDropdown.appendChild(newDiv);
                     });
@@ -29,9 +41,12 @@ function searchProjectMember() {
                     }
                 });
     });
-    
-    addMemberInput.addEventListener('blur', function(){
-        searchMemberDropdown.classList.remove('show');
+
+    // Hide dropdown when clicking outside of the input field
+    document.addEventListener('click', function (event) {
+        if (event.target !== addMemberInput && event.target !== searchMemberDropdown) {
+            searchMemberDropdown.classList.remove('show');
+        }
     });
 }
 

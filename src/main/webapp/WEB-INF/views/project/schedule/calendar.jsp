@@ -41,13 +41,13 @@
                 <!-- 제일 아래에 깔려 있는 파란색 card -->
                 <div class="card card-blue row mx-auto" style="height: viewportHeight;">
                     <!-- 중간에 깔려 있는 card -->
-                    <div class="card card-white-0 mx-auto" style="height: 80vh;">
-                        <div class="col-md-9 col-11 mx-auto my-5">
-                            <h4 class="fw-600 text-dark">
-                                <span>일정</span> 목록
+                    <div class="card card-white-0 mx-auto">
+                        <div class="col-lg-10 col-md-11 col-12 mx-auto my-5">
+                            <h4 class="fw-600 mb-4">
+                                일정목록
                             </h4>
-                            <div class="card card-white-1 mt-3" style="height: 50vh;">
-                                <div class="card-body" style="overflow: auto; white-space: nowrap;">
+                            <div class="card card-white-1 mt-3">
+                                <div class="card-body">
                                     <div id='calendar'></div>
                                     <div id="myModal" class="modal"></div>
                                 </div>
@@ -61,12 +61,12 @@
         <!-- Modal -->
         <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="w-100 d-flex justify-content-between align-items-center">
-                            <h3>일정</h3>
-                            <h5 id="closeModal" class="close">&times;</h5>
+                            <h3 class="modal-title fw-600" id="modalTitle">일정</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -102,7 +102,7 @@
                                 <th></th>
                                 <td>
                                     <div class="d-flex align-items-center justify-content-end">
-                                        <button id="changeTypeBtn" type="button" class="btn btn-gray fw-500" style="width: 8rem; height: 3rem;">시간 사용하기</button>
+                                        <button id="changeTypeBtn" type="button" class="btn btn-gray fw-500" style="width: 8rem;">시간 사용하기</button>
                                     </div>
                                 </td>
                             </tr>
@@ -127,7 +127,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th><label for="memberList">팀원</label></th>
+                                <th><label for="addMember">팀원</label></th>
                                 <td>
                                     <div id="addMemberDiv">
                                         <div class=" d-flex align-items-center w-100">
@@ -136,7 +136,7 @@
                                                 <div id="searchMember" class="dropdown-menu">
                                                 </div>
                                             </div>
-                                            <button id="addMemberBtn" type="button" class="btn btn-gray fw-500" style="width: 8rem; height: 3rem;">추가</button>
+                                            <button id="addMemberBtn" type="button" class="btn btn-gray fw-500 ms-2" style="width: 8rem;">추가</button>
                                         </div>
                                     </div>
                                     <div id="memberListDiv" class="p-1">
