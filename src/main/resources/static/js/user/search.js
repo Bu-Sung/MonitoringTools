@@ -81,6 +81,39 @@ function getAllMemberInfo() {
     });
 }
 
+/* 전체 사용자 검색 */
+function getUsersList() {
+    var addMemberInput = document.getElementById("teamMemberInput");
+    var searchMemberDropdown = document.getElementById("searchMember");
+
+    addMemberInput.addEventListener('keyup', function () {
+        fetch('/monitoring/project/searchUsers?uid='+addMemberInput.value, {})
+                .then(response => response.json())
+                .then(data => {
+                    searchMemberDropdown.innerHTML = '';
+                    data.forEach(item => {
+                        var newDiv = document.createElement("div");
+                        newDiv.classList.add("dropdown-item");
+                        newDiv.innerText = item;
+                        newDiv.addEventListener('click', function () {
+                            addMemberInput.value = item;
+                            searchMemberDropdown.classList.remove('show');
+                        });
+                        searchMemberDropdown.appendChild(newDiv);
+                    });
+                    if (!searchMemberDropdown.classList.contains('show')) {
+                        searchMemberDropdown.classList.add('show');
+                    }
+                });
+    });
+    document.addEventListener('click', function (event) {
+        if (event.target !== addMemberInput && event.target !== searchMemberDropdown) {
+            searchMemberDropdown.classList.remove('show');
+        }
+    });
+ 
+}
+
 /* 사용자 검색을 위한 js파일*/
 
 /* 검색 창에 나오는 div 형식 */

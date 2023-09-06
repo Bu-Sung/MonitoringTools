@@ -518,4 +518,8 @@ public class ProjectService {
                 .phone(user.get("phone").toString())
                 .build();
     }
+    
+    public void updateCartegory(String str, Long pid){
+        projectRepository.updateCategory(pid, str);
+    }
 }

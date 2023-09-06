@@ -192,6 +192,15 @@ public class ProjectController {
 
         return "redirect:/project/" + projectDTO.getPid();
     }
+    
+    /**
+     * 프로젝트 카테고리 수정
+     */
+    @PostMapping("/updateCategory")
+    public @ResponseBody boolean updateCategory(@RequestBody Map<String, String> request){
+        projectService.updateCartegory(request.get("str"), sessionManager.getProjectId());
+        return true;
+    }
 
     /**
      * 프로젝트 삭제 
@@ -270,6 +279,7 @@ public class ProjectController {
      */
     @GetMapping("/searchUsers")
     public @ResponseBody List<String> searchUsers(@RequestParam String uid) {
+        System.out.println(projectService.searchUsers(uid));
         return projectService.searchUsers(uid);
     }
     

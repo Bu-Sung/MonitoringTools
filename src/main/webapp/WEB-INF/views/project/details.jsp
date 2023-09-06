@@ -1,62 +1,369 @@
-<%-- 
-    Document   : projectDetails
-    Created on : 2023. 8. 11., 오전 4:43:23
-    Author     : parkchaebin
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <!DOCTYPE html>
-<html>
+<html lang="ko">
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>프로젝트 상세 페이지</title>
-        <script>
-            <c:if test="${!empty msg}">
-            alert("${msg}");
-            </c:if>
-        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>sw</title>
+
+        <!-- 부트스트랩 CSS 링크-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- 부트스트랩 Icons 링크 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+        <!-- Google Fonts - Inter -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+              rel="stylesheet">
+
+        <!-- CSS 파일 연결 -->
+        <link rel="stylesheet" href="/monitoring/css/kimleepark.css">
     </head>
 
     <body>
+        <div class="d-flex col-11 mx-auto mt-5">
+            <!-- side bar -->
+            <%@include file="/jspf/projectSidebar.jspf" %>
 
-        <h1>프로젝트 상세 정보 확인, 수정 및 삭제</h1>
+            <div class="w-100">
+                <!-- navbar -->
+                <%@include file="/jspf/projectTopbar.jspf" %>
+                <!-- 제일 아래에 깔려 있는 파란색 card -->
+                <div class="card card-blue row mx-auto" style="height: viewportHeight;">
+                    <!-- 중간에 깔려 있는 card -->
+                    <div class="card card-white-0 mx-auto">
 
-        <c:if test="${not empty project}">
-            <form action="/monitoring/project/updateProject" method="post">
-                <input type="hidden" name="pid" value="${project.pid}" />
+                        <div class="col-md-9 col-11 mx-auto my-5">
+                            <form action="/monitoring/project/updateProject" method="post">
+                                <input class="form-control form-control-primary" value="${project.pid}"
+                                       hidden>
 
-                <p><b>프로젝트 아이디 :</b> <c:out value="${project.pid}" /></p>
-                <p><b>프로젝트 이름 :</b> <input type="text" name="name" value="${project.name}" required/></p>
-                <p><b>프로젝트 설명 :</b> <input type="text" name="content" value="${project.content}" /></p>
-                <p><b>프로젝트 시작 기간 :</b> <input type="date" name="start" value="${project.start}" required/></p>
-                <p><b>프로젝트 종료 기간 :</b> <input type="date" name="end" value="${project.end}" required/></p>
-                <p><b>게시글 카테고리 : <input type="text" name="category" value="${project.category}" required/></p> 
-                카테고리 리스트 : <br>
-                    <c:forEach var="cat" items="${project.categoryList}">
-                        ${cat} <br>
-                    </c:forEach>
-                
-                <p><b>스프린트 주기 :</b> <input type="number" name="cycle" value="${project.cycle}" /></p>
+                                <div class="card card-white-1 p-3 mb-3">
+                                    <h6 class="mb-1 fw-600">프로젝트 명</h6>
+                                    <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
+                                    <input type="text" class="form-control form-control-primary"
+                                           value="${project.name}">
+                                </div>
 
-                <button type="submit" ${right == 1 ? '' : 'disabled'}>수정</button>
+                                <div class="card card-white-1 p-3 mb-3">
+                                    <h6 class="mb-1 fw-600">프로젝트 설명</h6>
+                                    <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
+                                    <textarea class="form-control form-control-primary"
+                                              style="height: 7rem;">${project.content}</textarea>
+                                </div>
 
-            </form>
+                                <div class="card card-white-1 p-3 mb-3">
+                                    <div class="row">
+                                        <div class="col-md-6 col-12">
+                                            <h6 class="mb-3 fw-600"> 프로젝트 시작 기간</h6>
+                                            <input type="date"
+                                                   class="form-control form-control-primary mb-md-0 mb-4"
+                                                   value="${project.start}">
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <h6 class="mb-3 fw-600"> 프로젝트 종료 기간</h6>
+                                            <input type="date" class="form-control form-control-primary"
+                                                   value="${project.end}">
+                                        </div>
+                                    </div>
+                                </div>
 
-            <form action="delete/${project.pid}" method="post">
-                <input type="hidden" name="pid" value="${project.pid}" />
-                <button type="submit" ${right == 1 ? '' : 'disabled'}>삭제</button>
-            </form>
- 
-            <br> <br> 
+                                <div class="card card-white-1 p-3 mb-3">
+                                    <h6 class="mb-1 fw-600">스프린트 주기</h6>
+                                    <small class="text-gray mb-3">주기를 일(날짜) 단위로 작성해주세요</small>
+                                    <input type="number" min="1" class="form-control form-control-primary"
+                                           value="${project.cycle}">
+                                </div>
+                            </form>
+                            <div class="card card-white-1 p-3 mb-3">
+                                <h6 class="mb-3 fw-600">게시글 카테고리</h6>
+                                <button class="btn btn-gray mb-2" style="border-width: 2px;"
+                                        data-bs-toggle="modal" data-bs-target="#categoryModal">카테고리
+                                    관리</button>
+                            </div>
 
-            <form action="/monitoring/project/manageMember/${project.pid}" method="get">
-                <input type="hidden" name="pid" value="${project.pid}" />
-                <input type="submit" value="팀원 관리" />
-            </form>
-                
-        </c:if>
+                            <div class="card card-white-1 p-3 mb-3">
+                                <h6 class="mb-3 fw-600">팀원</h6>
+                                <button class="btn btn-gray mb-2" style="border-width: 2px;"
+                                        data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
+                            </div>
 
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 카테고리 관리 모달 창 -->
+        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="max-height: 40rem; overflow-y: auto;">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-600" id="categoryModalLabel">카테고리 관리</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="white-space: normal;">
+                        <!-- 입력 폼 -->
+                        <div class="d-flex justify-content-between mb-5">
+                            <input type="text" class="form-control me-2" id="taskInput" placeholder="작업 내용">
+                            <button type="button" class="btn btn-secondary" id="addTask">추가</button>
+                        </div>
+                        <p class="fw-400 mb-3">카테고리 목록</p>
+                        <div id="taskList">
+                            <c:forEach var="cat" items="${project.categoryList}">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" data-cat="${cat}" ${cat eq '공지사항' ? 'disabled' : ''}>
+                                    <label class="form-check-label ms-2" for="noticeCheckbox">${cat}</label>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    <div class=" modal-footer">
+                        <button type="button" class="btn btn-danger" id="deleteTasks">삭제</button>
+                        <button type="button" class="btn btn-primary" id="saveTasks" >저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 팀원 관리 모달 창 -->
+        <div class="modal fade" id="teamModal" tabindex="-1" aria-labelledby="teamModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-600" id="teamModalLabel">팀원 관리</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="white-space: normal;">
+                        <!-- 입력 폼 -->
+                        <div class="d-flex justify-content-between mb-5">    
+                            <div style="position: relative; ">
+                                <input type="text" class="form-control me-2" id="teamMemberInput"
+                                       placeholder="팀원의 아이디를 입력하세요" autocomplete="off">
+                                <div id="searchMember" class="dropdown-menu"></div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="addTeamMember">추가</button>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-400 mt-1" style="width: 8rem;">팀원 목록</p>
+                            <input class="form-control mb-3" placeholder="검색할 팀원의 아이디를 입력하세요">
+                        </div>
+                        <!-- 동적으로 추가되는 체크박스 (script 참고) -->
+                        <div id="teamList">
+                            <c:forEach items="${memberDetails}" var="member">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" data-cat="${member.uid}" ${member.uid eq sessionScope.user.id ? 'disabled' : ''}>
+                                    <label class="form-check-label ms-2" for="noticeCheckbox">${member.uid}</label>
+                                    <select name="rights" ${member.uid eq sessionScope.user.id ? 'disabled' : ''}>
+                                        <option value="1" ${member.right == 1 ? 'selected' : ''}>마스터 권한</option>
+                                        <option value="2" ${member.right == 2 ? 'selected' : ''}>게시물 작성 및 편집 권한</option>
+                                        <option value="3" ${member.right == 3 ? 'selected' : ''}>보기 권한</option>
+                                    </select>
+                                    ${member.state == 0 ? '생성자' : member.state == 1 ? '미수락' : member.state == 2 ? '수락' : ''}
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    <div class=" modal-footer">
+                        <button type="button" class="btn btn-danger" id="deleteTeamMembers">삭제</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            const dashboardMenu = document.getElementById("dashboardMenu");
+            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+            /*카테고리 관리*/
+            document.addEventListener('DOMContentLoaded', function () {
+                const input = document.getElementById('taskInput');
+                const addTaskButton = document.getElementById('addTask');
+                const taskList = document.getElementById('taskList');
+                const deleteTasksButton = document.getElementById('deleteTasks');
+                const saveTaskButton = document.getElementById("saveTasks");
+                const noticeCheckbox = document.getElementById('noticeCheckbox');
+                const existingCheckboxes = Array.from(document.querySelectorAll('.modal-body .form-check .form-check-input'));
+                //추가된 체크박스 리스트
+                let baseCat = existingCheckboxes;
+                let checkboxes = [];
+                // 추가 버튼 클릭 시 체크박스 추가
+                addTaskButton.addEventListener('click', function () {
+                    const taskContent = input.value.trim();
+                    if (taskContent) {
+                        const taskItem = document.createElement('div');
+                        taskItem.classList.add('form-check', 'mb-2');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.classList.add('form-check-input');
+                        checkbox.setAttribute('data-cat', taskContent);
+                        taskItem.appendChild(checkbox);
+                        const label = document.createElement('label');
+                        label.classList.add('form-check-label', 'ms-2');
+                        label.textContent = taskContent;
+                        taskItem.appendChild(label);
+                        taskList.appendChild(taskItem);
+                        // 입력 필드 비우기
+                        // 체크박스 리스트에 추가
+                        input.value = '';
+                        checkboxes.push(checkbox);
+                    }
+                });
+                // 삭제 버튼 클릭 시 체크된 체크박스 삭제
+                deleteTasksButton.addEventListener('click', function () {
+                    baseCat = baseCat.filter(function (checkbox) {
+                        if (checkbox.checked) {
+                            checkbox.closest('.form-check').remove();
+                            return false; // 삭제된 체크박스는 리스트에서 제외
+                        }
+                        return true; // 그 외의 체크박스는 리스트에 유지
+                    });
+                    checkboxes = checkboxes.filter(function (checkbox) {
+                        if (checkbox.checked) {
+                            checkbox.closest('.form-check').remove();
+                            return false; // 삭제된 체크박스는 리스트에서 제외
+                        }
+                        return true; // 그 외의 체크박스는 리스트에 유지
+                    });
+                });
+                //저장하기 버튼
+                saveTaskButton.addEventListener('click', function () {
+                    let saveList = [];
+                    baseCat.forEach(item => {
+                        saveList.push(item.dataset.cat);
+                    });
+                    checkboxes.forEach(item => { // 오타를 수정하였습니다.
+                        saveList.push(item.dataset.cat);
+                    });
+                    const data = {
+                        str: saveList.join(',')
+                    };
+                    fetch("/monitoring/project/updateCategory", {
+                        method: 'POST', // or ''
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    })
+                            .then(response => response.text())
+                            .then(data => {
+
+                                if (data) {
+                                    location.reload();
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                });
+                // 모달이 닫힐 때 추가된 체크박스 목록 초기화
+                const categoryModal = new bootstrap.Modal(document.getElementById('categoryModal'));
+                categoryModal._element.addEventListener('hidden.bs.modal', function () {
+                    checkboxes.forEach(function (checkbox) {
+                        checkbox.closest('.form-check').remove();
+                    });
+                    checkboxes = [];
+                    baseCat = [];
+                    taskList.innerHTML = '';
+                    existingCheckboxes.forEach(item => {
+                        const taskItem = document.createElement('div');
+                        taskItem.classList.add('form-check', 'mb-2');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.classList.add('form-check-input');
+                        checkbox.setAttribute('data-cat', item.dataset.cat);
+                        if (item.dataset.cat === "공지사항") {
+                            checkbox.disabled = true;
+                        }
+                        taskItem.appendChild(checkbox);
+                        const label = document.createElement('label');
+                        label.classList.add('form-check-label', 'ms-2');
+                        label.textContent = item.dataset.cat;
+                        taskItem.appendChild(label);
+                        taskList.appendChild(taskItem);
+                        baseCat.push(checkbox);
+                    });
+                });
+                getUsersList();
+            });
+
+            const addButton = document.getElementById('addTeamMember');
+            const input = document.getElementById('teamMemberInput');
+            const teamList = document.getElementById('teamList');
+            const deleteButton = document.getElementById('deleteTeamMembers');
+            let teamcheckbox = [];
+            
+            addButton.addEventListener('click', function () {
+                const memberName = input.value.trim();
+                if (memberName) {
+                    // 체크박스 생성
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'form-check-input';
+                    // 라벨 생성
+                    const label = document.createElement('label');
+                    label.className = 'form-check-label ms-2';
+                    label.textContent = memberName;
+                    // 라벨과 체크박스를 함께 랩핑
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.className = 'form-check mb-2';
+                    checkboxDiv.appendChild(checkbox);
+                    checkboxDiv.appendChild(label);
+                    // 리스트에 추가
+                    teamList.appendChild(checkboxDiv);
+                    // 입력 필드 초기화
+                    input.value = '';
+                }
+            });
+
+            deleteButton.addEventListener('click', function () {
+                const checkboxes = teamList.querySelectorAll('input[type="checkbox"]:checked');
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.closest('.form-check').remove();
+                });
+            });
+            
+            const teamModal = new bootstrap.Modal(document.getElementById('teamModal'));
+                teamModal._element.addEventListener('hidden.bs.modal', function () {
+                    checkboxes.forEach(function (checkbox) {
+                        checkbox.closest('.form-check').remove();
+                    });
+                    checkboxes = [];
+                    baseCat = [];
+                    taskList.innerHTML = '';
+                    existingCheckboxes.forEach(item => {
+                        const taskItem = document.createElement('div');
+                        taskItem.classList.add('form-check', 'mb-2');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.classList.add('form-check-input');
+                        checkbox.setAttribute('data-cat', item.dataset.cat);
+                        if (item.dataset.cat === "공지사항") {
+                            checkbox.disabled = true;
+                        }
+                        taskItem.appendChild(checkbox);
+                        const label = document.createElement('label');
+                        label.classList.add('form-check-label', 'ms-2');
+                        label.textContent = item.dataset.cat;
+                        taskItem.appendChild(label);
+                        taskList.appendChild(taskItem);
+                        baseCat.push(checkbox);
+                    });
+                });
+        </script>
+        <script src="/monitoring/js/user/search.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- 부트스트랩 script -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+
 </html>
