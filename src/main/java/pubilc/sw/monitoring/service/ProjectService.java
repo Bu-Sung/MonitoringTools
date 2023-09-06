@@ -398,7 +398,7 @@ public class ProjectService {
         return uidList;
     }
 
-    // 프로젝트 내의 멤버 찾기
+    // 프로젝트 내의 검색와 아이디가 비슷한 멤버를 찾는데 이미 list에 있는 id는 제외하고 찾기
     public List<UserDTO> searchMembers(Long pid, String uid, List<String> memberList) {
         List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndSimilarUid(pid, uid, memberList);
         List<UserDTO> uidList = new ArrayList<>();
@@ -415,6 +415,22 @@ public class ProjectService {
         return uidList;
     }
 
+    public List<UserDTO> searchAllMembers(Long pid){
+        List<Map<String, Object>> searchResults = userRepository.findUsersByPid(pid);
+        
+        List<UserDTO> uidList = new ArrayList<>();
+
+        for (Map<String, Object> user : searchResults) {
+            uidList.add(UserDTO.builder()
+                    .id(user.get("id").toString())
+                    .name(user.get("name").toString())
+                    .email(user.get("email").toString())
+                    .birth(user.get("birth").toString())
+                    .phone(user.get("phone").toString())
+                    .build());
+        }
+        return uidList;
+    }
     /**
      * 프로젝트 멤버 추가 함수
      *
