@@ -38,12 +38,12 @@
                 <!-- 제일 아래에 깔려 있는 파란색 card -->
                 <div class="card card-blue row mx-auto" style="height: viewportHeight;">
                     <!-- 중간에 깔려 있는 card -->
-                    <div class="card card-white-0 mx-auto" style="height: 80vh;">
+                    <div class="card card-white-0 mx-auto" style="height: 90vh;">
                         <div class="col-md-9 col-11 mx-auto my-5">
                             <h4 class="fw-600 text-dark">
                                 <span>요구사항</span> 목록
                             </h4>
-                            <div class="card card-white-1 mt-2 mb-2" style="height: 50vh;">
+                            <div class="card card-white-1 mt-2 mb-2 " style="height: 75vh;">
                                 <div class="card-body" style="overflow: auto; white-space: nowrap;">
                                     <div>
                                         <div class="d-flex mt-4 justify-content-end">

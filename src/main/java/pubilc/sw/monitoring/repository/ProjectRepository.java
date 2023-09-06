@@ -33,4 +33,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     @Modifying
     @Query("UPDATE ProjectEntity p SET p.category = :category WHERE p.id = :id")
     void updateCategory(@Param("id") Long id, @Param("category") String category);
+    
+    @Query(value = "SELECT TIMESTAMPDIFF(DAY, NOW(), project_end) FROM project WHERE project_id = :pid", nativeQuery = true)
+    int getDaysUntilProjectEnd(@Param("pid") Long pid);
 }

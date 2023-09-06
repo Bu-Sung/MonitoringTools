@@ -518,8 +518,16 @@ public class ProjectService {
                 .phone(user.get("phone").toString())
                 .build();
     }
-    
+    /**
+     * 카테고리 업데이트
+     * @param str
+     * @param pid 
+     */
     public void updateCartegory(String str, Long pid){
         projectRepository.updateCategory(pid, str);
+    }
+    
+    public int getDaysUntilProjectEnd(Long pid) {
+        return projectRepository.getDaysUntilProjectEnd(pid);
     }
 }

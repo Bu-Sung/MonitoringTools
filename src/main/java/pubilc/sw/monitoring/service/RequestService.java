@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -336,5 +337,44 @@ public class RequestService {
             workbook.write(outputStream);
         }
     }
+    
+    /**
+     *  사용자의 스프린트 내역
+     * @param pid
+     * @param uid
+     * @return 
+     */
+    public List<RequestDTO> getUserSprintList(Long pid, String uid){
+        
+        List<RequestEntity> requestEntities = requestRepository.findUserRequests(pid, uid);
+        List<RequestDTO> requestDTOs = new ArrayList<>();
 
+        for (RequestEntity requestEntity : requestEntities) {
+
+            UserEntity userEntity = userRepository.findById(requestEntity.getUid()).orElse(null);
+            String username = (userEntity != null) ? userEntity.getName() : null;
+
+            requestDTOs.add(RequestDTO.builder()
+                    .frid(requestEntity.getFrid())
+                    .pid(requestEntity.getPid())
+                    .rid(requestEntity.getRid())
+                    .name(requestEntity.getName())
+                    .content(requestEntity.getContent())
+                    .date(requestEntity.getDate())
+                    .rank(requestEntity.getRank())
+                    .stage(requestEntity.getStage())
+                    .target(requestEntity.getTarget())
+                    .uid(requestEntity.getUid())
+                    .note(requestEntity.getNote())
+                    .username(username) // username 설정
+                    .build());
+        }
+
+        return requestDTOs;
+    }
+    
+    public Map<String, Object> getRequestCounts(Long pid) {
+        return requestRepository.countRequests(pid);
+    }
+    
 }
