@@ -45,11 +45,6 @@
                                                                                   class="me-2">회의록</a>
             </li>
 
-            <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/graph"  class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
-                                                                                  class="me-2">그래프</a>
-            </li>
-
 
 
         </ul>

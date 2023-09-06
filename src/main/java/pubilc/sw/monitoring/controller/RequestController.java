@@ -82,7 +82,7 @@ public class RequestController {
         return requestService.deleteRequestByFrid(frid);
     }
     
-    
+    /*
     // 요구사항 여러개 삭제 
     @PostMapping("/deletes")
     public @ResponseBody String deleteRequests(@RequestParam(value = "frids", required = false) List<Long> frids, RedirectAttributes attrs) {
@@ -98,9 +98,9 @@ public class RequestController {
         }
 
         return "redirect:/project/request/request";
-    }
+    }*/
     
-    
+    /*
     // 해당 프로젝트의 모든 요구사항 삭제 
     @PostMapping("/deleteAll")
     public @ResponseBody String deleteRequestsByPid(RedirectAttributes attrs) {
@@ -113,11 +113,11 @@ public class RequestController {
         
         return "redirect:/project/request/request";
     }
-
+*/
 
     // 요구사항 엑셀 파일 생성 (엑셀 생성 후 폴더에 저장함) 
     @GetMapping("/createExcel")
-    public @ResponseBody void createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
+    public String createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());  // 요구사항 목록 
 
         if (requestService.createRequestExcel(requestDTOs)) {
@@ -125,7 +125,7 @@ public class RequestController {
         } else {
             attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 실패하였습니다.");
         }
-
+        return "redirect:/project/request/request";
     }
 
     

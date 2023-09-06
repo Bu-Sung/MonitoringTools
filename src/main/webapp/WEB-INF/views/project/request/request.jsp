@@ -43,10 +43,20 @@
                             <h4 class="fw-600 text-dark">
                                 <span>요구사항</span> 목록
                             </h4>
-                            <a href="createExcel">엑셀 파일 생성</a> <br> <br> 
-                            <a href="createDownRequestExcel">엑셀 파일 다운(폴더에 저장하지 않고 엑셀 파일 생성해서 바로 다운)</a> <br> <br> 
-                            <div class="card card-white-1 mt-3" style="height: 50vh;">
+                            <div class="card card-white-1 mt-2 mb-2" style="height: 50vh;">
                                 <div class="card-body" style="overflow: auto; white-space: nowrap;">
+                                    <div>
+                                        <div class="d-flex mt-4 justify-content-end">
+                                            <a href="createExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 생성</button></a>
+                                            <a href="createDownRequestExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 다운</button></a>
+                                        </div>
+                                        <c:if test="${not empty excelNames}">
+                                            <c:forEach var="file" items="${excelNames}">
+                                                <a href="download?filename=${file}">${file}</a>
+                                            </c:forEach>
+                                        </c:if>
+                                        <hr>
+                                    </div>
                                     <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
                                     <table class="table table-hover">
                                         <thead>
@@ -236,7 +246,8 @@
         <!-- 부트스트랩 script -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            var requestList = [];
+            var requestList = []; // 요구사항 리스트
+            var similarList = []; // 유사한 데이터 쌍 리스트 
             const baseRequest = {
                 frid: 0,
                 rid: '',
@@ -507,32 +518,51 @@
 
 
                 document.getElementById('saveRequest').addEventListener('click', function () {
-                    if (rname.value === '') {
-                        alert("요구사항 명을 입력해 주세요");
-                        rname.focus();
-                    } else if (uid.value === '') {
-                        alert("담당자를 선택해 주세요");
-                        uid.focus();
-                    } else {
-                        request = {
-                            frid: parseInt(frid.value),
-                            rid: requestList.length + 1,
-                            name: rname.value,
-                            content: content.value,
-                            date: date.value,
-                            rank: rank.value,
-                            stage: stage.value,
-                            target: target.value,
-                            uid: uid.value,
-                            note: note.vaue
-                        }
-                        if (!saveRequest(request)) {
-                            alert("요구사항을 저장했습니다.");
+                    (async () => { // 즉시 실행되는 비동기 함수 생성
+                        if (rname.value === '') {
+                            alert("요구사항 명을 입력해 주세요");
+                            rname.focus();
+                        } else if (uid.value === '') {
+                            alert("담당자를 선택해 주세요");
+                            uid.focus();
                         } else {
-                            alert("요구사항 저장에 실패했습니다.");
-                        }
-                    }
+                            request = {
+                                frid: parseInt(frid.value),
+                                rid: requestList.length + 1,
+                                name: rname.value,
+                                content: content.value,
+                                date: date.value,
+                                rank: rank.value,
+                                stage: stage.value,
+                                target: target.value,
+                                uid: uid.value,
+                                note: note.vaue
+                            }
 
+                            // checkSimilarity가 끝날 때까지 기다림
+                            const isSimilar = await checkSimilarity(request);
+
+                            if (isSimilar) {
+                                if (!saveRequest(request)) {
+                                    alert("요구사항을 저장했습니다.");
+                                } else {
+                                    alert("요구사항 저장에 실패했습니다.");
+                                }
+                            } else {
+                                let allElements = '요구사항 유사도를 확인해 주세요!\n';
+                                for (let i = 0; i < similarList.length; i++) {
+                                    allElements += '유사 요구사항 ' + (i + 1) + ' = ' + similarList[i][0] + ' : ' + similarList[i][1] + '\n';
+                                }
+                                if (confirm(allElements) == true) {
+                                    if (!saveRequest(request)) {
+                                        alert("요구사항을 저장했습니다.");
+                                    } else {
+                                        alert("요구사항 저장에 실패했습니다.");
+                                    }
+                                }
+                            }
+                        }
+                    })();
                 });
 
                 document.getElementById("deleteRequest").addEventListener("click", function () {
@@ -553,7 +583,6 @@
                 document.getElementById("date").addEventListener("change", function () {
                     var stage = document.getElementById("stage");
                     var target = document.getElementById("target");
-                    console.log(document.getElementById("date").value);
                     if (document.getElementById("date").value === "-1") {
                         stage.selectedIndex = 0;
                         target.selectedIndex = 1;
@@ -566,34 +595,24 @@
                 });
             });
 
-        </script>
-        <script src="/monitoring/js/user/search.js"></script>
-        요구사항 목록 <br> 
-        ${requestDTOs}
+            const resultsElement = document.getElementById('results');
 
-        <br> <br> <br> <br> 
 
-        <!-- 요구사항 입력할 때 작성자 검색 --> 
-        <form action="/monitoring/project/request/searchUserNames" method="get">
-            <input type="text" name="username" placeholder="이름 입력" />
-            <button type="submit">Search</button>
-        </form>
-
-        <br> 
-        <!--         유사도 검사 결과 화면에 출력 
-                <div id="results"></div>-->
-
-        <a href="createExcel">엑셀 파일 생성</a> <br> <br> 
-        <a href="createDownRequestExcel">엑셀 파일 다운(폴더에 저장하지 않고 엑셀 파일 생성해서 바로 다운)</a> <br> <br> 
-
-        생성한 엑셀 파일 리스트 <br> 
-        <c:if test="${not empty excelNames}">
-            <c:forEach var="file" items="${excelNames}">
-                <a href="download?filename=${file}">${file}</a>
-            </c:forEach>
-        </c:if>
-
-        <script>
+            // 유사도 함수 실행 및 결과 출력 
+            async function checkSimilarity(request) {
+                similarList = [];
+                for (let item of requestList) {
+                    const comparison = item.name;
+                    const {isSimilar} = await similarityAPI(comparison, request.name);
+                    if (isSimilar) {
+                        similarList.push([item.name, request.name]);
+                    }
+                }
+                if (similarList.length === 0) { // 배열이 비어있는지 확인
+                    return true;
+                }
+                return false;
+            }
 
             // 서버의 API를 호출하여 유사성을 확인하는 함수
             async function similarityAPI(name1, name2) {
@@ -636,52 +655,7 @@
                     };
                 }
             }
-
-            const requestDTOs = [
-            <c:forEach items="${requestDTOs}" var="requestDTO" varStatus="loop">
-            {
-            name: '${requestDTO.name}'
-            } <c:if test="${!loop.last}">,</c:if>
-            </c:forEach>
-            ];
-
-            console.log('requestDTOs:', requestDTOs);
-
-            const resultsElement = document.getElementById('results');
-            const similarList = []; // 유사한 데이터 쌍 리스트 
-
-            // 유사도 함수 실행 및 결과 출력 
-            async function checkSimilarity() {
-                for (let i = 0; i < requestDTOs.length; i++) {
-                    for (let j = i + 1; j < requestDTOs.length; j++) {
-                        const name1 = requestDTOs[i].name;
-                        const name2 = requestDTOs[j].name;
-
-                        const {isSimilar} = await similarityAPI(name1, name2);
-
-                        if (isSimilar) {
-                            similarList.push([i, j]); // 인덱스를 기록
-                        }
-
-                        const resultMessage = isSimilar
-                                ? '(' + name1 + ') (' + name2 + ') : 유사O'
-                                : '(' + name1 + ') (' + name2 + ') : 유사X';
-
-                        // 유사도 검사 결과 화면에 출력
-                        //                        const resultParagraph = document.createElement('p');
-                        //                        resultParagraph.textContent = resultMessage;
-                        //                        resultsElement.appendChild(resultParagraph);
-                    }
-                }
-
-                console.log('유사한 데이터 인덱스 쌍 :', similarList);
-            }
-
-
-            // 유사도 함수 실행 
-            checkSimilarity();
         </script>
-
-
+        <script src="/monitoring/js/user/search.js"></script>
     </body>
 </html>
