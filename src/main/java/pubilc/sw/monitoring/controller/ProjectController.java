@@ -230,6 +230,12 @@ public class ProjectController {
         return "project/manageMember";
     }
     
+    @GetMapping("/getAllMemberInfo")
+    public @ResponseBody List<UserDTO> getAllMemberInfo(){
+        List<UserDTO> list = projectService.searchAllMembers(sessionManager.getProjectId());
+        System.out.println(list);
+        return list;
+    }
     
     /**
      * 프로젝트 멤버 추가
@@ -315,7 +321,7 @@ public class ProjectController {
 
 
     /**
-     * 초대된 멤버 중 아이디 찾기
+     * 초대된 멤버 중 일정에 추가를 위한 아이디 찾기
      * @param uid 입력한 아이디 
      * @return 
      */
@@ -323,6 +329,7 @@ public class ProjectController {
     public @ResponseBody List<UserDTO> searchMembers(@RequestBody Map<String, Object> request) {
         return projectService.searchMembers(sessionManager.getProjectId(),request.get("uid").toString(),(List<String>) request.get("memberList"));
     }
+    
     
     /**
      * 프로젝트에 소속된 멤버가 맞는 지 확인
