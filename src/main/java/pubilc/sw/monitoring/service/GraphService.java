@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -132,9 +133,8 @@ public class GraphService {
 
     
     // 멤버 요구사항 그래프 데이터 
-    // 날짜, 아이디, 총 요구사항 수, 완료 요구사항 수, 반복 요구사항 수, 총 추정치, 완료 추정치, 반복 추정치
+    // 날짜, 담당자, 총 요구사항 수, 완료 요구사항 수, 반복 요구사항 수, 총 추정치, 완료 추정치, 반복 추정치
     public List<Object[]> getMemberData(Long pid) {
-        List<String> uidList = memberRepository.findMember(pid);
         List<Object[]> data = new ArrayList<>();
 
         String directoryPath = ctx.getRealPath(requestFolderPath) + File.separator + pid;
@@ -162,6 +162,22 @@ public class GraphService {
                         FileInputStream fis = new FileInputStream(file);
                         Workbook workbook = new XSSFWorkbook(fis);
                         Sheet sheet = workbook.getSheetAt(0);
+
+                        // 엑셀의 7번째열에서 담당자 데이터 추출 
+                        List<String> uidList = new ArrayList<>();
+                        boolean firstRowSkipped = false; 
+                        for (Row row : sheet) {
+                            if (!firstRowSkipped) {
+                                firstRowSkipped = true;
+                                continue; // 첫 번째 행 값은 넣지않음 
+                            }
+                            Cell cell7 = row.getCell(7);
+                            if (cell7 != null && cell7.getCellType() == CellType.STRING) {
+                                String uid = cell7.getStringCellValue();
+                                uidList.add(uid);
+                            }
+                        }
+                        uidList = uidList.stream().distinct().collect(Collectors.toList());  // 중복 제거
 
                         for (String uid : uidList) {
                             // 각 멤버별로 데이터를 저장하기 위한 배열 초기화
@@ -223,10 +239,8 @@ public class GraphService {
 
     
     // 번다운 그래프 데이터 
-    // 날짜, 아이디, 총 추정치, 남은 추정치(총 추정치-완료 추정치)
+    // 날짜, 담당자, 총 추정치, 남은 추정치(총 추정치-완료 추정치)
     public List<Object[]> burnMemberData(Long pid) {
-        List<String> uidList = memberRepository.findMember(pid);
-        uidList.add("all"); // "all" 아이디 추가
         List<Object[]> data = new ArrayList<>();
 
         String directoryPath = ctx.getRealPath(requestFolderPath) + File.separator + pid;
@@ -254,6 +268,23 @@ public class GraphService {
                         FileInputStream fis = new FileInputStream(file);
                         Workbook workbook = new XSSFWorkbook(fis);
                         Sheet sheet = workbook.getSheetAt(0);
+
+                        // 엑셀의 7번째열에서 담당자 데이터 추출 
+                        List<String> uidList = new ArrayList<>();
+                        boolean firstRowSkipped = false; 
+                        for (Row row : sheet) {
+                            if (!firstRowSkipped) {
+                                firstRowSkipped = true;
+                                continue; // 첫 번째 행 값은 넣지않음 
+                            }
+                            Cell cell7 = row.getCell(7);
+                            if (cell7 != null && cell7.getCellType() == CellType.STRING) {
+                                String uid = cell7.getStringCellValue();
+                                uidList.add(uid);
+                            }
+                        }
+                        uidList.add("all"); // "all" 아이디 추가
+                        uidList = uidList.stream().distinct().collect(Collectors.toList());  // 중복 제거
 
                         for (String uid : uidList) {
                             Object[] memberData = new Object[4];
@@ -312,7 +343,7 @@ public class GraphService {
         int endDate = Integer.parseInt(dateFormat.format(end));  // 마감날짜 
 
         int[] result = {startDate, endDate};
-        
+
         return result;
     }
 

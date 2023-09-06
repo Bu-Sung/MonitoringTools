@@ -290,7 +290,7 @@
                     data: dates.map((date, index) => {
                         if (index === startIndex) {
                             // 시작날의 값
-                            return memberDataMap[memberId][0];
+                            return memberDataMap[memberId] && memberDataMap[memberId][0] ? memberDataMap[memberId][0] : 0;  // 값이 없는 경우 0으로 설정
                         } else if (index === endIndex) {
                             return 0;
                         } else {
