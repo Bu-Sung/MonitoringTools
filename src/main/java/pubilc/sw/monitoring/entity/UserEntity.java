@@ -20,7 +20,7 @@ import org.hibernate.annotations.ColumnDefault;
  */
 @Data
 @Entity
-@Table(name="user")// 필수는 X, DB에 테이블 설정 가능
+@Table(name="userinfo")// 필수는 X, DB에 테이블 설정 가능
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

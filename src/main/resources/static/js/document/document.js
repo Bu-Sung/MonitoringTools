@@ -78,7 +78,7 @@ function checkupdatefile() {
     remaininput.type = 'hidden';
     remaininput.name = 'fileExist';
     remaininput.value = 0;
-    if (document.getElementById("ulfile").getElementsByTagName("li") > 0 || newfile.files.length !== 0) {
+    if (document.getElementById("ulfile").getElementsByTagName("li") > 0 || newfile.value) {
         remaininput.value = 1;
     }
     container.appendChild(remaininput);

@@ -57,10 +57,10 @@
                                     <table class="table">
                                         <thead>
                                             <tr class="text-primary">
+                                                <th>카테고리</th>
                                                 <th>제목</th>
                                                 <th>작성자</th>
                                                 <th>작성일</th>
-                                                <th>카테고리</th>
                                             </tr>
                                         </thead>
                                         <tbody id="list">

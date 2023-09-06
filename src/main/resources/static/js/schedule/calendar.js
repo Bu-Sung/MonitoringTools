@@ -9,27 +9,30 @@ document.addEventListener('DOMContentLoaded', function () {
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
         },
         locale: 'ko',
-        initialDate: '2023-01-12',
+        initialDate:  new Date(),
         navLinks: true,
         selectable: true,
         selectMirror: false,
+        contentHeight: 600,
         select: function (arg) {
-            scheduleModal();
-            var request = {
-                title: '',
-                content: '',
-                color: '#43aef2',
-                sid: '',
-                memberList: [],
-                startDateType: "date",
-                endDateType: "date",
-                startDateValue: arg.startStr,
-                endDateValue: arg.startStr
-            };
+            if (hasRight.value !== 3) {
+                scheduleModal();
+                var request = {
+                    title: '',
+                    content: '',
+                    color: '#43aef2',
+                    sid: '',
+                    memberList: [],
+                    startDateType: "date",
+                    endDateType: "date",
+                    startDateValue: arg.startStr,
+                    endDateValue: arg.startStr
+                };
 
-            scheduleModalSetting(request);
-            editScheduleSetting();
-            calendar.unselect();
+                scheduleModalSetting(request);
+                editScheduleSetting();
+                calendar.unselect();
+            }
         },
         eventClick: function (arg) {
             scheduleModal();
@@ -47,20 +50,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 var tmp = new Date(end);
                 endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
             }
-
             var request = {
                 title: arg.event._def.title,
                 content: arg.event._def.extendedProps.content,
                 color: arg.event._def.ui.backgroundColor,
                 sid: arg.event._def.extendedProps.sid,
-                memberList: arg.event._def.extendedProps.memberList,
                 startDateType: startDateType,
                 endDateType: endDateType,
                 startDateValue: startDateValue,
                 endDateValue: endDateValue
             };
-
+            
             scheduleModalSetting(request);
+            readOnlyScheduleSetting();
+               
+            if (hasRight.value === 3) {
+                saveSchedule.hidden = true;
+                editSchedule.hidden = true;
+                deleteSchedule.hidden = true;
+                updateSchedule.hidden = true;
+            }
         },
         editable: true,
         dayMaxEvents: true, // allow "more" link when too many events

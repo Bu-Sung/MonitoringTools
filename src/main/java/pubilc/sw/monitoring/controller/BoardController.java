@@ -117,7 +117,7 @@ public class BoardController {
     
     @GetMapping("/download")
     public ResponseEntity<Resource> download(HttpServletRequest request){
-        return boardService.downloadFile(request.getParameter("filename"), request.getParameter("mid"));
+        return boardService.downloadFile(request.getParameter("filename"), request.getParameter("bid"));
     }
     
 }
