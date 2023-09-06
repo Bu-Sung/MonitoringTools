@@ -56,7 +56,7 @@ function getAllMemberInfo() {
     var searchMemberDropdown = document.getElementById("searchMember");
 
     addMemberInput.addEventListener('keyup', function () {
-        fetch('/monitoring/project/getAllMemberInfo', {})
+        fetch('/monitoring/project/getAllMemberInfo/{'+addMemberInput.value +"}", {})
                 .then(response => response.json())
                 .then(data => {
                     searchMemberDropdown.innerHTML = '';

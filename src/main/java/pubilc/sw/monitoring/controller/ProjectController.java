@@ -60,22 +60,32 @@ public class ProjectController {
         sessionManager.setProjectId(pid);
         sessionManager.setProjectRight(projectService.hasRight(sessionManager.getUserId(), pid));
         model.addAttribute("project", projectDTO);
-        
+
         ObjectMapper objectMapper = new ObjectMapper();
         model.addAttribute("allData", objectMapper.writeValueAsString(graphService.getData(pid)));  // 전체 요구사항 데이터 
         model.addAttribute("memberData", objectMapper.writeValueAsString(graphService.getMemberData(pid)));  // 멤버 요구사항 데이터 
         model.addAttribute("burnData", objectMapper.writeValueAsString(graphService.burnMemberData(pid)));  // 번다운 데이터
         model.addAttribute("projectDate", graphService.getProjectDate(pid));  // 프로젝트 시작, 마감 날짜 
-        
+
         model.addAttribute("todaySchedule", scheduleService.findSchedules(pid, sessionManager.getUserId()));// 금일 일정
         model.addAttribute("userSprint", requestService.getUserSprintList(pid, sessionManager.getUserId())); // 사용자의 스프린트 내역
+        Map<String, Object> rate = requestService.getRequestCounts(pid);
+        int num = 0;
+        if (rate.get("total") instanceof Number && ((Number) rate.get("total")).doubleValue() != 0) {
+            double clear = ((Number) rate.get("clear")).doubleValue();
+            double total = ((Number) rate.get("total")).doubleValue();
+            num = (int) (clear / total * 100);
+        } else {
+            
+        }
+        model.addAttribute("num", num);// 달성률
         model.addAttribute("rate", requestService.getRequestCounts(pid));// 달성률
         model.addAttribute("endDay", projectService.getDaysUntilProjectEnd(pid));
         return "project/project";
     }
 
-    @GetMapping("/invite")
-    public String invite(@RequestParam("pid") Long pid, Model model) {
+    @GetMapping("/invite/{pid}")
+    public String invite(@PathVariable Long pid, Model model) {
 
         model.addAttribute("pid", pid);  // 프로젝트 아이디 
         model.addAttribute("inviteUserName", projectService.getInviteUserName(pid));  // 프로젝트 초대한사람 이름 
@@ -118,35 +128,26 @@ public class ProjectController {
      * @param attrs
      * @return
      */
-    @PostMapping("/acceptInvite")
-    public String acceptInvite(@RequestParam(value = "selectedPid", required = false) List<Long> selectedPid, RedirectAttributes attrs) {
-        if (selectedPid != null && !selectedPid.isEmpty()) {
-            if (projectService.acceptInvite(selectedPid, sessionManager.getUserId())) {
-                attrs.addFlashAttribute("msg", "프로젝트 초대 수락하였습니다.");
-            } else {
-                attrs.addFlashAttribute("msg", "프로젝트 초대 수락 실패하였습니다.");
-            }
+    @PostMapping("/acceptInvite/{pid}")
+    public String acceptInvite(@PathVariable Long pid, RedirectAttributes attrs) {
+        if (projectService.acceptInvite(pid, sessionManager.getUserId())) {
+            attrs.addFlashAttribute("msg", "프로젝트 초대 수락하였습니다.");
         } else {
-            attrs.addFlashAttribute("msg", "선택된 수락이 없습니다.");
+            attrs.addFlashAttribute("msg", "프로젝트 초대 수락 실패하였습니다.");
         }
 
-        return "redirect:/project/list";
+        return "redirect:/project/main";
     }
 
     // 프로젝트 초대 거절 ㅓ 
-    @PostMapping("/refuseInvite")
-    public String refuseInvite(@RequestParam(value = "selectedPid", required = false) List<Long> selectedPid, RedirectAttributes attrs) {
-        if (selectedPid != null && !selectedPid.isEmpty()) {
-            if (projectService.refuseInvite(selectedPid, sessionManager.getUserId())) {
-                attrs.addFlashAttribute("msg", "프로젝트 초대 거절하였습니다.");
-            } else {
-                attrs.addFlashAttribute("msg", "프로젝트 초대 거절 실패하였습니다.");
-            }
+    @PostMapping("/refuseInvite/{pid}")
+    public String refuseInvite(@PathVariable Long pid, RedirectAttributes attrs) {
+        if (projectService.refuseInvite(pid, sessionManager.getUserId())) {
+            attrs.addFlashAttribute("msg", "프로젝트 초대 거절하였습니다.");
         } else {
-            attrs.addFlashAttribute("msg", "선택된 초대 거절이 없습니다.");
+            attrs.addFlashAttribute("msg", "프로젝트 초대 거절 실패하였습니다.");
         }
-
-        return "redirect:/project/list";
+        return "redirect:/project/main";
     }
 
     /**
@@ -223,14 +224,14 @@ public class ProjectController {
      * @param attrs
      * @return project 프로젝트 삭제 후 프로젝트 리스트 조회 페이지로 이동
      */
-    @PostMapping("update/delete/{pid}")
+    @GetMapping("/delete/{pid}")
     public String deleteProject(@PathVariable Long pid, RedirectAttributes attrs) {
         if (projectService.deleteProject(pid)) {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 성공했습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 실패했습니다.");
         }
-        return "redirect:/project/list";
+        return "redirect:/project/main";
     }
 
     /**
@@ -252,11 +253,10 @@ public class ProjectController {
         return "project/manageMember";
     }
 
-    @GetMapping("/getAllMemberInfo")
+    @GetMapping("/getAllMemberInfo/{uid}")
     public @ResponseBody
-    List<UserDTO> getAllMemberInfo() {
-        List<UserDTO> list = projectService.searchAllMembers(sessionManager.getProjectId());
-        System.out.println(list);
+    List<UserDTO> getAllMemberInfo(@PathVariable String uid) {
+        List<UserDTO> list = projectService.searchAllMembers(sessionManager.getProjectId(), uid);
         return list;
     }
 
@@ -283,7 +283,7 @@ public class ProjectController {
             attrs.addFlashAttribute("msg", "팀원 추가 실패했습니다.");
         }
 
-        return "redirect:/project/manageMember/" + pid;
+        return "redirect:/project/update/" + pid;
     }
 
     /**

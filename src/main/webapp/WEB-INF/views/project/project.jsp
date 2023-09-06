@@ -41,7 +41,7 @@
                                 <div class="card card-white-1 mb-4">
                                     <div class="card-body">
                                         <p>진행률</p>
-                                        <h5 class="text-primary">${rate.clear/rate.total*100}%</h5>
+                                        <h5 class="text-primary">${rate.total eq null ? 0 : num}%</h5>
                                     </div>
                                 </div>
                                 <div class="row mx-auto">
@@ -65,7 +65,7 @@
                                         <div class="card-body">
                                             <p>진행 중</p>
                                             <h5 class="text-primary">
-                                                <sapn>${rate.total-rate.standBy-rate.clear}</sapn> / <span>${rate.total}</span>
+                                                <sapn>${rate.total eq null ? 0 :rate.total-rate.standBy-rate.clear}</sapn> / <span>${rate.total}</span>
                                             </h5>
                                         </div>
                                     </div>
@@ -73,7 +73,7 @@
                                         <div class="card-body">
                                             <p>완료</p>
                                             <h5 class="text-primary">
-                                                <sapn>${rate.clear}</sapn> / <span>${rate.total}</span>
+                                                <sapn>${rate.total eq null ? 0 :rate.clear}</sapn> / <span>${rate.total}</span>
                                             </h5>
                                         </div>
                                     </div>

@@ -212,7 +212,7 @@ public class ProjectService {
                     .content(projectDTO.getContent())
                     .start(java.sql.Date.valueOf(startDate))
                     .end(java.sql.Date.valueOf(endDate))
-                    .category(projectDTO.getCategory())
+                    .category(projectEntity.getCategory())
                     .cycle(projectDTO.getCycle())
                     .build();
 
@@ -334,32 +334,30 @@ public class ProjectService {
     }
 
     // 받은 초대 수락 
-    public boolean acceptInvite(List<Long> selectedPid, String uid) {
+    public boolean acceptInvite(Long pid, String uid) {
         boolean invite = false;
 
-        for (Long pid : selectedPid) {
-            MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
-            if (memberEntity != null) {
-                memberEntity.setState(2); // 상태를 2(수락)로 변경 
-                memberRepository.save(memberEntity); // 변경 사항 저장
-                invite = true;
-            }
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        if (memberEntity != null) {
+            memberEntity.setState(2); // 상태를 2(수락)로 변경 
+            memberRepository.save(memberEntity); // 변경 사항 저장
+            invite = true;
         }
+
         return invite; // 하나 이상 수락된 경우 true 반환
     }
 
     // 받은 초대 거절 
-    public boolean refuseInvite(List<Long> selectedPid, String uid) {
+    public boolean refuseInvite(Long pid, String uid) {
         boolean invite = false;
 
-        for (Long pid : selectedPid) {
-            MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
-            if (memberEntity != null) {
-                memberEntity.setState(-1); // 상태를 -1(거절)로 변경 
-                memberRepository.save(memberEntity); // 변경 사항 저장
-                invite = true;
-            }
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        if (memberEntity != null) {
+            memberEntity.setState(-1); // 상태를 -1(거절)로 변경 
+            memberRepository.save(memberEntity); // 변경 사항 저장
+            invite = true;
         }
+
         return invite;
     }
 
@@ -415,9 +413,9 @@ public class ProjectService {
         return uidList;
     }
 
-    public List<UserDTO> searchAllMembers(Long pid){
-        List<Map<String, Object>> searchResults = userRepository.findUsersByPid(pid);
-        
+    public List<UserDTO> searchAllMembers(Long pid, String uid) {
+        List<Map<String, Object>> searchResults = userRepository.findUsersByPid(pid, uid);
+
         List<UserDTO> uidList = new ArrayList<>();
 
         for (Map<String, Object> user : searchResults) {
@@ -429,8 +427,10 @@ public class ProjectService {
                     .phone(user.get("phone").toString())
                     .build());
         }
+        System.out.println(uidList);
         return uidList;
     }
+
     /**
      * 프로젝트 멤버 추가 함수
      *
@@ -518,15 +518,17 @@ public class ProjectService {
                 .phone(user.get("phone").toString())
                 .build();
     }
+
     /**
      * 카테고리 업데이트
+     *
      * @param str
-     * @param pid 
+     * @param pid
      */
-    public void updateCartegory(String str, Long pid){
+    public void updateCartegory(String str, Long pid) {
         projectRepository.updateCategory(pid, str);
     }
-    
+
     public int getDaysUntilProjectEnd(Long pid) {
         return projectRepository.getDaysUntilProjectEnd(pid);
     }

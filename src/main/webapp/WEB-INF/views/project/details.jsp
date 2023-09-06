@@ -11,6 +11,7 @@
         <!-- 부트스트랩 CSS 링크-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+
         <!-- 부트스트랩 Icons 링크 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -40,12 +41,12 @@
                         <div class="col-md-9 col-11 mx-auto my-5">
                             <form action="/monitoring/project/updateProject" method="post">
                                 <input class="form-control form-control-primary" value="${project.pid}"
-                                       hidden>
+                                       hidden name="pid">
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-1 fw-600">프로젝트 명</h6>
                                     <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
-                                    <input type="text" class="form-control form-control-primary"
+                                    <input type="text" name="name" class="form-control form-control-primary"
                                            value="${project.name}">
                                 </div>
 
@@ -53,7 +54,7 @@
                                     <h6 class="mb-1 fw-600">프로젝트 설명</h6>
                                     <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
                                     <textarea class="form-control form-control-primary"
-                                              style="height: 7rem;">${project.content}</textarea>
+                                              style="height: 7rem;" name="content">${project.content}</textarea>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
@@ -62,12 +63,12 @@
                                             <h6 class="mb-3 fw-600"> 프로젝트 시작 기간</h6>
                                             <input type="date"
                                                    class="form-control form-control-primary mb-md-0 mb-4"
-                                                   value="${project.start}">
+                                                   value="${project.start}" name="start">
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <h6 class="mb-3 fw-600"> 프로젝트 종료 기간</h6>
                                             <input type="date" class="form-control form-control-primary"
-                                                   value="${project.end}">
+                                                   value="${project.end}" name="end">
                                         </div>
                                     </div>
                                 </div>
@@ -76,22 +77,24 @@
                                     <h6 class="mb-1 fw-600">스프린트 주기</h6>
                                     <small class="text-gray mb-3">주기를 일(날짜) 단위로 작성해주세요</small>
                                     <input type="number" min="1" class="form-control form-control-primary"
-                                           value="${project.cycle}">
+                                           value="${project.cycle}" name="cycle">
                                 </div>
-                            </form>
-                            <div class="card card-white-1 p-3 mb-3">
-                                <h6 class="mb-3 fw-600">게시글 카테고리</h6>
-                                <button class="btn btn-gray mb-2" style="border-width: 2px;"
-                                        data-bs-toggle="modal" data-bs-target="#categoryModal">카테고리
-                                    관리</button>
-                            </div>
 
-                            <div class="card card-white-1 p-3 mb-5">
-                                <h6 class="mb-3 fw-600">팀원</h6>
-                                <button class="btn btn-gray mb-2" style="border-width: 2px;"
-                                        data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
-                            </div>
-                            <button class="btn btn-primary w-100">저장하기</button>
+                                <div class="card card-white-1 p-3 mb-3">
+                                    <h6 class="mb-3 fw-600">게시글 카테고리</h6>
+                                    <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
+                                            data-bs-toggle="modal" data-bs-target="#categoryModal">카테고리
+                                        관리</button>
+                                </div>
+
+                                <div class="card card-white-1 p-3 mb-5">
+                                    <h6 class="mb-3 fw-600">팀원</h6>
+                                    <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
+                                            data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">저장하기</button>
+                            </form>
+                                <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2">삭제하기</button></a>
                         </div>
                     </div>
                 </div>
@@ -145,17 +148,17 @@
                     <div class="modal-body" style="white-space: normal;">
                         <!-- 입력 폼 -->
                         <div class="d-flex justify-content-between mb-4">    
-                            <input type="text" class="form-control form-control-secondary me-2" id="teamMemberInput"
-                                   placeholder="팀원의 아이디를 입력하세요" autocomplete="off">
-                            <div id="searchMember" class="dropdown-menu"></div>
+                            <div style="position: relative; flex-grow: 1;">
+                                <input type="text" class="form-control form-control-secondary me-2 w-100" id="teamMemberInput"
+                                       placeholder="팀원의 아이디를 입력하세요" autocomplete="off">
+                                <div id="searchMember" class="dropdown-menu "></div>
+                            </div>
                             <button type="button" class="btn btn-secondary" style="width: 4rem" id="addTeamMember">추가</button>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="fw-400 mt-2" style="width: 8rem;">팀원 목록</p>
                             <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers">삭제</button>
                         </div>
-                        <input class="form-control mb-4" style="background-color: #F2F2F2" placeholder="검색할 팀원의 아이디를 입력하세요">
-                        <!-- 동적으로 추가되는 체크박스 (script 참고) -->
                         <div id="teamList">
                             <c:forEach items="${memberDetails}" var="member">
                                 <div class="form-check mb-2 d-flex">
@@ -172,7 +175,7 @@
                         </div>
                     </div>
                     <div class=" modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">저장</button>
+                        <button type="button" class="btn btn-primary" id="saveTeam">저장</button>
                     </div>
                 </div>
             </div>
@@ -266,14 +269,15 @@
                             });
                 });
                 getUsersList();
+                baseteamList();
             });
 
             const addButton = document.getElementById('addTeamMember');
             const input = document.getElementById('teamMemberInput');
             const teamList = document.getElementById('teamList');
             const deleteButton = document.getElementById('deleteTeamMembers');
-            let teamcheckbox = [];
-
+            const saveButton = document.getElementById('saveTeam');
+            let baseteam = [];
             // 작업 상태에 따른 상태 텍스트 매핑
             const statusText = {
                 0: '생성자',
@@ -281,6 +285,94 @@
                 2: '수락',
             };
 
+            function reloadBaseTeam() {
+                teamList.innerHTML = '';
+                for (let item of baseteam) {
+                    // 체크박스 생성
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'form-check-input me-2';
+                    // 라벨 생성
+                    const label = document.createElement('label');
+                    label.className = 'form-check-label mx-2';
+                    label.textContent = item.uid;
+
+                    // 선택 옵션 생성 (마스터 권한, 게시물 작성 및 편집 권한, 보기 권한)
+                    const select = document.createElement('select');
+                    select.className = 'form-select-gray form-select-sm';
+                    select.name = 'rights';
+
+                    const option1 = document.createElement('option');
+                    option1.value = '1';
+                    option1.textContent = '마스터 권한';
+
+                    const option2 = document.createElement('option');
+                    option2.value = '2';
+                    option2.textContent = '게시물 작성 및 편집 권한';
+
+                    const option3 = document.createElement('option');
+                    option3.value = '3';
+                    option3.textContent = '보기 권한';
+
+                    select.appendChild(option1);
+                    select.appendChild(option2);
+                    select.appendChild(option3);
+
+                    // 작업 상태에 따른 상태 텍스트 생성
+                    const status = item.value; // 여기에 작업 상태를 설정 (0, 1 또는 2)
+                    const statusText = document.createElement('small');
+                    statusText.className = 'text-gray my-auto ps-2';
+                    statusText.textContent = statusText[status];
+
+                    // 모든 요소를 함께 랩핑
+                    const memberDiv = document.createElement('div');
+                    memberDiv.className = 'form-check mb-2 d-flex';
+                    memberDiv.appendChild(checkbox);
+                    memberDiv.appendChild(label);
+                    memberDiv.appendChild(select);
+                    memberDiv.appendChild(statusText);
+
+                    // 리스트에 추가
+                    teamList.appendChild(memberDiv);
+                }
+            }
+
+
+            function baseteamList() {
+                var labels = document.querySelectorAll('#teamList .form-check-label');
+                var selects = document.querySelectorAll('#teamList select');
+
+// 결과를 저장할 배열 생성
+                var result = [];
+
+// 각 label과 select 요소에 대해 반복 처리
+                for (let i = 0; i < labels.length; i++) {
+                    // 현재 label의 텍스트(멤버 uid)와 현재 select의 선택된 값 가져오기
+                    var memberUid = labels[i].textContent;
+                    var selectedValue = selects[i].value;
+
+                    // 결과 배열에 추가
+                    result.push({
+                        uid: memberUid,
+                        value: selectedValue,
+                    });
+                }
+                baseteam = result;
+            }
+            saveButton.addEventListener('click', function () {
+                var labels = document.querySelectorAll('#teamList .form-check-label');
+                var selects = document.querySelectorAll('#teamList select');
+                var result = [];
+                for (let i = 0; i < labels.length; i++) {
+                    var memberUid = labels[i].textContent;
+                    var selectedValue = selects[i].value;
+                    result.push({
+                        uid: memberUid,
+                        value: selectedValue,
+                    });
+                }
+                console.log(result);
+            });
             addButton.addEventListener('click', function () {
                 const memberName = input.value.trim();
                 if (memberName) {
@@ -333,6 +425,8 @@
 
                     // 입력 필드 초기화
                     input.value = '';
+
+
                 }
             });
 
@@ -343,38 +437,26 @@
                 });
             });
 
-            const teamModal = new bootstrap.Modal(document.getElementById('teamModal'));
-            teamModal._element.addEventListener('hidden.bs.modal', function () {
-                checkboxes.forEach(function (checkbox) {
-                    checkbox.closest('.form-check').remove();
-                });
-                checkboxes = [];
-                baseCat = [];
-                taskList.innerHTML = '';
-                existingCheckboxes.forEach(item => {
-                    const taskItem = document.createElement('div');
-                    taskItem.classList.add('form-check', 'mb-2');
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.classList.add('form-check-input');
-                    checkbox.setAttribute('data-cat', item.dataset.cat);
-                    if (item.dataset.cat === "공지사항") {
-                        checkbox.disabled = true;
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.attributeName === "class") {
+                        var attributeValue = $(mutation.target).prop(mutation.attributeName);
+                        if (!attributeValue.includes('show')) {
+                            reloadBaseTeam();
+                        }
                     }
-                    taskItem.appendChild(checkbox);
-                    const label = document.createElement('label');
-                    label.classList.add('form-check-label', 'ms-2');
-                    label.textContent = item.dataset.cat;
-                    taskItem.appendChild(label);
-                    taskList.appendChild(taskItem);
-                    baseCat.push(checkbox);
                 });
+            });
+
+            observer.observe(teamModal, {
+                attributes: true
             });
         </script>
         <script src="/monitoring/js/user/search.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!-- 부트스트랩 script -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     </body>
 
 </html>
