@@ -105,36 +105,7 @@ function createComment(item) {
         </div>
         `;
     }
-//     else {
-//        let writerPara = document.createElement('p');
-//        writerPara.textContent = "작성자: " + item.writer;
-//        divElement.appendChild(writerPara);
-//
-//        let contentPara = document.createElement('p');
-//        contentPara.textContent = "내용: " + item.content;
-//        divElement.appendChild(contentPara);
-//
-//        let datePara = document.createElement('p');
-//        datePara.textContent = "날짜: " + item.date;
-//        divElement.appendChild(datePara);
-//
-//        let deletePara = document.createElement('p');
-//        deletePara.textContent = "삭제";
-//        deletePara.addEventListener('click', function () {
-//            deleteCommit(item.cid);
-//        });
-//
-//        divElement.appendChild(deletePara);
-//
-//        let replyButton = document.createElement('button');
-//        replyButton.textContent = '답글';
-//        replyButton.addEventListener('click', function (event) {
-//            let spiltId = event.currentTarget.parentNode.id.split("-");
-//            settingComentInput(spiltId[spiltId.length - 1]);
-//        });
-//
-//        divElement.appendChild(replyButton);
-//    }
+   
     return divElement;
 }
 
