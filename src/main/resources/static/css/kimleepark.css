@@ -166,21 +166,6 @@ a.text-gray:hover {
     height: 60vh;
 }
 
-/*
-.modal-body {
-     공백 및 줄바꿈 유지 
-    white-space: pre-line;
-     긴 단어 자동 줄넘김 
-    word-wrap: break-word;
-     단어 내에서 줄바꿈 방지 
-    word-break: keep-all;
-}
-
-.modal-body:after {
-    content: "";
-    display: inline-block;
-    width: 100%;
-}*/
 
 .form-control {
     border-radius: 5px;
