@@ -19,7 +19,7 @@
             </li>
 
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/papaerPencil.png"
+                <a href="${pageContext.request.contextPath}/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/calendar.png"
                                                                                                                                     class="me-2">일정</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
