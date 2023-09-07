@@ -56,7 +56,7 @@ function getAllMemberInfo() {
     var searchMemberDropdown = document.getElementById("searchMember");
 
     addMemberInput.addEventListener('keyup', function () {
-        fetch('/monitoring/project/getAllMemberInfo/{'+addMemberInput.value +"}", {})
+        fetch('/monitoring/project/getAllMemberInfo', {})
                 .then(response => response.json())
                 .then(data => {
                     searchMemberDropdown.innerHTML = '';
@@ -82,7 +82,7 @@ function getAllMemberInfo() {
 }
 
 /* 전체 사용자 검색 */
-function getUsersList() {
+function searchUsersList() {
     var addMemberInput = document.getElementById("teamMemberInput");
     var searchMemberDropdown = document.getElementById("searchMember");
 

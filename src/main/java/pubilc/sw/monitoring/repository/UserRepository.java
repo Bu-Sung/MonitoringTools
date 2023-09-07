@@ -59,8 +59,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     
     @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth "
             + "FROM userinfo u JOIN member m ON u.user_id = m.user_id "
-            + "WHERE m.project_id=:pid AND m.user_id LIKE %:uid%", nativeQuery = true)
-    List<Map<String, Object>> findUsersByPid(@Param("pid") Long pid, @Param("uid") String uid);
+            + "WHERE m.project_id=:pid", nativeQuery = true)
+    List<Map<String, Object>> findUsersByPid(@Param("pid") Long pid);
     
     @Query(value = "SELECT u.user_id as id, u.user_name as name, u.user_email as email, u.user_phone as phone, u.user_birth as birth " 
             + "FROM userinfo u JOIN schedule s ON FIND_IN_SET(u.user_id, s.schedule_member) > 0 " 

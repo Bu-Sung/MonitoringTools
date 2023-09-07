@@ -181,10 +181,6 @@ public class ProjectController {
 
         int right = projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId());  // 권한 확인 
         model.addAttribute("right", right);
-
-        List<MemberDTO> memberDetails = projectService.getMember(sessionManager.getProjectId());  // 멤버 상세 정보 가져오기
-        model.addAttribute("memberDetails", memberDetails);
-
         return "project/details";
     }
 
@@ -224,7 +220,7 @@ public class ProjectController {
      * @param attrs
      * @return project 프로젝트 삭제 후 프로젝트 리스트 조회 페이지로 이동
      */
-    @GetMapping("/delete/{pid}")
+    @GetMapping("/update/delete/{pid}")
     public String deleteProject(@PathVariable Long pid, RedirectAttributes attrs) {
         if (projectService.deleteProject(pid)) {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 성공했습니다.");
@@ -237,26 +233,17 @@ public class ProjectController {
     /**
      * 프로젝트 멤버 정보 조회
      *
-     * @param pid 프로젝트 아이디
-     * @param model
-     * @return manageMember 프로젝트 멤버 관리 페이지
+
+     * @return 멤버 리스트
      */
-    @GetMapping("/manageMember/{pid}")
-    public String manageMember(@PathVariable Long pid, Model model) {
-
-        List<MemberDTO> memberDTO = projectService.getMember(pid);
-        model.addAttribute("memberDetails", memberDTO);
-
-        int editright = projectService.hasRight(sessionManager.getUserId(), pid);  // 편집 권한 확인 
-        model.addAttribute("editright", editright);
-
-        return "project/manageMember";
+    @GetMapping("/getMember")
+    public @ResponseBody List<MemberDTO> manageMember() {
+        return projectService.getMember(sessionManager.getProjectId());
     }
 
-    @GetMapping("/getAllMemberInfo/{uid}")
-    public @ResponseBody
-    List<UserDTO> getAllMemberInfo(@PathVariable String uid) {
-        List<UserDTO> list = projectService.searchAllMembers(sessionManager.getProjectId(), uid);
+    @GetMapping("/getAllMemberInfo")
+    public @ResponseBody List<UserDTO> getAllMemberInfo() {
+        List<UserDTO> list = projectService.searchAllMembers(sessionManager.getProjectId());
         return list;
     }
 
@@ -270,20 +257,9 @@ public class ProjectController {
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지
      */
-    @PostMapping("/addMember/{pid}")
-    public String addMember(@ModelAttribute MemberDTO memberDTO, @PathVariable Long pid, @RequestParam String addUid, @RequestParam int right, RedirectAttributes attrs) {
-
-        if (!projectService.isRegisteredUser(addUid)) {
-            attrs.addFlashAttribute("msg", "존재하지 않는 아이디입니다.");
-        } else if (projectService.isMember(memberDTO, addUid)) {
-            attrs.addFlashAttribute("msg", "이미 참여 중인 팀원입니다.");
-        } else if (projectService.addMember(memberDTO, addUid, right)) {
-            attrs.addFlashAttribute("msg", "팀원 추가 성공했습니다.");
-        } else {
-            attrs.addFlashAttribute("msg", "팀원 추가 실패했습니다.");
-        }
-
-        return "redirect:/project/update/" + pid;
+    @PostMapping("/addMember")
+    public @ResponseBody boolean addMember(@RequestBody MemberDTO memberDTO) {
+        return projectService.addMember(memberDTO.getUid(), sessionManager.getProjectId());
     }
 
     /**
@@ -295,8 +271,7 @@ public class ProjectController {
     @GetMapping("/searchUsers")
     public @ResponseBody
     List<String> searchUsers(@RequestParam String uid) {
-        System.out.println(projectService.searchUsers(uid));
-        return projectService.searchUsers(uid);
+        return projectService.searchUsers(uid, sessionManager.getProjectId());
     }
 
     /**
@@ -307,17 +282,12 @@ public class ProjectController {
      * @param rights 수정할 권한 리스트
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지
-     */
-    @PostMapping("/updateRight/{pid}")
-    public String updateRight(@RequestParam List<String> uids, @RequestParam Long pid, @RequestParam List<Integer> rights, RedirectAttributes attrs) {
-        for (int i = 0; i < uids.size(); i++) {
-            projectService.updateMemberRight(uids.get(i), pid, rights.get(i));
-        }
-
-        attrs.addFlashAttribute("msg", "권한 수정 성공했습니다.");
-
-        return "redirect:/project/manageMember/" + pid;
+    */ 
+    @PostMapping("/updateRight")
+    public @ResponseBody boolean updateRight(@RequestBody MemberDTO memberDTO) {
+        return  projectService.updateMemberRight(memberDTO, sessionManager.getProjectId());
     }
+   
 
     /**
      * 프로젝트 팀원 삭제
@@ -327,20 +297,10 @@ public class ProjectController {
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지
      */
-    @PostMapping("/deleteMember/{pid}")
-    public String removeMember(@RequestParam(value = "selectedMember", required = false) List<String> selectedMember, @RequestParam Long pid, RedirectAttributes attrs) {
-        if (selectedMember != null && !selectedMember.isEmpty()) {
-
-            if (projectService.deleteMember(selectedMember, pid)) {
-                attrs.addFlashAttribute("msg", "선택된 팀원 삭제 성공했습니다.");
-            } else {
-                attrs.addFlashAttribute("msg", "선택된 팀원 삭제 실패했습니다.");
-            }
-        } else {
-            attrs.addFlashAttribute("msg", "선택된 팀원이 없습니다.");
-        }
-
-        return "redirect:/project/manageMember/" + pid;
+    @GetMapping("/deleteMember/{uid}")
+    public @ResponseBody boolean removeMember(@PathVariable String uid) {
+        projectService.deleteMember(uid, sessionManager.getProjectId());
+        return true;
     }
 
     /**
@@ -367,11 +327,6 @@ public class ProjectController {
         return projectService.hasMember(sessionManager.getProjectId(), uid);
     }
 
-    @GetMapping("/graph")
-    public String graph(Model model) throws JsonProcessingException {
-
-        // JSON 문자열로 변환
-        return "project/graph";
-    }
+    
 
 }

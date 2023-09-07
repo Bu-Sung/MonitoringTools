@@ -94,7 +94,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">저장하기</button>
                             </form>
-                                <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2">삭제하기</button></a>
+                            <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2">삭제하기</button></a>
                         </div>
                     </div>
                 </div>
@@ -160,22 +160,7 @@
                             <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers">삭제</button>
                         </div>
                         <div id="teamList">
-                            <c:forEach items="${memberDetails}" var="member">
-                                <div class="form-check mb-2 d-flex">
-                                    <input type="checkbox" class="form-check-input me-2" data-cat="${member.uid}" ${member.uid eq sessionScope.user.id ? 'disabled' : ''}>
-                                    <label class="form-check-label mx-2" for="noticeCheckbox">${member.uid}</label>
-                                    <select class="form-select-gray form-select-sm" name="rights" width: fit-content" ${member.uid eq sessionScope.user.id ? 'disabled' : ''}>
-                                        <option value="1" ${member.right == 1 ? 'selected' : ''}>마스터 권한</option>
-                                        <option value="2" ${member.right == 2 ? 'selected' : ''}>게시물 작성 및 편집 권한</option>
-                                        <option value="3" ${member.right == 3 ? 'selected' : ''}>보기 권한</option>
-                                    </select>
-                                    <small class="text-gray my-auto ps-2">${member.state == 0 ? '생성자' : member.state == 1 ? '미수락' : member.state == 2 ? '수락' : ''}</small>
-                                </div>
-                            </c:forEach>
                         </div>
-                    </div>
-                    <div class=" modal-footer">
-                        <button type="button" class="btn btn-primary" id="saveTeam">저장</button>
                     </div>
                 </div>
             </div>
@@ -268,16 +253,35 @@
                                 console.error('Error:', error);
                             });
                 });
-                getUsersList();
-                baseteamList();
+                searchUsersList();
+                getMemberList().then(() => {
+                    reloadBaseTeam();
+                });
+
             });
+
+            let baseteam = [];
+
+            function getMemberList() {
+                baseteam = [];
+                return fetch('/monitoring/project/getMember')  // fetch 요청은 Promise를 반환합니다.
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(item => {
+                                baseteam.push(item);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+            }
 
             const addButton = document.getElementById('addTeamMember');
             const input = document.getElementById('teamMemberInput');
-            const teamList = document.getElementById('teamList');
+            //const teamList = document.getElementById('teamList');
             const deleteButton = document.getElementById('deleteTeamMembers');
             const saveButton = document.getElementById('saveTeam');
-            let baseteam = [];
+
             // 작업 상태에 따른 상태 텍스트 매핑
             const statusText = {
                 0: '생성자',
@@ -286,6 +290,7 @@
             };
 
             function reloadBaseTeam() {
+                const teamList = document.getElementById('teamList');
                 teamList.innerHTML = '';
                 for (let item of baseteam) {
                     // 체크박스 생성
@@ -296,33 +301,51 @@
                     const label = document.createElement('label');
                     label.className = 'form-check-label mx-2';
                     label.textContent = item.uid;
-
                     // 선택 옵션 생성 (마스터 권한, 게시물 작성 및 편집 권한, 보기 권한)
                     const select = document.createElement('select');
                     select.className = 'form-select-gray form-select-sm';
                     select.name = 'rights';
-
                     const option1 = document.createElement('option');
                     option1.value = '1';
                     option1.textContent = '마스터 권한';
-
                     const option2 = document.createElement('option');
                     option2.value = '2';
                     option2.textContent = '게시물 작성 및 편집 권한';
-
                     const option3 = document.createElement('option');
                     option3.value = '3';
                     option3.textContent = '보기 권한';
-
                     select.appendChild(option1);
                     select.appendChild(option2);
                     select.appendChild(option3);
-
+                    option1.selected = item.right == '1';
+                    option2.selected = item.right == '2';
+                    option3.selected = item.right == '3';
+                    select.addEventListener("change", function () {
+                        fetch('/monitoring/project/updateRight', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({uid: item.uid, right: this.value, state: item.state})
+                        })
+                                .then(response => response.json())
+                                .then(data => getMemberList().then(() => {
+                                        reloadBaseTeam()
+                                    }))
+                                .catch(error => console.error('Error:', error));
+                    });
                     // 작업 상태에 따른 상태 텍스트 생성
-                    const status = item.value; // 여기에 작업 상태를 설정 (0, 1 또는 2)
-                    const statusText = document.createElement('small');
-                    statusText.className = 'text-gray my-auto ps-2';
-                    statusText.textContent = statusText[status];
+                    // 여기에 작업 상태를 설정 (0, 1 또는 2)
+                    // 작업 상태에 따른 상태 텍스트 생성
+                    const statusSmall = document.createElement('small'); // 변수명 변경
+                    statusSmall.className = 'text-gray my-auto ps-2';
+                    statusSmall.textContent = statusText[item.state]; // 여기에 작업 상태를 설정 (0, 1 또는 2)
+
+
+                    if (item.state === 0) {
+                        checkbox.disabled = true;
+                        select.disabled = true;
+                    }
 
                     // 모든 요소를 함께 랩핑
                     const memberDiv = document.createElement('div');
@@ -330,111 +353,73 @@
                     memberDiv.appendChild(checkbox);
                     memberDiv.appendChild(label);
                     memberDiv.appendChild(select);
-                    memberDiv.appendChild(statusText);
-
+                    memberDiv.appendChild(statusSmall);
                     // 리스트에 추가
                     teamList.appendChild(memberDiv);
                 }
             }
 
-
-            function baseteamList() {
-                var labels = document.querySelectorAll('#teamList .form-check-label');
-                var selects = document.querySelectorAll('#teamList select');
-
-// 결과를 저장할 배열 생성
-                var result = [];
-
-// 각 label과 select 요소에 대해 반복 처리
-                for (let i = 0; i < labels.length; i++) {
-                    // 현재 label의 텍스트(멤버 uid)와 현재 select의 선택된 값 가져오기
-                    var memberUid = labels[i].textContent;
-                    var selectedValue = selects[i].value;
-
-                    // 결과 배열에 추가
-                    result.push({
-                        uid: memberUid,
-                        value: selectedValue,
-                    });
-                }
-                baseteam = result;
-            }
-            saveButton.addEventListener('click', function () {
-                var labels = document.querySelectorAll('#teamList .form-check-label');
-                var selects = document.querySelectorAll('#teamList select');
-                var result = [];
-                for (let i = 0; i < labels.length; i++) {
-                    var memberUid = labels[i].textContent;
-                    var selectedValue = selects[i].value;
-                    result.push({
-                        uid: memberUid,
-                        value: selectedValue,
-                    });
-                }
-                console.log(result);
-            });
             addButton.addEventListener('click', function () {
                 const memberName = input.value.trim();
-                if (memberName) {
-                    // 체크박스 생성
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'form-check-input me-2';
-                    // 라벨 생성
-                    const label = document.createElement('label');
-                    label.className = 'form-check-label mx-2';
-                    label.textContent = memberName;
-
-                    // 선택 옵션 생성 (마스터 권한, 게시물 작성 및 편집 권한, 보기 권한)
-                    const select = document.createElement('select');
-                    select.className = 'form-select-gray form-select-sm';
-                    select.name = 'rights';
-
-                    const option1 = document.createElement('option');
-                    option1.value = '1';
-                    option1.textContent = '마스터 권한';
-
-                    const option2 = document.createElement('option');
-                    option2.value = '2';
-                    option2.textContent = '게시물 작성 및 편집 권한';
-
-                    const option3 = document.createElement('option');
-                    option3.value = '3';
-                    option3.textContent = '보기 권한';
-
-                    select.appendChild(option1);
-                    select.appendChild(option2);
-                    select.appendChild(option3);
-
-                    // 작업 상태에 따른 상태 텍스트 생성
-                    const status = 0; // 여기에 작업 상태를 설정 (0, 1 또는 2)
-                    const statusText = document.createElement('small');
-                    statusText.className = 'text-gray my-auto ps-2';
-                    statusText.textContent = statusText[status];
-
-                    // 모든 요소를 함께 랩핑
-                    const memberDiv = document.createElement('div');
-                    memberDiv.className = 'form-check mb-2 d-flex';
-                    memberDiv.appendChild(checkbox);
-                    memberDiv.appendChild(label);
-                    memberDiv.appendChild(select);
-                    memberDiv.appendChild(statusText);
-
-                    // 리스트에 추가
-                    teamList.appendChild(memberDiv);
-
-                    // 입력 필드 초기화
-                    input.value = '';
-
-
+                if (memberName === '') {
+                    alert("아이디를 입력해주세요.");
+                    return;
                 }
+                fetch(`/monitoring/idcheck/` + memberName, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({id: memberName})
+                })
+                        .then(response => response.json())
+                        .then(isAvailable => {
+                            if (isAvailable) {
+                                fetch('/monitoring/project/addMember', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({uid: memberName})
+                                })
+                                        .then(response => response.json())
+                                        .then(data => getMemberList().then(() => {
+                                                reloadBaseTeam();
+                                            }))
+                                        .catch(error => console.error('Error:', error));
+
+//                                }
+                            } else {
+                                alert("아이디가 존재하지 않습니다.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+
+
             });
 
             deleteButton.addEventListener('click', function () {
                 const checkboxes = teamList.querySelectorAll('input[type="checkbox"]:checked');
+                let uid;
                 checkboxes.forEach(function (checkbox) {
-                    checkbox.closest('.form-check').remove();
+                    // 가장 가까운 '.form-check' 요소를 찾습니다.
+                    const memberDiv = checkbox.closest('.form-check');
+                    // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
+                    const label = memberDiv.querySelector('.form-check-label');
+                    uid = label.textContent;
+
+
                 });
+                fetch(`/monitoring/project/deleteMember/` + uid, {// uid 값을 URL에 포함시켜야 합니다.
+                    method: 'GET',
+                })
+                        .then(response => response.json())
+                        .then(data => getMemberList().then(() => {
+                                reloadBaseTeam();
+                            }))
+                        .catch(error => console.error('Error:', error));
             });
 
             var observer = new MutationObserver(function (mutations) {
