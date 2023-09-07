@@ -1,6 +1,8 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=200&section=header&text=MonitoringTools&fontSize=70&fontColor=f0f8ff" />
 
-<p align="center">Scrm 개발 방법론을 기반으로 하는 프로젝트 진행 관리 사이트</p>
+<br>
+<p align="center">✨ Scrm 개발 방법론을 기반으로 하는 프로젝트 진행 관리 사이트 ✨</p>
+<br><br><br>
 
 ## 	🖥️ 프로젝트 소개
 **Scrm 개발 방법론**을 이용한 프로젝트를 진행할 때 필요한 기능을 제공해주고 진행 상황을 관리해주는 사이트입니다. 
@@ -39,3 +41,7 @@
 <br><br>
 ### 5. 동적 웹 어플리케이션 시스템
 
+<br><br><br>
+## ⛓️ 시스템 구성
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=80&section=footer" />
