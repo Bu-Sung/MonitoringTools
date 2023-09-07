@@ -73,16 +73,24 @@
 - 해당 일정에 참여하는 팀원 관리
 - 색상 지정 가능<br><br>
 ![일정등록](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/69da79f7-0b70-4489-b6cd-47bd8497e2f7)
-
 <br><br>
+#### 4.2 일정 확인
+- [FullCalendar](https://fullcalendar.io/)를 이용하여 일정 확인
 ![일정](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/9cd420f3-701b-401e-83ed-b8ee4831f281)
 
 
 
 <br><br>
 ### 5. 동적 웹 어플리케이션 시스템
+- [Bootstrap5](https://getbootstrap.com/)를 이용하여 모든 페이지를 화면 크기에 따라 동적으로 화면 배치가 바뀌도록 설계
+<br><br>
+#### 5.1 큰 화면
 ![대시보드](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/3dc433b5-89e9-436b-99fa-b822a075b3d1)
+<br><br>
+#### 5.2 중간 화면
 ![대시보드(md)](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/9ebce9e1-4f85-4f4a-ab01-8897e7526977)
+<br><br>
+#### 5.3 작은 화면
 ![대시보드(sm)](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/13054c46-0e17-442d-b5d0-d438f14d6f57)
 
 <br><br><br>
