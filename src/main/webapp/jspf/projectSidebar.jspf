@@ -33,7 +33,7 @@
                 </a>
             </li>
             <ul class="collapse" id="sprintCollapse">
-                <li><a class="dropdown-item text-gray" href="#">스프린트 목록</a></li>
+                <li><a class="dropdown-item text-gray" href="/monitoring/project/sprint">스프린트 목록</a></li>
                 <li><a class="dropdown-item text-gray py-2" href="/monitoring/project/kanban">칸반보드</a></li>
             </ul>
             <li class="nav-item d-flex align-items-center py-2">

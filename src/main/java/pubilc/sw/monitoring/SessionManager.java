@@ -28,7 +28,7 @@ public class SessionManager {
     
     public void setUserSession(UserDTO userDTO){
         session.setAttribute(userSession, userDTO);
-        session.setMaxInactiveInterval(sessionTimeout);
+        session.setMaxInactiveInterval(-1);
     }
     
     public UserDTO getUserSession(){ // 사용자 세션 반환

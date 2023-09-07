@@ -345,4 +345,10 @@ public class ProjectController {
         requestService.changeSprint(frid, stage);
         return "redirect:/project/kanban";
     }
+    
+    @GetMapping("/sprint")
+    public String sprint(Model model){
+        model.addAttribute("request",requestService.getTrueTarget(sessionManager.getProjectId()));
+        return "/project/sprintList";
+    }
 }

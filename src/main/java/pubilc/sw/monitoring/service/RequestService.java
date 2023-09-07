@@ -449,7 +449,6 @@ public class RequestService {
         } else {
             log.error("디렉토리가 존재하지 않습니다.");
         }
-
         return trueTarget;
     }
     
