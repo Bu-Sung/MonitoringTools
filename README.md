@@ -51,17 +51,39 @@
 
 <br><br>
 ### 2. 요구사항관리
-![요구사항](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/de2ae1bd-99c1-437e-ab8f-d5c0e1a98b3e)
+#### 2.1 요구사항 작성
 ![요구사항 생성](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/6b0d4c90-656a-4786-a479-763459daca85)
+
+#### 2.2 요구사항 목록
+- 이번 주 스프린트 항목인 경우 노란색으로 표시
+<br><br>
+![요구사항](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/de2ae1bd-99c1-437e-ab8f-d5c0e1a98b3e)
+<br><br>
+#### 2.3 유사도 검사
+- 요구사항을 등록할 때, [AI API·DATA ParaphraseQA](https://aiopen.etri.re.kr/)를 이용하여 등록되어 있는 요구사항과 유사한지 검사<br><br>
 ![유사도 검사](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/3bfec70b-115a-4281-bfbf-5e1ba7c33656)
+<br><br>
+#### 2.4 스프린트 목록
 ![스프린트 목록](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/69a947a9-b810-44e8-924c-aa34e538b9b9)
+#### 2.5 칸반보드
+- 스프린트를 효율적으로 관리할 수 있도록 칸반보드 구현
+- [Sortable.js](https://sortablejs.github.io/Sortable/)를 이용하여 요구사항 진행 상황을 drag & drop 으로 관리<br><br>
 ![칸반보드](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/742f3bb1-9dc7-48e9-a187-665235901289)
 ![칸반보드(모달)](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/5c24c46b-ebc2-4d80-a267-a974acd9ea25)
 
 <br><br>
 ### 3. 프로젝트 자료 관리
-![회의록 목록](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/bb950a59-cea0-44c1-959b-9c75692de7b5)
+#### 3.1 회의록 작성
+- 사이트 내에서 제목, 시간, 장소, 내용을 입력하여 회의록 작성 가능
+- 회의록 내 파일 첨부 가능<br><br>
 ![회의록 작성](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/6f16ccad-9d24-4643-8bfc-8f827c0be207)
+<br><br>
+#### 3.2 회의록 목록
+![회의록 목록](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/bb950a59-cea0-44c1-959b-9c75692de7b5)
+<br><br>
+#### 3.3 회의록 확인
+![회의록 확인](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/ccbf3354-4b4d-453e-a976-2290f2bbe156)
+
 ![게시판 목록](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/21f0b0a7-4d21-41b8-bc9b-50df1fd172ed)
 ![게시판 글 작성](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/4abd26b1-e931-49bb-a645-ebe4515c5596)
 ![게시판 글 확인](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/0bba4bc5-cc15-4240-a0b5-6d7489a6d5c9)
