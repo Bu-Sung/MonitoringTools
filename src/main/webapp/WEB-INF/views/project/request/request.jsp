@@ -598,10 +598,15 @@
             const resultsElement = document.getElementById('results');
 
 
-            // 유사도 함수 실행 및 결과 출력 
+            // 유사도 함수 실행 및 결과 출력
             async function checkSimilarity(request) {
                 similarList = [];
                 for (let item of requestList) {
+
+                    if (item.frid === request.frid) { 
+                        continue;
+                    }
+
                     const comparison = item.name;
                     const {isSimilar} = await similarityAPI(comparison, request.name);
                     if (isSimilar) {
