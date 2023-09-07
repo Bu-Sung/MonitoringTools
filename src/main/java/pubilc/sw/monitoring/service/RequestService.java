@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -346,15 +347,16 @@ public class RequestService {
             workbook.write(outputStream);
         }
     }
-    
+
     /**
-     *  사용자의 스프린트 내역
+     * 사용자의 스프린트 내역
+     *
      * @param pid
      * @param uid
-     * @return 
+     * @return
      */
-    public List<RequestDTO> getUserSprintList(Long pid, String uid){
-        
+    public List<RequestDTO> getUserSprintList(Long pid, String uid) {
+
         List<RequestEntity> requestEntities = requestRepository.findUserRequests(pid, uid);
         List<RequestDTO> requestDTOs = new ArrayList<>();
 
@@ -381,21 +383,18 @@ public class RequestService {
 
         return requestDTOs;
     }
-    
+
     public Map<String, Object> getRequestCounts(Long pid) {
         return requestRepository.countRequests(pid);
     }
-    
 
-    
-    
     // 반복 요구사항 
-    public List<RequestDTO> getTrueTarget(Long pid) {
+    public Map<Integer, List<RequestDTO>> getTrueTarget(Long pid) {
         String directoryPath = ctx.getRealPath(requestFolderPath) + File.separator + pid;
         String fileNamePattern = "Request\\d{6}\\.xlsx";  // 파일 이름 패턴 
 
         File directory = new File(directoryPath);
-        List<RequestDTO> trueTarget = new ArrayList<>();
+        Map<Integer, List<RequestDTO>> trueTargetMap = new HashMap<>();
 
         if (directory.exists() && directory.isDirectory()) {
             File[] files = directory.listFiles((dir, name) -> name.matches(fileNamePattern));  // 디렉토리 내에 해당 패턴을 가진 파일 목록
@@ -411,8 +410,8 @@ public class RequestService {
                 for (File file : files) {
                     try {
                         String fileName = file.getName();
-                        String dateStr = fileName.replaceAll("[^0-9]", "");
-                        
+                        Integer requestDateInt = Integer.parseInt(fileName.replaceAll("[^0-9]", ""));
+
                         FileInputStream fis = new FileInputStream(file);
                         Workbook workbook = new XSSFWorkbook(fis);
                         Sheet sheet = workbook.getSheetAt(0);
@@ -420,8 +419,9 @@ public class RequestService {
                         for (Row row : sheet) {
                             Cell cell6 = row.getCell(6);
                             if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals("true")) {
+
                                 RequestDTO requestDTO = new RequestDTO();
-                                requestDTO.setPid(pid); 
+                                requestDTO.setPid(pid);
                                 requestDTO.setRid((String) row.getCell(0).getStringCellValue());
                                 requestDTO.setName((String) row.getCell(1).getStringCellValue());
                                 requestDTO.setContent((String) row.getCell(2).getStringCellValue());
@@ -431,9 +431,9 @@ public class RequestService {
                                 requestDTO.setTarget((String) row.getCell(6).getStringCellValue());
                                 requestDTO.setUsername((String) row.getCell(7).getStringCellValue());
                                 requestDTO.setNote((String) row.getCell(8).getStringCellValue());
-                                requestDTO.setRequestDate(Integer.parseInt(dateStr));  // 요구사항 파일 날짜 
+                                requestDTO.setRequestDate(requestDateInt);  // 요구사항 파일 날짜 
 
-                                trueTarget.add(requestDTO);
+                                trueTargetMap.computeIfAbsent(requestDateInt, k -> new ArrayList<>()).add(requestDTO);
                             }
                         }
 
@@ -449,39 +449,37 @@ public class RequestService {
         } else {
             log.error("디렉토리가 존재하지 않습니다.");
         }
-        return trueTarget;
-    }
-    
-    
 
-    public void changeSprint(Long frid,String stage){
+        return trueTargetMap;
+    }
+
+    public void changeSprint(Long frid, String stage) {
         Optional<RequestEntity> entity = requestRepository.findById(frid);
         RequestEntity oldEntity = entity.get();
         String oldStage = oldEntity.getStage(); // 기존 스프린트
         String oldTarget = oldEntity.getTarget(); // 기존 반복주기
-        if(stage.equals("clear")){
+        if (stage.equals("clear")) {
             oldEntity.setStage("완료");
-        }else if(stage.equals("backlog")){
+        } else if (stage.equals("backlog")) {
             oldEntity.setStage("대기");
             oldEntity.setTarget("false");
-        }else if(stage.equals("test")){
+        } else if (stage.equals("test")) {
             oldEntity.setStage("테스트");
-        }else if(stage.equals("todo")){
+        } else if (stage.equals("todo")) {
             oldEntity.setTarget("fales");
-        }else if(stage.equals("progress")){
-            if(oldEntity.getStage().equals("완료") || oldEntity.getStage().equals("테스트")){
+        } else if (stage.equals("progress")) {
+            if (oldEntity.getStage().equals("완료") || oldEntity.getStage().equals("테스트")) {
                 oldEntity.setTarget("true");
                 oldEntity.setStage("구현");
-            }else if(oldEntity.getStage().equals("대기")){
+            } else if (oldEntity.getStage().equals("대기")) {
                 oldEntity.setTarget("true");
                 oldEntity.setStage("분석");
-            }else{
+            } else {
                 oldEntity.setTarget("true");
             }
-            
+
         }
         requestRepository.save(oldEntity);
     }
-    
 
 }

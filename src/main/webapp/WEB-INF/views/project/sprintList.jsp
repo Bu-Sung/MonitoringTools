@@ -45,40 +45,34 @@
                          style="max-height: viewportHeight; min-height: 80vh; overflow: auto;">
                         <div class="col-md-9 col-11 mx-auto my-5">
                             <h4 class="mb-4 fw-600">스프린트 리스트</h4>
-                            <c:forEach items="${request}" var="list" varStatus="status">
-                                <c:if test="${status.index > 0}">
-                                    <c:set var="prevItem" value="${request[status.index - 1].requestDate}" />
-                                </c:if>
-                                <c:if test="${list.requestDate != prevItem or status.index == 0}">
-                                    <div class="card card-white-1 mb-3">
-                                        <div class="card-body" style="overflow: auto; white-space: nowrap;">
-                                            <p class="px-2 fw-600 mb-3 bg-yellow">No.<span>1</span></p>
-
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>진행날짜</th>
-                                                        <th>요구사항 명</th>
-                                                        <th>추정치</th>
-                                                        <th>진행사항</th>
-                                                        <th>담당자</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </c:if>
+                            <c:forEach var="entry" items="${requestMap}" varStatus="status">
+                                <div class="card card-white-1 mb-3">
+                                    <div class="card-body" style="overflow: auto; white-space: nowrap;">
+                                        <p class="px-2 fw-600 mb-3 bg-yellow">No.<span>${status.count}</span></p>
+                                        <table class="table">
+                                            <thead>
                                                 <tr>
-                                                    <td>${list.requestDate}</td>
-                                                    <td>${list.name}</td>
-                                                    <td>${list.date}</td>
-                                                    <td>${list.stage}</td>
-                                                    <td>${list.username}</td>
+                                                    <th>진행날짜</th>
+                                                    <th>요구사항 명</th>
+                                                    <th>추정치</th>
+                                                    <th>진행사항</th>
+                                                    <th>담당자</th>
                                                 </tr>
-                                                <c:if test="${list.requestDate != prevItem or status.index == 0}">
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="list" items="${entry.value}">
+                                                    <tr>
+                                                        <td>${list.requestDate}</td>
+                                                        <td>${list.name}</td>
+                                                        <td>${list.date}</td>
+                                                        <td>${list.stage}</td>
+                                                        <td>${list.username}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </c:if>
+                                </div>
                             </c:forEach>
                         </div>
                     </div>

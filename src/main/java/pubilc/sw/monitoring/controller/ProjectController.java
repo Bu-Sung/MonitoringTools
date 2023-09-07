@@ -348,7 +348,7 @@ public class ProjectController {
     
     @GetMapping("/sprint")
     public String sprint(Model model){
-        model.addAttribute("request",requestService.getTrueTarget(sessionManager.getProjectId()));
+        model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
         return "/project/sprintList";
     }
 }
