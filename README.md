@@ -1,7 +1,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=300&section=header&text=MonitoringTools&fontSize=70&fontColor=f0f8ff" />
 
 <br>
-<p align="center">✨ Scrm 개발 방법론을 기반으로 하는 프로젝트 진행 관리 사이트 ✨</p>
+<p align="center">✨ Scrum 개발 방법론을 기반으로 하는 프로젝트 진행 관리 사이트 ✨</p>
 <br><br><br>
 
 ## 🔎 목차
