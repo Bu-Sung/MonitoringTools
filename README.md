@@ -154,5 +154,13 @@
 <br><br><br>
 
 ## 💡 사용 방법
+### 1. 프로젝트 폴더 파일 다운로드
+### 2. 원하는 위치에 압축 해제
+### 3. 폴더 안 'monitoring-sql' 파일을 이용하여 MySQL에 테이블 생성
+### 4. src/main/resources/application.properties 파일에서 연결 정보 확인하고 자신의 DB에 연결
+- **연결 URL** - spring.datasource.url=jdbc:mysql://localhost:3306/monitoring??useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul<br>
+- **연결 아이디** - spring.datasource.username=monitoring<br>
+- **연결 비밀번호** - spring.datasource.password=qwer1234<br>
+### 5.
 <br><br><br>
 <img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=80&section=footer" />
