@@ -5,12 +5,14 @@
 package pubilc.sw.monitoring.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -383,6 +386,75 @@ public class RequestService {
         return requestRepository.countRequests(pid);
     }
     
+
+    
+    
+    // 반복 요구사항 
+    public List<RequestDTO> getTrueTarget(Long pid) {
+        String directoryPath = ctx.getRealPath(requestFolderPath) + File.separator + pid;
+        String fileNamePattern = "Request\\d{6}\\.xlsx";  // 파일 이름 패턴 
+
+        File directory = new File(directoryPath);
+        List<RequestDTO> trueTarget = new ArrayList<>();
+
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles((dir, name) -> name.matches(fileNamePattern));  // 디렉토리 내에 해당 패턴을 가진 파일 목록
+
+            if (files != null) {
+                // 파일을 날짜 순으로 정렬
+                Arrays.sort(files, (file1, file2) -> {
+                    String dateStr1 = file1.getName().replaceAll("[^0-9]", "");
+                    String dateStr2 = file2.getName().replaceAll("[^0-9]", "");
+                    return dateStr1.compareTo(dateStr2);
+                });
+
+                for (File file : files) {
+                    try {
+                        String fileName = file.getName();
+                        String dateStr = fileName.replaceAll("[^0-9]", "");
+                        
+                        FileInputStream fis = new FileInputStream(file);
+                        Workbook workbook = new XSSFWorkbook(fis);
+                        Sheet sheet = workbook.getSheetAt(0);
+
+                        for (Row row : sheet) {
+                            Cell cell6 = row.getCell(6);
+                            if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals("true")) {
+                                RequestDTO requestDTO = new RequestDTO();
+                                requestDTO.setPid(pid); 
+                                requestDTO.setRid((String) row.getCell(0).getStringCellValue());
+                                requestDTO.setName((String) row.getCell(1).getStringCellValue());
+                                requestDTO.setContent((String) row.getCell(2).getStringCellValue());
+                                requestDTO.setDate((int) row.getCell(3).getNumericCellValue());
+                                requestDTO.setRank((String) row.getCell(4).getStringCellValue());
+                                requestDTO.setStage((String) row.getCell(5).getStringCellValue());
+                                requestDTO.setTarget((String) row.getCell(6).getStringCellValue());
+                                requestDTO.setUsername((String) row.getCell(7).getStringCellValue());
+                                requestDTO.setNote((String) row.getCell(8).getStringCellValue());
+                                requestDTO.setRequestDate(Integer.parseInt(dateStr));  // 요구사항 파일 날짜 
+
+                                trueTarget.add(requestDTO);
+                            }
+                        }
+
+                        fis.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                log.error("파일이 없습니다.");
+            }
+        } else {
+            log.error("디렉토리가 존재하지 않습니다.");
+        }
+
+        return trueTarget;
+    }
+    
+    
+
     public void changeSprint(Long frid,String stage){
         Optional<RequestEntity> entity = requestRepository.findById(frid);
         RequestEntity oldEntity = entity.get();
@@ -412,4 +484,5 @@ public class RequestService {
         requestRepository.save(oldEntity);
     }
     
+
 }
