@@ -86,7 +86,7 @@
                                 <!-- 스프린트 card -->
                                 <div class="card card-white-1 mb-4">
                                     <div class="card-body">
-                                        <a href="#" class="text-dark fw-600">스프린트<i class="bi bi-chevron-right"></i></a>
+                                        <a href="/monitoring/project/kanban" class="text-dark fw-600">스프린트<i class="bi bi-chevron-right"></i></a>
                                         <div class="mt-3" style="overflow: auto; white-space: nowrap;">
                                             <table>
                                                 <tr class="text-primary">
@@ -117,7 +117,7 @@
                                 <!-- 오늘 일정 card -->
                                 <div class="card card-white-1 mb-4">
                                     <div class="card-body">
-                                        <a href="#" class="text-dark fw-600">오늘 일정<i class="bi bi-chevron-right"></i></a>
+                                        <a href="/monitoring/project/schedule" class="text-dark fw-600">오늘 일정<i class="bi bi-chevron-right"></i></a>
                                         <div class="mt-3">
                                             <table>
                                                 <tr class="text-primary">

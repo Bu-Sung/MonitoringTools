@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
+import pubilc.sw.monitoring.dto.RequestDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.GraphService;
 import pubilc.sw.monitoring.service.ProjectService;
@@ -76,7 +77,7 @@ public class ProjectController {
             double total = ((Number) rate.get("total")).doubleValue();
             num = (int) (clear / total * 100);
         } else {
-            
+
         }
         model.addAttribute("num", num);// 달성률
         model.addAttribute("rate", requestService.getRequestCounts(pid));// 달성률
@@ -233,16 +234,18 @@ public class ProjectController {
     /**
      * 프로젝트 멤버 정보 조회
      *
-
+     *
      * @return 멤버 리스트
      */
     @GetMapping("/getMember")
-    public @ResponseBody List<MemberDTO> manageMember() {
+    public @ResponseBody
+    List<MemberDTO> manageMember() {
         return projectService.getMember(sessionManager.getProjectId());
     }
 
     @GetMapping("/getAllMemberInfo")
-    public @ResponseBody List<UserDTO> getAllMemberInfo() {
+    public @ResponseBody
+    List<UserDTO> getAllMemberInfo() {
         List<UserDTO> list = projectService.searchAllMembers(sessionManager.getProjectId());
         return list;
     }
@@ -258,7 +261,8 @@ public class ProjectController {
      * @return manageMember 프로젝트 멤버 관리 페이지
      */
     @PostMapping("/addMember")
-    public @ResponseBody boolean addMember(@RequestBody MemberDTO memberDTO) {
+    public @ResponseBody
+    boolean addMember(@RequestBody MemberDTO memberDTO) {
         return projectService.addMember(memberDTO.getUid(), sessionManager.getProjectId());
     }
 
@@ -282,12 +286,12 @@ public class ProjectController {
      * @param rights 수정할 권한 리스트
      * @param attrs
      * @return manageMember 프로젝트 멤버 관리 페이지
-    */ 
+     */
     @PostMapping("/updateRight")
-    public @ResponseBody boolean updateRight(@RequestBody MemberDTO memberDTO) {
-        return  projectService.updateMemberRight(memberDTO, sessionManager.getProjectId());
+    public @ResponseBody
+    boolean updateRight(@RequestBody MemberDTO memberDTO) {
+        return projectService.updateMemberRight(memberDTO, sessionManager.getProjectId());
     }
-   
 
     /**
      * 프로젝트 팀원 삭제
@@ -298,7 +302,8 @@ public class ProjectController {
      * @return manageMember 프로젝트 멤버 관리 페이지
      */
     @GetMapping("/deleteMember/{uid}")
-    public @ResponseBody boolean removeMember(@PathVariable String uid) {
+    public @ResponseBody
+    boolean removeMember(@PathVariable String uid) {
         projectService.deleteMember(uid, sessionManager.getProjectId());
         return true;
     }
@@ -327,6 +332,17 @@ public class ProjectController {
         return projectService.hasMember(sessionManager.getProjectId(), uid);
     }
 
-    
+    @GetMapping("/kanban")
+    public String kanban(Model model) {
+        model.addAttribute("request", requestService.getRequests(sessionManager.getProjectId()));
+        return "/project/kanban";
+    }
 
+    @PostMapping("/changeSprint")
+    public String chageSprint(@RequestBody Map<String, Object> request) {
+        Long frid = Long.parseLong((String)request.get("frid"));
+        String stage = request.get("stage").toString();
+        requestService.changeSprint(frid, stage);
+        return "redirect:/project/kanban";
+    }
 }
