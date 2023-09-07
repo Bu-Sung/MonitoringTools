@@ -34,7 +34,7 @@
             </li>
             <ul class="collapse" id="sprintCollapse">
                 <li><a class="dropdown-item text-gray" href="#">스프린트 목록</a></li>
-                <li><a class="dropdown-item text-gray py-2" href="#">칸반보드</a></li>
+                <li><a class="dropdown-item text-gray py-2" href="/monitoring/project/kanban">칸반보드</a></li>
             </ul>
             <li class="nav-item d-flex align-items-center py-2">
                 <a href="${pageContext.request.contextPath}/project/board/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/clip.png"
