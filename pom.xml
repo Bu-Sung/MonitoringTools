@@ -90,6 +90,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>monitoring</finalName>
     </build>
 
 </project>
