@@ -77,12 +77,12 @@
 ![UseCaseDiagram](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/7c156d66-cca5-425a-ab5e-ffdd898a6db4)
 
 ### 1. 사용자 관리
-### 1.1 기본적인 로그인, 회원가입 기능
-### 1.2 프로젝트 등록 후 수정
+#### 1.1 기본적인 로그인, 회원가입 기능
+#### 1.2 프로젝트 등록 후 수정
 ![프로젝트 등록 후 수정](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/c5d83384-9f29-4f7a-b9b1-a38fb943eaee)
-### 1.3 사용자 검색 후 멤버 추가
+#### 1.3 사용자 검색 후 멤버 추가
 ![사용자 검색 후 멤버 추가](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/6f225089-39c2-4075-9328-d23fa0cafce2)
-### 1.4 초대 메시지 수신 후 확인
+#### 1.4 초대 메시지 수신 후 확인
 ![초대 메시지](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/4d222c67-c387-459c-9b56-efbaab131055)
 ![초대 메시지 확인](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/36223e51-83f6-4a14-a997-85fc21fe63b4)
 
