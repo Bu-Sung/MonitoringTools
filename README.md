@@ -161,6 +161,9 @@
 - **연결 URL** - spring.datasource.url=jdbc:mysql://localhost:3306/monitoring??useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul<br>
 - **연결 아이디** - spring.datasource.username=monitoring<br>
 - **연결 비밀번호** - spring.datasource.password=qwer1234<br>
-### 5.
+### 5. 해당 프로젝트 최상위 폴더로 이동하여 (pom.xml이 있는 폴더) cmd 창 실행
+### 6. ./mvnw clean install 명령어를 사용해서 빌드
+### 7. java -jar target/monitoring.war 명령어를 사용해 실행
+### 8. localhost:8080/monitoring/ 경로로 접속
 <br><br><br>
 <img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=80&section=footer" />
