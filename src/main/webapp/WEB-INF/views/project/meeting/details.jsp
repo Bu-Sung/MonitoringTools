@@ -89,7 +89,7 @@
                                             <c:forEach items="${meeting.files}" var="file">
                                                 <li class="m-0" ><a href="../download?filename=${file}&mid=${meeting.id}">${file}</a><span
                                                         onclick="removefile(event)">&nbsp;삭제</span></li>
-                                            </c:forEach>
+                                                    </c:forEach>
                                         </ul>
                                     </div>
                                     <input class="form-control border mb-3" id="file" type="file" name="file"

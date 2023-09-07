@@ -39,7 +39,7 @@
             <div class="card card-blue row mx-auto mb-5" style="height: viewportHeight;">
                 <!-- 중간에 깔려 있는 card -->
                 <div class="card card-white-0 mx-auto" style="height: viewportHeight;">
-                    <div class="col-md-10 col-11 mx-auto my-5">
+                    <div class="col-md-10 col-12 mx-auto my-5">
                         <h4 class="fw-600 text-dark mb-4">게시글 상세</h4>
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
@@ -56,72 +56,48 @@
                                         </div>
                                     </c:if>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="align-items-center mb-2">
-                                            <span class="fw-bold">카테고리</span>
-                                            <div>${board.category}</div>
-                                        </div>
+                                <div class="row mt-3 mb-md-3 mb-0">
+                                    <div class="col-md-4 mb-md-0 mb-3">
+                                        <span>카테고리</span>
+                                        <div class="text-gray">${board.category}</div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="align-items-center mb-2">
-                                            <span class="fw-bold">작성날짜</span>
-                                            <div>${board.date}</div>
-                                        </div>
-                                        <div class="align-items-center">
-                                            <span class="fw-bold">작성자</span>
-                                            <div>${board.writer}</div>
-                                        </div>
+                                    <div class="col-md-4 mb-md-0 mb-3">
+                                        <span>작성날짜</span>
+                                        <div class="text-gray">${board.date}</div>
                                     </div>
-                                </div>
-                                <ul class='list-unstyled' id="ulfile">
-                                    <c:forEach var="file" items="${board.files}">
-                                        <li class="m-0" ><a href="download?filename=${file}&bid=${board.bid}">${file}</a></li>
-                                        </c:forEach>
-                                </ul>
-                                <div id="content" class="document-content">
-                                    ${board.content}
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-sm btn-secondary" id="commentToggle">댓글 보기</button>
+                                    <div class="col-md-4 mb-md-0 mb-3 ">
+                                        <span>작성자</span>
+                                        <div class="text-gray">${board.writer}</div>
+                                    </div>
 
-                        </div>
-                        <div id="commentContainer" class="card card-white-1 p-4" style="display: none;">
-                            <div class="card card-white-0 p-4">
-                                <div class="d-flex justify-content-between">
-                                    <span>작성자</span>
-                                    <div>
-                                        <span>날짜</span>
-                                        <span>삭제</span>
-                                    </div>
                                 </div>
-                                <hr>
-                                <div>내용</div>
-                                <button type="button" class="btn btn-sm btn-secondary">답글</button>
-                                <div class="card card-white-1 p-4 border-gray">
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0">
-                                            →
-                                        </div>
-                                        <div  class="flex-grow-1 ps-4">
-                                            <div class="d-flex justify-content-between">
-                                                <span>작성자</span>
-                                                <div>
-                                                    <span>날짜</span>
-                                                    <span>삭제</span>
-                                                </div>
-
-                                            </div>
-                                            <hr>
-                                            <div>내용</div>
-                                        </div>
+                                <div class="mb-4 p-2 border" style="background-color:#fff; border-radius: 5px;">
+                                    <ul class='list-unstyled m-0' id="ulfile">
+                                        <c:forEach var="file" items="${board.files}">
+                                            <li><a href="download?filename=${file}&bid=${board.bid}">${file}</a></li>
+                                            </c:forEach>
+                                    </ul>
+                                    <div id="content" class="document-content p-0">
+                                        ${board.content}
                                     </div>
                                 </div>
                             </div>
-                            <div id="commentList" class="commentList">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" data-bs-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">댓글 보기</button>
 
+                            <!--여기서부터 댓글 div-->
+                            <div id="commentContainer" class="collapse mt-3">
+                                <!--댓글 입력창 start-->
+                                <div class="d-flex mb-3">
+                                    <input type="text" id="comment" class="form-control me-2 border" style="background-color: #fff;" placeholder="댓글을 입력해주세요">
+                                    <button class="btn btn-sm btn-outline-primary" id="commentButton" style="width: 4rem;">작성</button>
+                                </div>
+                                <!--댓글 입력창 end-->
+                                <div class="border" style="background-color:#fff; border-radius: 5px;">   
+                                    <!--댓글 목록-->
+                                    <div id="commentList" class="commentList mb-3">
+                                    </div>
+                                </div>
                             </div>
-                            <input type="text" id="comment" placeholder="댓글을 입력해주세요"><button id="commentButton">작성</button>
                         </div>
                     </div>
                 </div>

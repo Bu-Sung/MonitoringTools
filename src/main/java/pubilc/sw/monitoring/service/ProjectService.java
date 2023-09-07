@@ -212,7 +212,7 @@ public class ProjectService {
                     .content(projectDTO.getContent())
                     .start(java.sql.Date.valueOf(startDate))
                     .end(java.sql.Date.valueOf(endDate))
-                    .category(projectDTO.getCategory())
+                    .category(projectEntity.getCategory())
                     .cycle(projectDTO.getCycle())
                     .build();
 
@@ -334,32 +334,30 @@ public class ProjectService {
     }
 
     // 받은 초대 수락 
-    public boolean acceptInvite(List<Long> selectedPid, String uid) {
+    public boolean acceptInvite(Long pid, String uid) {
         boolean invite = false;
 
-        for (Long pid : selectedPid) {
-            MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
-            if (memberEntity != null) {
-                memberEntity.setState(2); // 상태를 2(수락)로 변경 
-                memberRepository.save(memberEntity); // 변경 사항 저장
-                invite = true;
-            }
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        if (memberEntity != null) {
+            memberEntity.setState(2); // 상태를 2(수락)로 변경 
+            memberRepository.save(memberEntity); // 변경 사항 저장
+            invite = true;
         }
+
         return invite; // 하나 이상 수락된 경우 true 반환
     }
 
     // 받은 초대 거절 
-    public boolean refuseInvite(List<Long> selectedPid, String uid) {
+    public boolean refuseInvite(Long pid, String uid) {
         boolean invite = false;
 
-        for (Long pid : selectedPid) {
-            MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
-            if (memberEntity != null) {
-                memberEntity.setState(-1); // 상태를 -1(거절)로 변경 
-                memberRepository.save(memberEntity); // 변경 사항 저장
-                invite = true;
-            }
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        if (memberEntity != null) {
+            memberEntity.setState(-1); // 상태를 -1(거절)로 변경 
+            memberRepository.save(memberEntity); // 변경 사항 저장
+            invite = true;
         }
+
         return invite;
     }
 
@@ -386,21 +384,48 @@ public class ProjectService {
     }
 
     // 입력한 값이 들어간 아이디 찾기 
-    public List<String> searchUsers(String uid) {
+    public List<String> searchUsers(String uid, Long pid) {
         List<UserEntity> searchResults = userRepository.findByIdContainingIgnoreCase(uid);
+        List<MemberEntity> memberList = memberRepository.findByPid(pid);
         List<String> uidList = new ArrayList<>();
-
+        
+        
         for (UserEntity user : searchResults) {
-            uidList.add(user.getId());
+            boolean exits = false;
+            for(MemberEntity  member : memberList){
+                if(member.getUid().equals(user.getId())){
+                    exits = true;
+                }
+            }
+            if(!exits){
+                uidList.add(user.getId());
+            }
         }
 
         // System.out.println("User: " + uidList);
         return uidList;
     }
 
-    // 프로젝트 내의 멤버 찾기
+    // 프로젝트 내의 검색와 아이디가 비슷한 멤버를 찾는데 이미 list에 있는 id는 제외하고 찾기
     public List<UserDTO> searchMembers(Long pid, String uid, List<String> memberList) {
         List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndSimilarUid(pid, uid, memberList);
+        List<UserDTO> uidList = new ArrayList<>();
+
+        for (Map<String, Object> user : searchResults) {
+            uidList.add(UserDTO.builder()
+                    .id(user.get("id").toString())
+                    .name(user.get("name").toString())
+                    .email(user.get("email").toString())
+                    .birth(user.get("birth").toString())
+                    .phone(user.get("phone").toString())
+                    .build());
+        }
+        return uidList;
+    }
+
+    public List<UserDTO> searchAllMembers(Long pid) {
+        List<Map<String, Object>> searchResults = userRepository.findUsersByPid(pid);
+
         List<UserDTO> uidList = new ArrayList<>();
 
         for (Map<String, Object> user : searchResults) {
@@ -423,12 +448,12 @@ public class ProjectService {
      * @param right 추가할 멤버의 권한
      * @return 맴보 추가 성공 여부 (true : 멤버 추가 성공, false : 멤버 추가 실패)
      */
-    public boolean addMember(MemberDTO memberDTO, String addUid, int right) {
+    public boolean addMember(String addUid, Long pid) {
 
         MemberEntity addEntity = MemberEntity.builder()
                 .uid(addUid)
-                .pid(memberDTO.getPid())
-                .right(right)
+                .pid(pid)
+                .right(2)
                 .state(1)
                 .build();
 
@@ -445,17 +470,18 @@ public class ProjectService {
      * @param right 수정할 권한
      * @return 권한 수정 여부 (true : 권한 수정 성공, false : 권한 수정 실패)
      */
-    public boolean updateMemberRight(String uid, Long pid, int right) {
+    public boolean updateMemberRight(MemberDTO memberDTO, Long pid) {
         // 프로젝트 아이디와 유저 아이디를 기반으로 멤버 엔티티 조회
-        MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        MemberEntity memberEntity = memberRepository.findByUidAndPid(memberDTO.getUid(), pid);
 
         if (memberEntity != null) { // 멤버 엔티티가 존재하는 경우
             // 새로운 멤버 엔티티 생성
             MemberEntity updatedMember = MemberEntity.builder()
                     .mid(memberEntity.getMid())
-                    .uid(uid)
+                    .uid(memberDTO.getUid())
                     .pid(pid)
-                    .right(right)
+                    .right(memberDTO.getRight())
+                    .state(memberDTO.getState())
                     .build();
 
             updatedMember = memberRepository.save(updatedMember);
@@ -472,17 +498,13 @@ public class ProjectService {
      * @param pid 프로젝트 아이디
      * @return 삭제 성공 여부 (true : 삭제 성공, false : 삭제 실패, 선택된 삭제 멤버가 없음)
      */
-    public boolean deleteMember(List<String> selectedMember, Long pid) {
-        boolean delete = false;  // 삭제할 멤버 선택 여부 확인 
-
-        for (String uid : selectedMember) {
+    public boolean deleteMember(String uid, Long pid) {
             MemberEntity deleteMember = memberRepository.findByUidAndPid(uid, pid);
             if (deleteMember != null) {
                 memberRepository.delete(deleteMember);
-                delete = true;
+                return true;
             }
-        }
-        return delete; // 하나 이상의 멤버가 삭제된 경우 true 반환
+            return false;
     }
 
     public String[] getProjectCategory(Long pid) {
@@ -501,5 +523,19 @@ public class ProjectService {
                 .birth(user.get("birth").toString())
                 .phone(user.get("phone").toString())
                 .build();
+    }
+
+    /**
+     * 카테고리 업데이트
+     *
+     * @param str
+     * @param pid
+     */
+    public void updateCartegory(String str, Long pid) {
+        projectRepository.updateCategory(pid, str);
+    }
+
+    public int getDaysUntilProjectEnd(Long pid) {
+        return projectRepository.getDaysUntilProjectEnd(pid);
     }
 }

@@ -42,7 +42,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     UserEntity findByName(String name);
 
     @Transactional
-    @Modifying
     @Query("SELECT u.name FROM UserEntity u WHERE u.id = :id")
     String findNameById(String id);
     

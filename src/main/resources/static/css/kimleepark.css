@@ -166,20 +166,6 @@ a.text-gray:hover {
     height: 60vh;
 }
 
-.modal-body {
-    /* 공백 및 줄바꿈 유지 */
-    white-space: pre-line;
-    /* 긴 단어 자동 줄넘김 */
-    word-wrap: break-word;
-    /* 단어 내에서 줄바꿈 방지 */
-    word-break: keep-all;
-}
-
-.modal-body:after {
-    content: "";
-    display: inline-block;
-    width: 100%;
-}
 
 .form-control {
     border-radius: 5px;
@@ -188,11 +174,33 @@ a.text-gray:hover {
     border-style: none;
 }
 
+.form-control-primary{
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--bs-primary);
+    background-color: #fff;
+}
+
+.form-control-secondary{
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--bs-secondary);
+    background-color: #fff;
+}
+
 .form-select {
     border-radius: 5px;
     background: #EDF6FF;
     height: 2.5rem;
     border-style: none;
+}
+
+.form-select-gray {
+    border-radius: 5px;
+    background: #fff;
+    border-style: solid;
+    border-color: var(--bs-gray-light);
+    border-width: 1px;
 }
 
 /* 파일 선택 버튼 */

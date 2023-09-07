@@ -23,6 +23,11 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
+        <script>
+        <c:if test="${!empty msg}">
+            alert("${msg}");
+        </c:if>
+            </script>
     </head>
 
     <body>
@@ -42,7 +47,7 @@
                              d-flex flex-column flex-md-row align-items-center justify-content-between">
                             <p class="pt-1">"<span>${invitedProject.name}</span>" 프로젝트에 초대되셨습니다!<span style="font-size: 1.8rem;">📨</span>
                             </p>
-                            <a href="invite.jsp/${invitedProject.pid}" class="btn btn-primary mb-md-0 mb-4" style="width: 8rem;">자세히보기</a>
+                            <a href="invite/${invitedProject.pid}" class="btn btn-primary mb-md-0 mb-4" style="width: 8rem;">자세히보기</a>
                         </div>
                     </c:forEach>
                     <!-- 참여되어 있는 프로젝트 목록 -->

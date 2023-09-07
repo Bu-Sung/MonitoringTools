@@ -4,7 +4,9 @@
  */
 package pubilc.sw.monitoring.service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import static java.time.LocalDateTime.now;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,16 +28,16 @@ import pubilc.sw.monitoring.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
-    
+
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
-    
+
     @Value("${date.input.format}")
     private String dateInputFormatter;
     @Value("${date.none.time.format}")
     private String dateFormatter;
-    
-    public boolean addSchedule(ScheduleDTO scheduleDTO, Long pid){
+
+    public boolean addSchedule(ScheduleDTO scheduleDTO, Long pid) {
 
         DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
 
@@ -46,19 +48,19 @@ public class ScheduleService {
                 .content(scheduleDTO.getContent())
                 .color(scheduleDTO.getColor())
                 .start(LocalDateTime.parse(scheduleDTO.getStart(), InputFormatter))
-                .end(LocalDateTime.parse(scheduleDTO.getEnd(),InputFormatter))
-                .member(scheduleDTO.getMemberList().isEmpty()? "" : String.join(",", scheduleDTO.getMemberList()))
+                .end(LocalDateTime.parse(scheduleDTO.getEnd(), InputFormatter))
+                .member(scheduleDTO.getMemberList().isEmpty() ? "" : String.join(",", scheduleDTO.getMemberList()))
                 .build());
         return newEntity != null;
     }
-    
-    public List<ScheduleDTO> getScheduleList(Long pid){
-        
+
+    public List<ScheduleDTO> getScheduleList(Long pid) {
+
         List<ScheduleDTO> scheduleDTOList = new ArrayList();
-        List<ScheduleEntity> scheduleEntitList =  scheduleRepository.findByPid(pid);
-        for(ScheduleEntity entity : scheduleEntitList){
+        List<ScheduleEntity> scheduleEntitList = scheduleRepository.findByPid(pid);
+        for (ScheduleEntity entity : scheduleEntitList) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateInputFormatter);
-            if(entity.getAllTime() == 0){
+            if (entity.getAllTime() == 0) {
                 formatter = DateTimeFormatter.ofPattern(dateFormatter);
             }
             scheduleDTOList.add(ScheduleDTO.builder()
@@ -72,10 +74,10 @@ public class ScheduleService {
                     .memberList(Arrays.asList(entity.getMember().split(",")))
                     .build());
         }
-        return scheduleDTOList; 
+        return scheduleDTOList;
     }
-    
-    public boolean updateSchedule(ScheduleDTO scheduleDTO, Long pid){
+
+    public boolean updateSchedule(ScheduleDTO scheduleDTO, Long pid) {
 
         DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
 
@@ -87,20 +89,20 @@ public class ScheduleService {
                 .content(scheduleDTO.getContent())
                 .color(scheduleDTO.getColor())
                 .start(LocalDateTime.parse(scheduleDTO.getStart(), InputFormatter))
-                .end(LocalDateTime.parse(scheduleDTO.getEnd(),InputFormatter))
-                .member(scheduleDTO.getMemberList().isEmpty()? "" : String.join(",", scheduleDTO.getMemberList()))
+                .end(LocalDateTime.parse(scheduleDTO.getEnd(), InputFormatter))
+                .member(scheduleDTO.getMemberList().isEmpty() ? "" : String.join(",", scheduleDTO.getMemberList()))
                 .build());
         return newEntity != null;
     }
-    
-    public boolean deleteSchedule(Long sid){
-        if(scheduleRepository.existsById(sid)){
+
+    public boolean deleteSchedule(Long sid) {
+        if (scheduleRepository.existsById(sid)) {
             scheduleRepository.deleteById(sid);
             return true;
         }
         return false;
     }
-    
+
     public List<UserDTO> getScheduleMembers(Long sid) {
         List<Map<String, Object>> members = userRepository.findUsersBySid(sid);
 
@@ -116,5 +118,31 @@ public class ScheduleService {
                     .build());
         }
         return uidList;
+    }
+
+    public List<ScheduleDTO> findSchedules(Long pid, String uid) {
+        List<ScheduleEntity> entityList = scheduleRepository.findSchedules(pid, uid);
+        List<ScheduleDTO> dtoList = new ArrayList();
+
+        for (ScheduleEntity entity : entityList) {
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            String start = "";
+            String end = "";
+            if(entity.getAllTime() == 1){
+                 start = timeFormat.format(entity.getStart());
+                 end = timeFormat.format(entity.getEnd());
+            }
+            dtoList.add(ScheduleDTO.builder()
+                    .sid(entity.getSid())
+                    .title(entity.getTitle())
+                    .color(entity.getColor())
+                    .content(entity.getContent())
+                    .allTime(entity.getAllTime())
+                    .start(start)
+                    .end(end)
+                    .memberList(Arrays.asList(entity.getMember().split(",")))
+                    .build());
+        }
+        return dtoList;
     }
 }

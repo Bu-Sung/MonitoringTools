@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,34 +43,33 @@ import pubilc.sw.monitoring.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class RequestService {
-    
+
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final FileService fileService;
-    
+
     @Value("${request.folder}")
     private String requestFolderPath;
-    
+
     @Autowired
     private ServletContext ctx;
-    
-    
+
     /**
-     * 해당 프로젝트의 모든 요구사항 
-     * 
-     * @param pid 해당 프로젝트 아이디 
-     * @return 해당 프로젝트의 모든 요구사항 리스트 객체 
+     * 해당 프로젝트의 모든 요구사항
+     *
+     * @param pid 해당 프로젝트 아이디
+     * @return 해당 프로젝트의 모든 요구사항 리스트 객체
      */
     public List<RequestDTO> getRequests(Long pid) {
         List<RequestEntity> requestEntities = requestRepository.findByPid(pid);
         List<RequestDTO> requestDTOs = new ArrayList<>();
 
         for (RequestEntity requestEntity : requestEntities) {
-            
+
             UserEntity userEntity = userRepository.findById(requestEntity.getUid()).orElse(null);
             String username = (userEntity != null) ? userEntity.getName() : null;
-        
+
             requestDTOs.add(RequestDTO.builder()
                     .frid(requestEntity.getFrid())
                     .pid(requestEntity.getPid())
@@ -88,51 +88,44 @@ public class RequestService {
 
         return requestDTOs;
     }
-    
 
     /**
-     * 요구사항 저장 및 수정 
-     * 
+     * 요구사항 저장 및 수정
+     *
      * @param requestDTOList
-     * @return 저장 성공 여부 
+     * @return 저장 성공 여부
      */
-    public boolean saveRequests(List<RequestDTO> requestDTOList) {
+    public boolean saveRequest(RequestDTO requestDTO) {
         List<RequestEntity> requestEntities = new ArrayList<>();
-        
-        for (RequestDTO requestDTO : requestDTOList) {
-            
-            String username = requestDTO.getUsername();
-            UserEntity userEntity = userRepository.findByName(username);
-            requestDTO.setUid(userEntity.getId());
-             
-            RequestEntity requestEntity = RequestEntity.builder()
-                .frid(requestDTO.getFrid())
-                .pid(requestDTO.getPid())
-                .rid(requestDTO.getRid())
-                .name(requestDTO.getName())
-                .content(requestDTO.getContent())
-                .date(requestDTO.getDate())
-                .rank(requestDTO.getRank())
-                .stage(requestDTO.getStage())
-                .target(requestDTO.getTarget())
-                .uid(requestDTO.getUid())
-                .note(requestDTO.getNote())
-                .build();
 
-            requestEntities.add(requestEntity);
+        RequestEntity requestEntity = new RequestEntity();
+
+        if (requestDTO.getFrid() != null) {  // 수정의 경우 
+            requestEntity.setRid(String.valueOf(requestRepository.findRidByFrid(requestDTO.getFrid())));
+        } else {  // 추가의 경우 
+            requestEntity.setRid(requestDTO.getRid());
         }
 
-        List<RequestEntity> savedEntities = requestRepository.saveAll(requestEntities);
-        return !savedEntities.isEmpty();
+        requestEntity.setFrid(requestDTO.getFrid());
+        requestEntity.setPid(requestDTO.getPid());
+        requestEntity.setName(requestDTO.getName());
+        requestEntity.setContent(requestDTO.getContent());
+        requestEntity.setDate(requestDTO.getDate());
+        requestEntity.setRank(requestDTO.getRank());
+        requestEntity.setStage(requestDTO.getStage());
+        requestEntity.setTarget(requestDTO.getTarget());
+        requestEntity.setUid(requestDTO.getUid());
+        requestEntity.setNote(requestDTO.getNote());
+
+        return requestRepository.save(requestEntity) != null;
     }
-    
-    
+
     /**
-     * 입력한 이름을 기반으로 프로젝트 멤버 중 해당하는 이름 검색 
-     * 
+     * 입력한 이름을 기반으로 프로젝트 멤버 중 해당하는 이름 검색
+     *
      * @param username
      * @param pid
-     * @return 
+     * @return
      */
     public List<String> searchUserNames(String username, Long pid) {
         // 해당 프로젝트의 멤버 조회
@@ -151,12 +144,11 @@ public class RequestService {
         return usernameList;
     }
 
-
     /**
-     * 요구사항 삭제 
-     * 
-     * @param frid 
-     * @return 삭제 성공 여부 
+     * 요구사항 삭제
+     *
+     * @param frid
+     * @return 삭제 성공 여부
      */
     public boolean deleteRequestByFrid(Long frid) {
         try {
@@ -167,8 +159,6 @@ public class RequestService {
             return false;
         }
     }
-    
-    
 
     // 요구사항 여러개 삭제 
     public boolean deleteRequestByFrids(List<Long> frids) {
@@ -177,7 +167,7 @@ public class RequestService {
         for (Long frid : frids) {
             try {
                 requestRepository.deleteByFrid(frid);
-                
+
                 delete = true;
             } catch (Exception ex) {
                 log.error("deleteRequestByFrids() error: {}", ex.getMessage());
@@ -186,13 +176,12 @@ public class RequestService {
 
         return delete;  // 하나 이상의 요구사항이 삭제된 경우 true 반환
     }
-    
 
     /**
-     * 해당 프로젝트 아이디에 대한 모든 요구사항 전체 삭제 
-     * 
-     * @param pid 
-     * @return 전체 삭제 성공 여부 
+     * 해당 프로젝트 아이디에 대한 모든 요구사항 전체 삭제
+     *
+     * @param pid
+     * @return 전체 삭제 성공 여부
      */
     public boolean deleteRequestsByPid(Long pid) {
         try {
@@ -204,13 +193,12 @@ public class RequestService {
             return false;
         }
     }
-    
-    
+
     /**
-     * 요구사항 엑셀 생성 (생성 후 폴더에 파일 저장) 
-     * 
+     * 요구사항 엑셀 생성 (생성 후 폴더에 파일 저장)
+     *
      * @param requestDTOs
-     * @return 엑셀 파일 생성 성공 여부 
+     * @return 엑셀 파일 생성 성공 여부
      */
     public boolean createRequestExcel(List<RequestDTO> requestDTOs) {
         boolean status = false;
@@ -239,13 +227,13 @@ public class RequestService {
                 row.createCell(4).setCellValue(requestDTO.getRank());
                 row.createCell(5).setCellValue(requestDTO.getStage());
                 row.createCell(6).setCellValue(requestDTO.getTarget());
-                row.createCell(7).setCellValue(requestDTO.getUid());
+                row.createCell(7).setCellValue(requestDTO.getUsername());
                 row.createCell(8).setCellValue(requestDTO.getNote());
             }
 
             LocalDateTime now = LocalDateTime.now();
             String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd")) + ".xlsx";
-            File file = new File(ctx.getRealPath(requestFolderPath)  + File.separator + requestDTOs.get(0).getPid(), fileName);
+            File file = new File(ctx.getRealPath(requestFolderPath) + File.separator + requestDTOs.get(0).getPid(), fileName);
 
             saveFile(workbook, file.getParentFile().getAbsolutePath(), file.getName());  // 파일 저장 
             status = true;
@@ -257,11 +245,10 @@ public class RequestService {
         return status;
     }
 
- 
     // 파일 저장 
     private void saveFile(Workbook workbook, String folderPath, String fileName) throws IOException {
         File folder = new File(folderPath);
-        
+
         // 파일 폴더가 존재하지 않는 경우 폴더 생성
         if (!folder.exists()) {
             folder.mkdirs();
@@ -272,13 +259,12 @@ public class RequestService {
             workbook.write(fileOut);
         }
     }
-    
-    
+
     /**
-     * 해당 프로젝트에 해당하는 엑셀 파일 이름 가져오는 함수 
-     * 
-     * @param pid 프로젝트 아이디 
-     * @return 엑셀 파일 이름 리스트 
+     * 해당 프로젝트에 해당하는 엑셀 파일 이름 가져오는 함수
+     *
+     * @param pid 프로젝트 아이디
+     * @return 엑셀 파일 이름 리스트
      */
     public List<String> getExcelNames(Long pid) {
         File folder = new File(ctx.getRealPath(requestFolderPath) + File.separator + pid);
@@ -297,26 +283,24 @@ public class RequestService {
 
         return excelFileNames;
     }
-    
-    
+
     /**
      * 엑셀 파일 다운
-     * 
+     *
      * @param filename
      * @param pid
-     * @return 
+     * @return
      */
     public ResponseEntity<Resource> downloadFile(String filename, String pid) {
         return fileService.downloadFile((requestFolderPath) + File.separator + pid, filename);
     }
-    
-    
+
     /**
-     * 현재 요구사항 엑셀 파일 생성 후 다운 (폴더에 저장하지 않음) 
-     * 
+     * 현재 요구사항 엑셀 파일 생성 후 다운 (폴더에 저장하지 않음)
+     *
      * @param requestDTOs
      * @param response
-     * @throws IOException 
+     * @throws IOException
      */
     public void createDownRequestExcel(List<RequestDTO> requestDTOs, HttpServletResponse response) throws IOException {
 
@@ -356,9 +340,46 @@ public class RequestService {
 
         try (OutputStream outputStream = response.getOutputStream()) {
             workbook.write(outputStream);
-        } 
+        }
     }
     
-    
+    /**
+     *  사용자의 스프린트 내역
+     * @param pid
+     * @param uid
+     * @return 
+     */
+    public List<RequestDTO> getUserSprintList(Long pid, String uid){
+        
+        List<RequestEntity> requestEntities = requestRepository.findUserRequests(pid, uid);
+        List<RequestDTO> requestDTOs = new ArrayList<>();
 
+        for (RequestEntity requestEntity : requestEntities) {
+
+            UserEntity userEntity = userRepository.findById(requestEntity.getUid()).orElse(null);
+            String username = (userEntity != null) ? userEntity.getName() : null;
+
+            requestDTOs.add(RequestDTO.builder()
+                    .frid(requestEntity.getFrid())
+                    .pid(requestEntity.getPid())
+                    .rid(requestEntity.getRid())
+                    .name(requestEntity.getName())
+                    .content(requestEntity.getContent())
+                    .date(requestEntity.getDate())
+                    .rank(requestEntity.getRank())
+                    .stage(requestEntity.getStage())
+                    .target(requestEntity.getTarget())
+                    .uid(requestEntity.getUid())
+                    .note(requestEntity.getNote())
+                    .username(username) // username 설정
+                    .build());
+        }
+
+        return requestDTOs;
+    }
+    
+    public Map<String, Object> getRequestCounts(Long pid) {
+        return requestRepository.countRequests(pid);
+    }
+    
 }

@@ -38,14 +38,20 @@ function loadTableData() {
 
 function createCommentInput(id) {
     let divElement = document.createElement('div'); // 댓글 div
-
+    divElement.classList.add('d-flex', 'justify-content-between', 'm-3');
+    
     divElement.id = "childCommentInput";
     let inputElement = document.createElement('INPUT');
     inputElement.type = 'text';
     inputElement.id = 'childComment';
     inputElement.placeholder = '댓글을 입력해주세요';
+    inputElement.style.backgroundColor="#fff";
+    inputElement.classList.add('border', 'form-control', 'me-2');
+    
     let buttonElement = document.createElement('BUTTON');
     buttonElement.innerHTML = '작성';
+    buttonElement.style.width = '4rem'; // width 설정
+    buttonElement.classList.add('btn', 'btn-outline-secondary', 'btn-sm');
     divElement.appendChild(inputElement);
     divElement.appendChild(buttonElement);
     buttonElement.addEventListener('click', function () { // 댓글 작성
@@ -73,40 +79,33 @@ function settingComentInput(id) {
 function createComment(item) {
     let divElement = document.createElement('div'); // 댓글 div
     divElement.id = "comment-" + item.cid;
+
+//    divElement.style.paddingLeft = '1rem';
+//    divElement.style.paddingRight = '1rem';
+//    divElement.style.paddingTop = '1rem';
+
     if (item.delete === 1) {
         let para = document.createElement('p');
         para.textContent = "삭제된 댓글입니다.";
+        para.classList.add('px-3', 'pt-3');
         divElement.appendChild(para);
-    } else {
-        let writerPara = document.createElement('p');
-        writerPara.textContent = "작성자: " + item.writer;
-        divElement.appendChild(writerPara);
-
-        let contentPara = document.createElement('p');
-        contentPara.textContent = "내용: " + item.content;
-        divElement.appendChild(contentPara);
-
-        let datePara = document.createElement('p');
-        datePara.textContent = "날짜: " + item.date;
-        divElement.appendChild(datePara);
-
-        let deletePara = document.createElement('p');
-        deletePara.textContent = "삭제";
-        deletePara.addEventListener('click', function () {
-            deleteCommit(item.cid);
-        });
-
-        divElement.appendChild(deletePara);
-
-        let replyButton = document.createElement('button');
-        replyButton.textContent = '답글';
-        replyButton.addEventListener('click', function (event) {
-            let spiltId = event.currentTarget.parentNode.id.split("-");
-            settingComentInput(spiltId[spiltId.length - 1]);
-        });
-
-        divElement.appendChild(replyButton);
+        }else {
+        divElement.innerHTML = `
+            <div class="d-flex justify-content-between px-3 pt-3">
+                <span class="fw-600">${item.writer}</span>
+                <small class="text-danger" onclick="deleteCommit(${item.cid})">삭제</small>
+            </div>
+            <div class="my-2 px-3">
+                <p class="m-0">${item.content}</p>
+                <small class="text-gray">${item.date}</small>
+            </div>
+            <div class="px-3">
+            <button type="button" class="btn btn-sm btn-outline-secondary mt-1" style="font-size: 0.7rem;" onclick="settingComentInput(${item.cid})">답글</button>
+            <hr class="mt-3 mb-0">
+        </div>
+        `;
     }
+   
     return divElement;
 }
 
@@ -138,13 +137,24 @@ function deleteCommit(id) {
 function createChildComment(commentDiv, id) {
     let containerDiv = document.createElement('div'); // Container div
     containerDiv.className = "childCommentContainerDiv";
+    containerDiv.classList.add('d-flex');
+    
     let arrowDiv = document.createElement('div'); // Small div (10%)
     arrowDiv.className = "arrowDiv";
-    arrowDiv.textContent = "→";
+    arrowDiv.classList.add( 'mt-3', 'ps-3'); // mt-1 클래스 추가
+    arrowDiv.textContent = "└";
     containerDiv.appendChild(arrowDiv);
+    
     commentDiv.className = "childCommentDiv";
     commentDiv.id = "child-" + id;
+    commentDiv.classList.add('flex-fill');
+    
+    let buttons = commentDiv.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.remove();
+        });
     containerDiv.appendChild(commentDiv);
+    containerDiv.style.backgroundColor = "#FAFAFA";
     return containerDiv;
 }
 
@@ -190,17 +200,10 @@ document.addEventListener('DOMContentLoaded', function () { // 페이지 로드 
 });
 
 document.getElementById('commentButton').addEventListener('click', function () { // 댓글 작성
-    var comment = document.getElementById('comment').value;
+    var commentInput = document.getElementById('comment');
+    var comment = commentInput.value;
     if (comment !== '') {
         saveComment(comment, 0);
-    }
-});
-
-document.getElementById('commentToggle').addEventListener('click', function () {
-    let commentList = document.getElementById('commentContainer');
-    if (commentList.style.display === 'block') {
-        commentList.style.display = 'none';
-    } else {
-        commentList.style.display = 'block';
+        commentInput.value = '';
     }
 });
