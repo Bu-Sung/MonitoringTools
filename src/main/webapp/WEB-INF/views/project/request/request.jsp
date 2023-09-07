@@ -536,7 +536,7 @@
                                 stage: stage.value,
                                 target: target.value,
                                 uid: uid.value,
-                                note: note.vaue
+                                note: note.value
                             }
 
                             // checkSimilarity가 끝날 때까지 기다림
