@@ -26,21 +26,38 @@
 - 2023.07.28 ~ (진행 중)
 <br><br>
 ### ⚙ 개발 환경
-- ##### 협업
+- ##### 협업 도구
   <img src="https://img.shields.io/badge/github-181717?style=flat&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/notion-000000?style=flat&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/figma-F24E1E?style=flat&logo=figma&logoColor=white">
 - ##### 모시기1
   <img src="https://img.shields.io/badge/html5-E34F26?style=flat&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css-1572B6?style=flat&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap5-7952B3?style=flat&logo=bootstrap&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat&logo=springboot&logoColor=white">
 - ##### 모시기2 
   <img src="https://img.shields.io/badge/java-007396?style=flat&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=flat&logo=javascript&logoColor=black">
 - ##### 모시기3
-  <img src="https://img.shields.io/badge/mysql-4479A1?style=flate&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/jquery-0769AD?style=flat&logo=jquery&logoColor=white"> <img src="https://img.shields.io/badge/NetBeans-1B6AC6?style=flat&logo=apache-netbeans-ide&logoColor=white)">
-
+  <img src="https://img.shields.io/badge/jquery-0769AD?style=flat&logo=jquery&logoColor=white"> <img src="https://img.shields.io/badge/NetBeans-1B6AC6?style=flat&logo=apache-netbeans-ide&logoColor=white)">
+- ##### 데이터베이스
+   <img src="https://img.shields.io/badge/mysql-4479A1?style=flate&logo=mysql&logoColor=white">
 
 <br><br>
 ### 👨‍💻 팀원 구성
-- **김부성** - 역할 뭐햇는지
-- **이수진** - 역할 뭐햇는지
-- **박채빈** - 역할 뭐햇는지
+- **김부성👑**
+  - 프로젝트 진행관리
+  - 사용자 관리 기능
+  - 게시판, 회의록, 댓글 작성 기능
+  - 클라이언트와 웹서버 연결
+ 
+- **이수진**
+  - 화면 레이아웃 디자인
+  - 사용 템플릿 제작
+  - 화면 크기에 맞는 레이아웃 구성
+  - 동적 웹 환경 제작
+    
+- **박채빈**
+  - 프로젝트 등록·수정·삭제 기능
+  - 팀원 등록 및 권한 수정
+  - 요구사항 등록·수정·삭제
+  - 요구사항 유사도 검사
+  - 요구사항 엑셀 파일 생성
+  - 요구사항 진행도 그래프 시각화
 <br><br><br>
 
 ## ⛓️ 시스템 구성
@@ -59,8 +76,8 @@
 <br><br><br>
 ## 📌 주요 기능
 ### 1. 사용자 관리
+<br>
 
-<br><br>
 ### 2. 요구사항관리
 #### 2.1 요구사항 작성
 ![요구사항 생성](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/6b0d4c90-656a-4786-a479-763459daca85)
