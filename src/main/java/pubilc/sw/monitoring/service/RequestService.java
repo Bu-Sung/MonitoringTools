@@ -98,19 +98,24 @@ public class RequestService {
     public boolean saveRequest(RequestDTO requestDTO) {
         List<RequestEntity> requestEntities = new ArrayList<>();
 
-        RequestEntity requestEntity = RequestEntity.builder()
-                .frid(requestDTO.getFrid())
-                .pid(requestDTO.getPid())
-                .rid(requestDTO.getRid())
-                .name(requestDTO.getName())
-                .content(requestDTO.getContent())
-                .date(requestDTO.getDate())
-                .rank(requestDTO.getRank())
-                .stage(requestDTO.getStage())
-                .target(requestDTO.getTarget())
-                .uid(requestDTO.getUid())
-                .note(requestDTO.getNote())
-                .build();
+        RequestEntity requestEntity = new RequestEntity();
+
+        if (requestDTO.getFrid() != null) {  // 수정의 경우 
+            requestEntity.setRid(String.valueOf(requestRepository.findRidByFrid(requestDTO.getFrid())));
+        } else {  // 추가의 경우 
+            requestEntity.setRid(requestDTO.getRid());
+        }
+
+        requestEntity.setFrid(requestDTO.getFrid());
+        requestEntity.setPid(requestDTO.getPid());
+        requestEntity.setName(requestDTO.getName());
+        requestEntity.setContent(requestDTO.getContent());
+        requestEntity.setDate(requestDTO.getDate());
+        requestEntity.setRank(requestDTO.getRank());
+        requestEntity.setStage(requestDTO.getStage());
+        requestEntity.setTarget(requestDTO.getTarget());
+        requestEntity.setUid(requestDTO.getUid());
+        requestEntity.setNote(requestDTO.getNote());
 
         return requestRepository.save(requestEntity) != null;
     }
@@ -222,7 +227,7 @@ public class RequestService {
                 row.createCell(4).setCellValue(requestDTO.getRank());
                 row.createCell(5).setCellValue(requestDTO.getStage());
                 row.createCell(6).setCellValue(requestDTO.getTarget());
-                row.createCell(7).setCellValue(requestDTO.getUid());
+                row.createCell(7).setCellValue(requestDTO.getUsername());
                 row.createCell(8).setCellValue(requestDTO.getNote());
             }
 

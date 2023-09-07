@@ -147,8 +147,8 @@
                                             <select id="requestMember">
                                                 <option value="all">전체</option>
                                             </select>
-                                            <div id="requestGraph" >  
-                                                <canvas id="request" width="300" height="300"></canvas>
+                                            <div id="requestGraph" style="width: 95%; margin: auto;">  
+                                                <canvas id="request" width="500" height="400"></canvas>
                                             </div>
                                         </div>
                                         <!--번다운 차트-->

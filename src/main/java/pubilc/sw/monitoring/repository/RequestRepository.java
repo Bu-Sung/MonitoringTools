@@ -35,4 +35,6 @@ public interface RequestRepository extends JpaRepository<RequestEntity, Long> {
     @Query(value = "SELECT COUNT(*) as total, SUM(CASE WHEN request_stage != '완료' THEN 0 ELSE 1 END) as clear, SUM(CASE WHEN request_stage != '대기' THEN 0 ELSE 1 END) as standBy FROM request WHERE project_id = :pid AND request_date != -1", nativeQuery = true)
     Map<String, Object> countRequests(@Param("pid") Long pid);
     
+    @Query("SELECT r.rid FROM RequestEntity r WHERE r.frid = :frid")
+    Long findRidByFrid(Long frid);
 }
