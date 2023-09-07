@@ -47,7 +47,7 @@
                                         <div id="backlog" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
                                                 <c:if test="${list.stage eq '대기'}">
-                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}"  data-bs-target="#myModal">
+                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}"  data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
                                                 </c:if>
@@ -64,7 +64,7 @@
                                         <div id="todo" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
                                                 <c:if test="${list.stage != '대기' && list.stage != '테스트' && list.stage != '완료' && list.target != 'true'}">
-                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}"  data-bs-target="#myModal">
+                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}"  data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
                                                 </c:if>
@@ -81,7 +81,7 @@
                                         <div id="progress" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
                                                 <c:if test="${list.stage != '대기' && list.stage != '테스트' && list.stage != '완료' && list.target == 'true'}">
-                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}"  data-bs-target="#myModal">
+                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}"  data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
                                                 </c:if>
@@ -98,7 +98,7 @@
                                         <div id="test" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
                                                 <c:if test="${list.stage eq '테스트'}">
-                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}"  data-bs-target="#myModal">
+                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}" data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
                                                 </c:if>
@@ -115,7 +115,7 @@
                                         <div id="clear" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
                                                 <c:if test="${list.stage eq '완료'}">
-                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}"  data-bs-target="#myModal">
+                                                    <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}" data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
                                                 </c:if>
@@ -145,11 +145,7 @@
                             <table class="table">
                                 <tr>
                                     <th style="width: 25%">담당자</th>
-                                    <td><input type="text" class="form-control" value="내용"></td>
-                                </tr>
-                                <tr>
-                                    <th>작성자</th>
-                                    <td><input type="text" class="form-control" value="내용"></td>
+                                    <td><input type="text" id="user" class="form-control" ></td>
                                 </tr>
                                 <tr>
                                     <th>내용</th>
@@ -165,8 +161,8 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                            <button type="button" class="btn btn-primary" id="saveModalContent">저장</button>
+                            <!--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>-->
+                            <!--<button type="button" class="btn btn-primary" id="saveModalContent">저장</button>-->
                         </div>
                     </div>
                 </div>
@@ -174,78 +170,7 @@
 
             <script>
                 let requestList = [];
-                /*
-                 function getAllRequest() {
-                 fetch("/monitoring/project/request/getRequests", {
-                 })
-                 .then(response => response.json())
-                 .then(data => {
-                 data.forEach(item => {
-                 requestList.push(item);
-                 });
-                 settingkanban();
-                 })
-                 .catch((error) => console.error('Error:', error));
-                 }
-                 */
-//                function settingkanban() {
-//                    const backlogList = document.getElementById("backlog");
-//                    const todoList = document.getElementById("todo");
-//                    const progressList = document.getElementById("progress");
-//                    const testList = document.getElementById("test");
-//                    const clearList = document.getElementById("clear");
-//
-//                    for (item of requestList) {
-//                        if (item.date != -1) {
-//                            const newMemo = createMemo(item);
-//                            if (item.stage === "대기") {
-//                                backlogList.appendChild(newMemo);
-//                            } else if (item.stage === "완료") {
-//                                clearList.appendChild(newMemo);
-//                            } else if (item.stage === "테스트") {
-//                                testList.appendChild(newMemo);
-//                            } else {
-//                                if (item.target === "true") {
-//                                    progressList.appendChild(newMemo);
-//                                } else {
-//                                    todoList.appendChild(newMemo);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-
-                function createMemo(item) {
-                    const memoDiv = document.createElement('div');
-                    memoDiv.classList.add('memo-yellow');
-
-                    memoDiv.dataset.bsToggle = 'modal';
-                    memoDiv.dataset.bsTarget = '#myModal';
-                    memoDiv.innerText = item.name;
-                    memoDiv.setAttribute("data-memoid", item.frid);
-                    return memoDiv;
-                }
-
-                function changeStage(request) {
-                    fetch("/monitoring/project/reqeust/save", {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(request)
-                    })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data) {
-                                    location.reload();
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            })
-                            .catch((error) => console.error('Error:', error));
-                }
-
+              
                 // 뷰포트의 세로 길이
                 var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
@@ -331,13 +256,13 @@
                 const memoLists = document.querySelectorAll('.card-white-1');
 
                 memoLists.forEach(function (memoList) {
-                    memoList.addEventListener('click', function () {
+                    memoList.addEventListener('click', function (e) {
                         // 클릭한 영역의 제목을 가져와 모달 제목으로 설정합니다.
                         const clickedTitle = memoList.querySelector('.card-header').textContent.trim();
                         const modalTitle = document.getElementById('modalTitle');
                         modalTitle.textContent = clickedTitle;
-
-                        console.log("Modal Header Name: " + clickedTitle);
+                        const modalUser = document.getElementById('user');
+                        modalUser.value =e.target.dataset.requestuser;
                     });
                 });
 
