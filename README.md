@@ -28,12 +28,10 @@
 ### ⚙ 개발 환경
 - ##### 협업 도구
   <img src="https://img.shields.io/badge/github-181717?style=flat&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/notion-000000?style=flat&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/figma-F24E1E?style=flat&logo=figma&logoColor=white">
-- ##### 모시기1
-  <img src="https://img.shields.io/badge/html5-E34F26?style=flat&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css-1572B6?style=flat&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap5-7952B3?style=flat&logo=bootstrap&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat&logo=springboot&logoColor=white">
-- ##### 모시기2 
-  <img src="https://img.shields.io/badge/java-007396?style=flat&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=flat&logo=javascript&logoColor=black">
-- ##### 모시기3
-  <img src="https://img.shields.io/badge/jquery-0769AD?style=flat&logo=jquery&logoColor=white"> <img src="https://img.shields.io/badge/NetBeans-1B6AC6?style=flat&logo=apache-netbeans-ide&logoColor=white)">
+- ##### 사용언어
+  <img src="https://img.shields.io/badge/html5-E34F26?style=flat&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css-1572B6?style=flat&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap5-7952B3?style=flat&logo=bootstrap&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/java-007396?style=flat&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=flat&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/jquery-0769AD?style=flat&logo=jquery&logoColor=white">
+- ##### IDE
+  <img src="https://img.shields.io/badge/NetBeans-1B6AC6?style=flat&logo=apache-netbeans-ide&logoColor=white)">
 - ##### 데이터베이스
    <img src="https://img.shields.io/badge/mysql-4479A1?style=flate&logo=mysql&logoColor=white">
 
@@ -75,7 +73,19 @@
 - **[FullCalendar](https://fullcalendar.io/)** - 일정 확인을 위한 캘린더 라이브러리
 <br><br><br>
 ## 📌 주요 기능
+### UseCaseDiagram
+![UseCaseDiagram](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/7c156d66-cca5-425a-ab5e-ffdd898a6db4)
+
 ### 1. 사용자 관리
+### 1.1 기본적인 로그인, 회원가입 기능
+### 1.2 프로젝트 등록 후 수정
+![프로젝트 등록 후 수정](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/c5d83384-9f29-4f7a-b9b1-a38fb943eaee)
+### 1.3 사용자 검색 후 멤버 추가
+![사용자 검색 후 멤버 추가](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/6f225089-39c2-4075-9328-d23fa0cafce2)
+### 1.4 초대 메시지 수신 후 확인
+![초대 메시지](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/4d222c67-c387-459c-9b56-efbaab131055)
+![초대 메시지 확인](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/93811002/36223e51-83f6-4a14-a997-85fc21fe63b4)
+
 <br>
 
 ### 2. 요구사항관리
