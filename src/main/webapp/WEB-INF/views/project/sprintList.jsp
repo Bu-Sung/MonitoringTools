@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -48,7 +49,7 @@
                             <c:forEach var="entry" items="${requestMap}" varStatus="status">
                                 <div class="card card-white-1 mb-3">
                                     <div class="card-body" style="overflow: auto; white-space: nowrap;">
-                                        <p class="px-2 fw-600 mb-3 bg-yellow">No.<span>${status.count}</span></p>
+                                        <p class="px-2 fw-600 mb-3 bg-yellow">No.<span>${fn:length(requestMap) - status.index}</span></p>
                                         <table class="table">
                                             <thead>
                                                 <tr>
