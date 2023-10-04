@@ -20,7 +20,10 @@ import pubilc.sw.monitoring.entity.UserEntity;
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, String> {
-
+    
+    // Optional객체를 사용하지 않고 바로 Entity를 반환하여 사용자가 없는 null을 사용
+    UserEntity findUserById(String uid);
+    
     @Override
     boolean existsById(String id);
 

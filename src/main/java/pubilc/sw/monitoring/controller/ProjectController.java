@@ -58,8 +58,8 @@ public class ProjectController {
     public String project(@PathVariable Long pid, Model model) throws JsonProcessingException {
 
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
-        sessionManager.setProjectId(pid);
-        sessionManager.setProjectRight(projectService.hasRight(sessionManager.getUserId(), pid));
+        sessionManager.setProjectInfo(projectDTO,projectService.hasRight(sessionManager.getUserId(), pid));
+        
         model.addAttribute("project", projectDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();

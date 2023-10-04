@@ -24,23 +24,22 @@ import pubilc.sw.monitoring.repository.UserRepository;
 public class UserService {
     
     private final UserRepository userRepository; // UserRepository 사용을 위한 변수
-    private final SessionManager sessionManager;
+    
     
     /**
      * 
      * @param userDTO 로그인을 원하는 사용자의 입력
      * @return 로그인 성공 여부 - 성공하면 true, 실패하면 false
      */
-    public boolean login(UserDTO userDTO){
-        Optional<UserEntity> userEntity = userRepository.findById(userDTO.getId());
-        if(!userEntity.isPresent() || !userDTO.getPw().equals(userEntity.get().getPw()) || userEntity.get().getState() != 0){
-            return false;
+    public UserDTO login(UserDTO userDTO){
+        UserEntity userEntity = userRepository.findUserById(userDTO.getId());
+        if(userEntity == null || !userDTO.getPw().equals(userEntity.getPw()) || userEntity.getState() != 0){
+            return null;
         }else{
-            sessionManager.setUserSession(UserDTO.builder()
-                    .id(userEntity.get().getId())
-                    .name(userEntity.get().getName())
-                    .build());
-            return true;
+            return UserDTO.builder()
+                    .id(userEntity.getId())
+                    .name(userEntity.getName())
+                    .build();
         }
     }
     
@@ -79,8 +78,8 @@ public class UserService {
         return userEntity.isPresent() && pw.equals(userEntity.get().getPw());
     }
     
-    public UserDTO getUserInfo(){
-        Optional<UserEntity> userEntity = userRepository.findById(sessionManager.getUserId());
+    public UserDTO getUserInfo(String uid){
+        Optional<UserEntity> userEntity = userRepository.findById(uid);
         return UserDTO.builder()
                     .id(userEntity.get().getId())
                     .name(userEntity.get().getName())

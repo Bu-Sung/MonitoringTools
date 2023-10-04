@@ -8,7 +8,7 @@
             <li class="breadcrumb-item active" aria-current="page">Project</li>
         </ol>
         <a href="${project.pid}" class="navbar-brand">
-            <h4 class="fw-600 mb-0">${project.name}</h4>
+            <h4 class="fw-600 mb-0">${sessionScope.myInfo.pname}</h4>
         </a>
         <div class="d-none d-lg-block">
             <div class="dropdown">
@@ -17,8 +17,8 @@
                     <img src="/monitoring/asset/profile.png" alt="프로필 이미지" class="rounded-circle"
                          style="width: 3.5rem; height: 3.5rem;">
                     <div class="ps-3 pe-2">
-                        <h6 class="fw-400 mb-0 text-dark">${sessionScope.user.name}</h6>
-                        <small class="text-gray">${sessionScope.hasRight == 1 ? '관리자' : '팀원'}</small>
+                        <h6 class="fw-400 mb-0 text-dark">${sessionScope.myInfo.uname}</h6>
+                        <small class="text-gray">${sessionScope.myInfo.hasRight == 1 ? '관리자' : '팀원'}</small>
                     </div>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
