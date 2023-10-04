@@ -44,9 +44,6 @@
                 <a href="/monitoring/project/meeting/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
                                                                                   class="me-2">회의록</a>
             </li>
-
-
-
         </ul>
     </div>
 </div>
