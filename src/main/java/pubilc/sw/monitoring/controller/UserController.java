@@ -36,6 +36,11 @@ public class UserController {
         return "register";
     }
     
+    @GetMapping("/findUser")
+    public String findUser(){
+        return "findUser";
+    }
+    
     @GetMapping("/login")
     public String login(){
         return "login";
@@ -81,6 +86,16 @@ public class UserController {
             attrs.addFlashAttribute("msg", "회원가입에 실패하였습니다.");
             return "redirect:/register";
         }
+    }
+    
+    @PostMapping("/findId")
+    public String findIdSuccess(){
+        return "findIdSuccess";
+    }
+    
+   @PostMapping("/findPw")
+    public String findPwSuccess(){
+        return "findPwSuccess";
     }
     
     /**
