@@ -45,78 +45,95 @@
                             </h4>
                             <div class="card card-white-1 mt-2 mb-2 " style="height: 75vh;">
                                 <div class="card-body" style="overflow: auto; white-space: nowrap;">
-                                    <div>
-                                        <div class="d-flex mt-4 justify-content-end">
-                                            <a href="createExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 생성</button></a>
-                                            <a href="createDownRequestExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 다운</button></a>
+                                    <!--md 사이즈 이상일 경우에 적용-->
+                                    <div class='d-none d-lg-block'>
+                                        <div>
+                                            <div class="d-flex mt-4 justify-content-end">
+                                                <a href="createExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 생성</button></a>
+                                                <a href="createDownRequestExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 다운</button></a>
+                                            </div>
+                                            <c:if test="${not empty excelNames}">
+                                                <c:forEach var="file" items="${excelNames}">
+                                                    <a href="download?filename=${file}">${file}</a>
+                                                </c:forEach>
+                                            </c:if>
+                                            <hr>
                                         </div>
-                                        <c:if test="${not empty excelNames}">
-                                            <c:forEach var="file" items="${excelNames}">
-                                                <a href="download?filename=${file}">${file}</a>
-                                            </c:forEach>
-                                        </c:if>
-                                        <hr>
-                                    </div>
-                                    <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr class="text-primary">
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        구분
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        요구사항
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        상세설명
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        추정치
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        우선 순위
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        개발단계
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        반복대상
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        담당자
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <비고>
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="requestListTable">
+                                        <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
+                                        <div style='overflow-x:auto;'>
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr class="text-primary">
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                구분
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                요구사항
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                상세설명
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                추정치
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                우선 순위
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                개발단계
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                반복대상
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                담당자
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                <비고>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="requestListTable">
 
-                                        </tbody>
-                                    </table>
-                                    <c:if test="${sessionScope.hasRight != 3}">
-                                        <div class="row">
-                                            <button id="addRequest" class="btn btn-sm btn-outline-primary">+</button>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </c:if>
+                                        <c:if test="${sessionScope.hasRight != 3}">
+                                            <div class="row">
+                                                <button id="addRequest" class="btn btn-sm btn-outline-primary">+</button>
+                                            </div>
+                                        </c:if>
+                                    </div>
+
+                                    <!--모바일 크기 이하에만 적용-->
+                                    <div class='d-block d-lg-none mt-7'>
+                                        <div class='d-flex justify-content-center'>
+                                            <a href="createDownRequestExcel" class="m-2">
+                                                <button class="btn">
+                                                    <img src="${pageContext.request.contextPath}/asset/file_down.png" width='40rem' height='auto'>
+                                                    <p class="mt-3 text-gray mb-0">파일 다운받기</p>
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -603,7 +620,7 @@
                 similarList = [];
                 for (let item of requestList) {
 
-                    if (item.frid === request.frid) { 
+                    if (item.frid === request.frid) {
                         continue;
                     }
 
