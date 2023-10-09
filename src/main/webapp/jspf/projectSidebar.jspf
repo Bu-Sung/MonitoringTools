@@ -10,11 +10,11 @@
     <div class="mt-5">
         <ul class="nav flex-column" id="dashboardMenu">
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/${sessionScope.pid}" class="mb-0 ps-0 text-gray nav-link"><img src="/monitoring/asset/dashboard.png"
+                <a href="/monitoring/project/${sessionScope.myInfo.pname}" class="mb-0 ps-0 text-gray nav-link"><img src="/monitoring/asset/dashboard.png"
                                                                                                                                    class="me-2">대시보드</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/update/${sessionScope.pid}" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/setting.png"
+                <a href="/monitoring/project/update/${sessionScope.myInfo.pname}" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/setting.png"
                                                                                                                                                       class="me-2">프로젝트 관리</a>
             </li>
 
