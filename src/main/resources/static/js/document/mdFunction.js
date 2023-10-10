@@ -6,23 +6,35 @@ function checkMD(eventDiv) {
     const newText = fullText.substring(firstSpaceIndex + 1);
 
     if (markDownKey === '-') {
-        console.log('Unordered list');
+        replaceDot(eventDiv, newText);
     } else if (markDownKey === '#') {
         replaceTag(eventDiv, 'h1', newText);
     } else if (markDownKey === '##') {
         replaceTag(eventDiv, 'h2', newText);
     } else if (markDownKey === '###') {
         replaceTag(eventDiv, 'h3', newText);
-    } else if (markDownKey === '1.') {
-        console.log('Ordered list');
+    } else if (markDownKey === '/일정') {
+        var myModal = document.getElementById('openModal');
+        var bsModal = new bootstrap.Modal(myModal, { keyboard: false });
+        bsModal.show();
     }
 }
 
 /* 태그 변경을 위한 함수 */
 function replaceTag(eventDiv, tag, newText) {
-    eventDiv.innerHTML = ''.trim();
-    const content = document.createElement(tag);
-    content.textContent = newText + "\u200B";
-    eventDiv.appendChild(content);
+    eventDiv.classList.add(tag);
+    eventDiv.textContent = newText;
 }
 
+/* 앞에 • 추가하기 */
+function replaceDot(eventDiv, newText) {
+    var parentDiv = eventDiv.parentNode;
+    if (parentDiv.children.length <= 1) {
+        const dotDiv = document.createElement("div");
+        dotDiv.classList.add("dot");
+        dotDiv.innerHTML = "•";
+        parentDiv.insertBefore(dotDiv, parentDiv.firstChild);
+        eventDiv.innerHTML = ''.trim();
+        eventDiv.textContent = newText;
+    }
+}
