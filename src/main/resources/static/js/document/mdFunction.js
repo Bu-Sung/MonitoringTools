@@ -14,9 +14,7 @@ function checkMD(eventDiv) {
     } else if (markDownKey === '###') {
         replaceTag(eventDiv, 'h3', newText);
     } else if (markDownKey === '/일정') {
-        var myModal = document.getElementById('openModal');
-        var bsModal = new bootstrap.Modal(myModal, { keyboard: false });
-        bsModal.show();
+        scheduleModal();
     }
 }
 

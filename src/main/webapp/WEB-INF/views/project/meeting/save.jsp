@@ -85,7 +85,7 @@
                                     <div id="content" class="document-content">
                                         <div class="document-content-explanation">
                                             <h2>단축키 설명</h2>
-                                            <div style="text-align: left;" class="mb-5">
+                                            <div style="text-align: left;">
                                                 # => h1<br>
                                                 ## => h2<br>
                                                 ### => h3<br>
@@ -93,8 +93,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                             </div>
-                            <button class="btn btn-primary sticky-bottom" style="bottom:2rem;"
+                            <button class="btn btn-primary sticky-bottom mt-2" style="bottom:2rem;"
                                 type="submit">저장하기</button>
                             </form>
                         </div>
@@ -102,6 +103,106 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <div class="w-100 d-flex justify-content-between align-items-center">
+                   <h3 class="modal-title fw-600" id="modalTitle">일정</h3>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+           </div>
+           <div class="modal-body">
+               <input id="sid" type="text" hidden>
+               <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
+               <table class="table table-borderless">
+                   <tr>
+                       <th style="width:25%"><label for="title">제목<span class="text-danger">*</span></label>
+                       </th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="text" id="title" name="title" class="form-control" required>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="startDate">시작 날짜<span class="text-danger">*</span></label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="date" id="startDate" name="startDate" class="form-control">
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="endDate">종료 날짜<span class="text-danger">*</span></label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="date" id="endDate" name="endDate" class="form-control">
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th></th>
+                       <td>
+                           <div class="d-flex align-items-center justify-content-end">
+                               <button id="changeTypeBtn" type="button" class="btn btn-gray fw-500" style="width: 8rem;">시간 사용하기</button>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="content">내용</label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <textArea id="content" class="form-control"></textArea>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr id="colorSelectDiv">
+                       <th><label for="colorSelect">배경</label></th>
+                       <td>
+                           <div class="w-100">
+                               <select id="colorSelect" class="w-100" style="background-color: #43aef2; appearance: none;">
+                                   <option value="#43aef2" class="m-1" style="background-color: #43aef2;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                   <option value="#84e45c" class="m-1" style="background-color: #84e45c;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                   <option value="#f24d43" class="m-1" style="background-color: #f24d43;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                               </select>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="addMember">팀원</label></th>
+                       <td>
+                           <div id="addMemberDiv">
+                               <div class=" d-flex align-items-center w-100">
+                                   <div style="position: relative; width: auto;">
+                                       <input type="text" id="addMember" name="addMember" class="form-control"  autocomplete="off">
+                                       <div id="searchMember" class="dropdown-menu">
+                                       </div>
+                                   </div>
+                                   <button id="addMemberBtn" type="button" class="btn btn-gray fw-500 ms-2" style="width: 8rem;">추가</button>
+                               </div>
+                           </div>
+                           <div id="memberListDiv" class="p-1">
+                           </div>
+                       </td>
+                   </tr>
+               </table> 
+           </div>
+           <div class="modal-footer">
+               <button type="button" id="saveSchedule" class="btn btn-primary fw-500"
+                   style="width: 8rem; height: 3rem;">등록하기</button>
+               <button type="button" id="updateSchedule" class="btn btn-primary fw-500"
+                   style="width: 8rem; height: 3rem;">수정하기</button>
+               <button type="button" id="editSchedule" class="btn btn-primary fw-500"
+                       style="width: 8rem; height: 3rem;">수정하기</button>
+               <button type="button" id="deleteSchedule" class="btn btn-danger fw-500"
+               style="width: 8rem; height: 3rem;">삭제하기</button>
+           </div>
+       </div>
     </div>
 
     <script>
@@ -115,6 +216,8 @@
     <script charset="UTF-8" src="/monitoring/js/document/document.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/keyEvent.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/mdFunction.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <!-- 부트스트랩 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
