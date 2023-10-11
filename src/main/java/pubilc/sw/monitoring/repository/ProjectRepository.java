@@ -4,6 +4,8 @@
  */
 package pubilc.sw.monitoring.repository;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +38,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     
     @Query(value = "SELECT TIMESTAMPDIFF(DAY, NOW(), project_end) FROM project WHERE project_id = :pid", nativeQuery = true)
     int getDaysUntilProjectEnd(@Param("pid") Long pid);
+    
+    @Query("SELECT p FROM ProjectEntity p WHERE p.start <= :currentDate AND p.end >= :currentDate")
+    List<ProjectEntity> findByStartBeforeAndEndAfter(@Param("currentDate") Date currentDate);
 }
