@@ -237,7 +237,7 @@ public class RequestService {
             int rowNum = 1;
             for (RequestDTO requestDTO : requestDTOs) {
                 Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(requestDTO.getRid());
+                row.createCell(0).setCellValue(rowNum - 1);
                 row.createCell(1).setCellValue(requestDTO.getName());
                 row.createCell(2).setCellValue(requestDTO.getContent());
                 row.createCell(3).setCellValue(requestDTO.getDate());
@@ -337,14 +337,14 @@ public class RequestService {
         int rowNum = 1;
         for (RequestDTO requestDTO : requestDTOs) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(requestDTO.getRid());
+            row.createCell(0).setCellValue(rowNum - 1);
             row.createCell(1).setCellValue(requestDTO.getName());
             row.createCell(2).setCellValue(requestDTO.getContent());
             row.createCell(3).setCellValue(requestDTO.getDate());
             row.createCell(4).setCellValue(requestDTO.getRank());
             row.createCell(5).setCellValue(requestDTO.getStage());
             row.createCell(6).setCellValue(requestDTO.getTarget());
-            row.createCell(7).setCellValue(requestDTO.getUid());
+            row.createCell(7).setCellValue(requestDTO.getUsername());
             row.createCell(8).setCellValue(requestDTO.getNote());
         }
 
@@ -500,7 +500,7 @@ public class RequestService {
      * 프로젝트 주기에 따라 요구사항 파일 자동 생성 
      */
     @Scheduled(cron = "0 27 3 * * ?", zone = "Asia/Seoul") 
-    public void processProjects() {
+    public void autoRequestFileCreate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date todayDate = new Date();
 
