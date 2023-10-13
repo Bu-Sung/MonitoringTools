@@ -15,6 +15,7 @@ function checkMD(eventDiv) {
         replaceTag(eventDiv, 'h3', newText);
     } else if (markDownKey === '/일정') {
         scheduleModal();
+        editScheduleSetting();
     }
 }
 

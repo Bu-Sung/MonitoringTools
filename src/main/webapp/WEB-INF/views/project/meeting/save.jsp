@@ -193,7 +193,7 @@
                </table> 
            </div>
            <div class="modal-footer">
-               <button type="button" id="saveSchedule" class="btn btn-primary fw-500"
+               <button type="button" id="saveScheduleList" class="btn btn-primary fw-500"
                    style="width: 8rem; height: 3rem;">등록하기</button>
                <button type="button" id="updateSchedule" class="btn btn-primary fw-500"
                    style="width: 8rem; height: 3rem;">수정하기</button>
