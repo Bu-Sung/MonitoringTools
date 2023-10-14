@@ -499,7 +499,7 @@ public class RequestService {
     /**
      * 프로젝트 주기에 따라 요구사항 파일 자동 생성 
      */
-    @Scheduled(cron = "0 27 3 * * ?", zone = "Asia/Seoul") 
+    @Scheduled(cron = "59 59 23 * * ?", zone = "Asia/Seoul") 
     public void autoRequestFileCreate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date todayDate = new Date();
