@@ -42,9 +42,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <a href="findUser" class="px-2 text-gray">아이디 찾기</a>
-            <span>|</span>
-            <a href="findUser" class="px-2 text-gray">비밀번호 찾기</a>
+            <a href="findUser" class="px-2 text-gray">회원 정보 찾기</a>
             <span>|</span>
             <a href="register" class="px-2 text-gray">회원가입</a>
         </div>

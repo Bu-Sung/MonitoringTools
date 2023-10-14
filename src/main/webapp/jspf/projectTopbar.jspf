@@ -46,7 +46,7 @@
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown"
                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="ms-3 my-0 pe-2 text-center">
-                        <p class="fw-500 mb-0 text-dark">${sessionScope.user.name}<span>님</span></p>
+                        <p class="fw-500 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                         <small class="text-gray">${hasRight == 1 ? '관리자' : '팀원'}</small>
                     </div>
                 </a>

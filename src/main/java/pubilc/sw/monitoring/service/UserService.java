@@ -78,6 +78,14 @@ public class UserService {
         return userEntity.isPresent() && pw.equals(userEntity.get().getPw());
     }
     
+    public boolean changPw(String id, String pw){
+        if(userRepository.updatePasswordById(id, pw) > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
     public UserDTO getUserInfo(String uid){
         Optional<UserEntity> userEntity = userRepository.findById(uid);
         return UserDTO.builder()
@@ -99,6 +107,19 @@ public class UserService {
             return userRepository.deleteUser(userEntity.get().getId()) > 0;
         }else {
             return false;
+        }
+    }
+    
+    public String findId(UserDTO userDTO){
+        String id = userRepository.findIdByNameAndPhoneAndState(userDTO.getName(), userDTO.getPhone());
+        return id.replaceAll("^(.{5}).*", "$1" + "*".repeat(id.length() - 5));
+    }
+    
+    public boolean findPw(UserDTO userDTO){
+        if(userRepository.findNameByNameAndPhoneAndState(userDTO.getId(), userDTO.getName(), userDTO.getPhone()) == null){
+            return false;
+        }else{
+            return true;
         }
     }
 }

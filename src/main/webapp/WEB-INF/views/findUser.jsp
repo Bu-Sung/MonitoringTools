@@ -50,11 +50,11 @@
                         <div class="w-100 me-4" style="max-width: 30rem;">
                             <div class="d-flex align-items-center mb-3">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">이름</b>
-                                <input type="text" class="form-control">
+                                <input type="text" name="name" class="form-control">
                             </div>
                             <div class="d-flex align-items-center">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">전화번호</b>
-                                <input type="text" class="form-control" placeholder="'-'을 제외한 숫자만 입력하세요.">
+                                <input type="text" class="form-control" name="phone" placeholder="'-'을 제외한 숫자만 입력하세요.">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="white-space: nowrap; width: 7rem;">아이디<br>찾기</button>
@@ -71,15 +71,15 @@
                         <div class="w-100 me-4" style="max-width: 30rem;">
                             <div class="d-flex align-items-center mb-3">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">아이디</b>
-                                <input type="text" class="form-control">
+                                <input type="text" name="id" class="form-control">
                             </div>
                             <div class="d-flex align-items-center mb-3">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">이름</b>
-                                <input type="text" class="form-control">
+                                <input type="text" name="name" class="form-control">
                             </div>
                             <div class="d-flex align-items-center">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">전화번호</b>
-                                <input type="text" class="form-control" placeholder="'-'을 제외한 숫자만 입력하세요.">
+                                <input type="text" name="phone" class="form-control" placeholder="'-'을 제외한 숫자만 입력하세요.">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="white-space: nowrap; width: 7rem;">비밀번호<br>찾기</button>

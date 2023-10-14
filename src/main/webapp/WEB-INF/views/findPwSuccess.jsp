@@ -24,7 +24,18 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
-
+        <script>
+            function checkPwAndPw2() {
+                var pw = document.getElementById("pw").value;
+                var pw2 = document.getElementById("pw2").value;
+                if (pw !== pw2) {
+                    alert("비밀번호가 일치하지 않습니다.");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        </script>
     </head>
     <body class="bg-gray">
         <!-- navbar-->
@@ -46,17 +57,17 @@
                 <div class="card-body mt-3 mx-4">
                     <h5 class="fw-700">✨ 비밀번호 찾기 결과 ✨</h5>
                     <small class="text-gray">비밀번호를 재설정하세요.</small>
-                    <form>
+                    <form id="chagePwForm" action="chagePw" method="POST"  onsubmit="return checkPwAndPw2()">
                         <div class="d-flex align-items-center mb-4 mt-5">
                             <b class="me-3" style="white-space: nowrap; width: 9rem;">비밀번호</b>
                             <div class="w-100">
-                                <input type="password" class="form-control" required>
+                                <input type="password" id="pw" name="pw" class="form-control" required>
                                 <small class="form-text text-muted mb-3">영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-3">
                             <b class="me-3" style="white-space: nowrap; width: 9rem;">비밀번호 확인</b>
-                            <input type="password" class="form-control" required>
+                            <input type="password" id="pw2" name="pw2" class="form-control" required>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary mt-5 mb-3" style="white-space: nowrap; display: inline-block;">비밀번호 변경</button>
