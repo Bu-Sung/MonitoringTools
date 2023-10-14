@@ -15,7 +15,7 @@
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="profileDropdown" role="button"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="${pageContext.request.contextPath}/asset/person.png">
-                    <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">${sessionScope.user.name}<span>님</span></p>
+                    <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="/monitoring/update">회원정보관리</a></li>

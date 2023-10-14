@@ -6,6 +6,7 @@ package pubilc.sw.monitoring.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -36,7 +37,20 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Modifying
     @Query(value = "update UserEntity u set u.state=1 where u.id=:id")
     int deleteUser(@Param("id") String id);
-
+    
+//    사용자 아이디 찾기
+    @Query("SELECT u.id FROM UserEntity u WHERE u.name = :name AND u.phone = :phone AND u.state=0")
+    String findIdByNameAndPhoneAndState(String name, String phone);
+    
+    //    로그인 전 사용자 비밀번호 변경시 확인
+    @Query("SELECT u.id FROM UserEntity u WHERE u.id = :id AND u.name = :name AND u.phone = :phone AND u.state=0")
+    String findNameByNameAndPhoneAndState(String id, String name, String phone);
+    
+    @Modifying
+    @Transactional
+    @Query("UPDATE UserEntity u SET u.pw = :pw WHERE u.id = :id")
+    int updatePasswordById(String id, String pw);
+    
     // 입력한 아이디가 포함되어 있는 모든 멤버 정보를 대소문자 무시하고 검색
     List<UserEntity> findByIdContainingIgnoreCase(String id);
 

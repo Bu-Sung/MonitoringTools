@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
@@ -89,13 +90,38 @@ public class UserController {
     }
     
     @PostMapping("/findId")
-    public String findIdSuccess(){
+    public String findIdSuccess(@ModelAttribute UserDTO userDTO, Model model){
+        String id = userService.findId(userDTO);
+        if(id == null){
+            return "findUser";
+        }else{
+            model.addAttribute("userId", id);
         return "findIdSuccess";
+        }
     }
     
    @PostMapping("/findPw")
-    public String findPwSuccess(){
-        return "findPwSuccess";
+    public String findPwSuccess(@ModelAttribute UserDTO userDTO){
+        if(userService.findPw(userDTO)){
+            sessionManager.setUserInfo(userDTO);
+            return "findPwSuccess";
+        }else{
+            return "findUser";
+        }
+    }
+    
+    /**
+     * 비밀번호를 변경하는 컨트롤러
+     * @param pw2
+     * @return 변경에 성공여부에 따른 url
+     */
+    @PostMapping("/chagePw")
+    public String chagePw(@RequestParam("pw2") String pw2){
+        if(userService.changPw(sessionManager.getUserId(), pw2)){
+            return "login";
+        }else{
+            return "findPwSuccess";
+        }
     }
     
     /**
