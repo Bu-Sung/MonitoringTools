@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -374,13 +376,13 @@ public class ProjectService {
     /**
      * 해당 프로젝트에 이미 참여중인 멤버인지 판별
      *
-     * @param memberDTO 멤버 정보를 담은 MemberDTO 객체
+     * @param pid 프로젝트 아이디 
      * @param addUid 참여중인지 판별할 유저 아이디
      * @return 해당 프로젝트에 대한 참여 여부 (true : 이미 프로젝트에 참여 중인 아이디, false : 해당 프로젝트에 참여
      * 중이 아닌 아이디)
      */
-    public boolean isMember(MemberDTO memberDTO, String addUid) {
-        return memberRepository.existsByUidAndPid(addUid, memberDTO.getPid());
+    public boolean isMember(Long pid, String addUid) {
+        return memberRepository.existsByUidAndPid(addUid, pid);
     }
 
     // 입력한 값이 들어간 아이디 찾기 
@@ -443,12 +445,16 @@ public class ProjectService {
     /**
      * 프로젝트 멤버 추가 함수
      *
-     * @param memberDTO 멤버 정보를 담은 MemberDTO 객체
      * @param addUid 추가할 멤버 아이디
-     * @param right 추가할 멤버의 권한
+     * @param pid 프로젝트 아이디 
      * @return 맴보 추가 성공 여부 (true : 멤버 추가 성공, false : 멤버 추가 실패)
      */
     public boolean addMember(String addUid, Long pid) {
+        
+        // 이미 멤버인 경우 추가하지 않음
+        if (isMember(pid, addUid)) {
+            return false; 
+        }
 
         MemberEntity addEntity = MemberEntity.builder()
                 .uid(addUid)
@@ -498,19 +504,75 @@ public class ProjectService {
      * @param pid 프로젝트 아이디
      * @return 삭제 성공 여부 (true : 삭제 성공, false : 삭제 실패, 선택된 삭제 멤버가 없음)
      */
-    public boolean deleteMember(String uid, Long pid) {
+    public boolean deleteMember(List<String> uids, Long pid) {
+        boolean status = false; // 초기값은 false로 설정
+
+        for (String uid : uids) {
             MemberEntity deleteMember = memberRepository.findByUidAndPid(uid, pid);
             if (deleteMember != null) {
                 memberRepository.delete(deleteMember);
-                return true;
+                status = true; // 하나 이상의 멤버를 삭제한 경우 true로 설정
             }
-            return false;
+        }
+
+        return status;
     }
 
-    public String[] getProjectCategory(Long pid) {
-        return projectRepository.findCategoryByProjectId(pid).get().split(",");
+    
+    // 카테고리 목록 
+    public List<String> getProjectCategory(Long pid) {
+        String categories = projectRepository.findCategoryByProjectId(pid).get();
+
+        if (categories != null && !categories.isEmpty()) {
+            return Arrays.asList(categories.split(","));
+        } else {
+            return Collections.emptyList();  // 빈 리스트를 반환
+        }
+    }
+    
+    
+    // 카테고리 삭제 
+    public boolean deleteCategory(List<String> cats, Long pid) {
+        boolean status = false; 
+
+        String categories = projectRepository.findCategoryByProjectId(pid).get();
+
+        List<String> categoryList = new ArrayList<>(Arrays.asList(categories.split(",")));
+        categoryList.removeAll(cats); 
+
+        // 수정된 카테고리를 콤마로 구분하여 문자열 생성 
+        String updateCats = String.join(",", categoryList);
+
+        projectRepository.updateCategory(pid, updateCats);
+
+        status = true;
+
+        return status;
     }
 
+    
+    // 카테고리 추가 
+    public boolean addCategory(String addCat, Long pid) {
+        boolean status = false; 
+
+        String categories = projectRepository.findCategoryByProjectId(pid).get();
+
+        String[] categoryArray = categories.split(",");
+        for (String category : categoryArray) {
+            if (category.equals(addCat)) {  // 카테고리 중복 
+                return false;
+            }
+        }
+
+        categories += "," + addCat;
+        projectRepository.updateCategory(pid, categories);
+
+        status = true;
+
+        return status;
+    }
+
+    
     public UserDTO hasMember(Long pid, String uid) {
         Map<String, Object> user = userRepository.findUsersByPidAndUid(pid, uid);
         if (user == null) {
@@ -538,6 +600,6 @@ public class ProjectService {
     public int getDaysUntilProjectEnd(Long pid) {
         return projectRepository.getDaysUntilProjectEnd(pid);
     }
+
     
- 
 }
