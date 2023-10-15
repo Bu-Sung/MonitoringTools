@@ -240,7 +240,7 @@
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="position: relative; width: auto;">
-                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off">
+                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
                                             <div id="searchMember" class="dropdown-menu">
                                             </div>
                                         </div>
