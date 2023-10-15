@@ -31,4 +31,6 @@ public class MeetingDTO {
     private String content; // 회의 내용
     private List<String> files; // 첨부 파일
     private String date; // 작성 날짜
+    private List<String> delScheduleList;
+    private List<ScheduleDTO> scheduleList;
 }

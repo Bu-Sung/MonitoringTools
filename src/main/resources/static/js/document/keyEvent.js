@@ -15,11 +15,11 @@ function createDiv(eventDiv) {
         unfocusing(event.target);
     });
 
-    if(eventDiv.parentNode.nodeName === 'LI'){
+    if (eventDiv.parentNode.nodeName === 'LI') {
         var newItem = document.createElement('li');
         newItem.appendChild(content);
         contentWrap.appendChild(newItem);
-    }else{
+    } else {
         contentWrap.appendChild(content);
     }
     return contentWrap;
@@ -32,12 +32,28 @@ function deleteDiv(eventDiv) {
     if (eventDiv.innerHTML === "") {
         const preDiv = contentWrap.previousElementSibling;
         const nextDiv = contentWrap.nextElementSibling;
+        var name = contentWrap.querySelector('div').getAttribute('name'); // name 속성 값을 가져옵니다.
+        if (name) { // 만약 name이 존재한다면
+            var scheduleItem = scheduleList.find(function (item) {
+                return item.listId === Number(name);
+            });
+            if (scheduleItem) {
+                scheduleList.splice(scheduleList.findIndex(function (item) {
+                    return item.listId === Number(name);
+                }), 1);
+                console.log(scheduleList);
+                if (scheduleItem.sid !== 0) {
+                    delScheduleList.push(scheduleItem.listId);
+                }
+                console.log(delScheduleList);
+            }
+        }
         contentWrap.remove();
         if (preDiv) {
             preDiv.querySelector('.document-content-div').focus();
         } else if (nextDiv) {
             nextDiv.querySelector('.document-content-div').focus();
-        } else{
+        } else {
             document.getElementById("content").innerHTML = `<div class="document-content-explanation">
                                                                     <h2>단축키 설명</h2>
                                                                     <div style="text-align: left;">
@@ -94,11 +110,11 @@ function moveCursorEnd(eventDiv) {
 function insertTab(eventDiv) {
     contentWrap = eventDiv.parentNode;
     var paddingValue = parseFloat(contentWrap.style.paddingLeft);
-    
+
     if (isNaN(paddingValue)) {
         paddingValue = 0;
     }
-    
+
     paddingValue += 1.5;
     contentWrap.style.paddingLeft = paddingValue + 'em';
 }
@@ -107,11 +123,11 @@ function insertTab(eventDiv) {
 function deleteTab(eventDiv) {
     contentWrap = eventDiv.parentNode;
     var paddingValue = parseFloat(contentWrap.style.paddingLeft);
-    
+
     if (isNaN(paddingValue)) {
         paddingValue = 0;
     }
-    
+
     paddingValue -= 1.5;
     contentWrap.style.paddingLeft = paddingValue + 'em';
 }

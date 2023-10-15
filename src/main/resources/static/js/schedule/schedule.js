@@ -81,12 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
     
-//    회의록에서 일정 저장할 때
-    document.getElementById("saveSchedule").addEventListener("click", function(){
-//       회의록에 일정에 관한 마크 추가
-//         일정 리스트에 json파일 추가
-    });
-    
     function scheduleItem(){
         var memberListId = [];
             memberList.forEach(item => {
@@ -203,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function scheduleModal() {
     var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
-
     myModal.show();
 }
 

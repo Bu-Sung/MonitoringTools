@@ -58,3 +58,11 @@
     display: flex;
 }
 
+.scheduleText{
+    background-color: rgb(224, 224, 224);
+    padding: 0 1em;
+    margin-right: 1em;
+    height: 100%;
+    width: 100%;
+}
+

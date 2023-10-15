@@ -26,5 +26,8 @@ public class ScheduleDTO {
     private String start; // 일정 시작일
     private String end; // 일정 종료일
     private String color; // 일정 색깔
-    private List<String> memberList; // 일정 멤버  
+    private List<String> memberList; // 일정 멤버
+    private Long msid; // 회의록 내 일정에 대한 아이디
+    private Long mid; // 회의록 아이디
 }
+

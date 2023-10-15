@@ -50,7 +50,7 @@
                                 <form id="documentForm" method="POST" action="addMeeting" enctype="multipart/form-data"
                                     onsubmit="saveDocument()">
                                     <input class="form-control mb-4" style="font-size: 2rem; height: 4rem;" type="text"
-                                        id="title" class="document-title" placeholder="제목을 입력하세요" name="title">
+                                           id="title" class="document-title" placeholder="제목을 입력하세요" name="title" required="">
                                     <div class="row">
                                         <div class="col-md-6"> <!-- 중간 크기 이상의 화면에서는 날짜 영역을 절반의 너비로 표시 -->
                                             <table style="width: 100%;">
@@ -60,12 +60,12 @@
                                                         <div class="d-flex align-items-center mb-2">
                                                             <span style="width: 3rem;">시작</span>
                                                             <input class="form-control form-control-sm"
-                                                                type="datetime-local" id="inputDateStart" name="start">
+                                                                   type="datetime-local" id="inputDateStart" name="start" required="">
                                                         </div>
                                                         <div class="d-flex align-items-center mb-md-5 mb-4">
                                                             <span style="width: 3rem;">종료</span>
                                                             <input class="form-control form-control-sm"
-                                                                type="datetime-local" id="inputDateEnd" name="end">
+                                                                type="datetime-local" id="inputDateEnd" name="end" required>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -125,7 +125,7 @@
                        </th>
                        <td>
                            <div class="d-flex align-items-center">
-                               <input type="text" id="title" name="title" class="form-control" required>
+                               <input type="text" id="scheduleTitle" class="form-control" required>
                            </div>
                        </td>
                    </tr>
@@ -133,7 +133,7 @@
                        <th><label for="startDate">시작 날짜<span class="text-danger">*</span></label></th>
                        <td>
                            <div class="d-flex align-items-center">
-                               <input type="date" id="startDate" name="startDate" class="form-control">
+                               <input type="date" id="startDate" class="form-control">
                            </div>
                        </td>
                    </tr>
@@ -141,7 +141,7 @@
                        <th><label for="endDate">종료 날짜<span class="text-danger">*</span></label></th>
                        <td>
                            <div class="d-flex align-items-center">
-                               <input type="date" id="endDate" name="endDate" class="form-control">
+                               <input type="date" id="endDate" class="form-control">
                            </div>
                        </td>
                    </tr>
@@ -179,7 +179,7 @@
                            <div id="addMemberDiv">
                                <div class=" d-flex align-items-center w-100">
                                    <div style="position: relative; width: auto;">
-                                       <input type="text" id="addMember" name="addMember" class="form-control"  autocomplete="off">
+                                       <input type="text" id="addMember" class="form-control"  autocomplete="off">
                                        <div id="searchMember" class="dropdown-menu">
                                        </div>
                                    </div>
@@ -193,14 +193,10 @@
                </table> 
            </div>
            <div class="modal-footer">
-               <button type="button" id="saveScheduleList" class="btn btn-primary fw-500"
+               <button type="button" id="addSchedule" class="btn btn-primary fw-500"
                    style="width: 8rem; height: 3rem;">등록하기</button>
-               <button type="button" id="updateSchedule" class="btn btn-primary fw-500"
-                   style="width: 8rem; height: 3rem;">수정하기</button>
                <button type="button" id="editSchedule" class="btn btn-primary fw-500"
                        style="width: 8rem; height: 3rem;">수정하기</button>
-               <button type="button" id="deleteSchedule" class="btn btn-danger fw-500"
-               style="width: 8rem; height: 3rem;">삭제하기</button>
            </div>
        </div>
     </div>
