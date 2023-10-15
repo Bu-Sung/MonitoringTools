@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -45,78 +47,96 @@
                             </h4>
                             <div class="card card-white-1 mt-2 mb-2 " style="height: 75vh;">
                                 <div class="card-body" style="overflow: auto; white-space: nowrap;">
-                                    <div>
-                                        <div class="d-flex mt-4 justify-content-end">
-                                            <a href="createExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 생성</button></a>
-                                            <a href="createDownRequestExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 다운</button></a>
+                                    <!--md 사이즈 이상일 경우에 적용-->
+                                    <div class='d-none d-lg-block'>
+                                        <div>
+                                            <div class="d-flex mt-4 justify-content-end">
+                                                <a href="createExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 생성</button></a>
+                                                <a href="createDownRequestExcel" class="m-2"><button class="btn btn-primary">요구사항 파일 다운</button></a>
+                                                <a class="m-2" id="similarityTest"><button class="btn btn-primary">요구사항 유사도 검사</button></a>
+                                            </div>
+                                            <c:if test="${not empty excelNames}">
+                                                <c:forEach var="file" items="${excelNames}">
+                                                    <a href="download?filename=${file}">${file}</a>
+                                                </c:forEach>
+                                            </c:if>
+                                            <hr>
                                         </div>
-                                        <c:if test="${not empty excelNames}">
-                                            <c:forEach var="file" items="${excelNames}">
-                                                <a href="download?filename=${file}">${file}</a>
-                                            </c:forEach>
-                                        </c:if>
-                                        <hr>
-                                    </div>
-                                    <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr class="text-primary">
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        구분
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        요구사항
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        상세설명
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        추정치
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        우선 순위
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        개발단계
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        반복대상
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        담당자
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <비고>
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="requestListTable">
+                                        <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
+                                        <div style='overflow-x:auto;'>
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr class="text-primary">
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                구분
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                요구사항
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                상세설명
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                추정치
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                우선 순위
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                개발단계
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                반복대상
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                담당자
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="d-flex justify-content-center align-items-center">
+                                                                <비고>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="requestListTable">
 
-                                        </tbody>
-                                    </table>
-                                    <c:if test="${sessionScope.hasRight != 3}">
-                                        <div class="row">
-                                            <button id="addRequest" class="btn btn-sm btn-outline-primary">+</button>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </c:if>
+                                        <c:if test="${sessionScope.hasRight != 3}">
+                                            <div class="row">
+                                                <button id="addRequest" class="btn btn-sm btn-outline-primary">+</button>
+                                            </div>
+                                        </c:if>
+                                    </div>
+
+                                    <!--모바일 크기 이하에만 적용-->
+                                    <div class='d-block d-lg-none mt-7'>
+                                        <div class='d-flex justify-content-center'>
+                                            <a href="createDownRequestExcel" class="m-2">
+                                                <button class="btn">
+                                                    <img src="${pageContext.request.contextPath}/asset/file_down.png" width='40rem' height='auto'>
+                                                    <p class="mt-3 text-gray mb-0">파일 다운받기</p>
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +240,7 @@
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="position: relative; width: auto;">
-                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off">
+                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
                                             <div id="searchMember" class="dropdown-menu">
                                             </div>
                                         </div>
@@ -306,7 +326,7 @@
                         })
                         .catch((error) => console.error('Error:', error));
             }
-
+            
             function settingRequestList() {
                 var idx = 1;
                 for (var item of requestList) {
@@ -598,32 +618,31 @@
             const resultsElement = document.getElementById('results');
 
 
-            // 유사도 함수 실행 및 결과 출력
-            async function checkSimilarity(request) {
-                similarList = [];
-                for (let item of requestList) {
+          
+            // 요구사항 유사도 검사 함수 
+            async function checkSimilarity(requestList) {
+                const similarList = [];
 
-                    if (item.frid === request.frid) { 
-                        continue;
-                    }
+                for (let i = 0; i < requestList.length; i++) {
+                    for (let j = i + 1; j < requestList.length; j++) {
+                        const requestA = requestList[i];
+                        const requestB = requestList[j];
 
-                    const comparison = item.name;
-                    const {isSimilar} = await similarityAPI(comparison, request.name);
-                    if (isSimilar) {
-                        similarList.push([item.name, request.name]);
+                        const { isSimilar } = await similarityAPI(requestA.name, requestB.name);
+
+                        if (isSimilar) {
+                            similarList.push([requestList[i], requestList[j]]);
+                        }
                     }
                 }
-                if (similarList.length === 0) { // 배열이 비어있는지 확인
-                    return true;
-                }
-                return false;
+
+                return similarList;
             }
 
             // 서버의 API를 호출하여 유사성을 확인하는 함수
             async function similarityAPI(name1, name2) {
                 const openApiURL = 'http://aiopen.etri.re.kr:8000/ParaphraseQA';
-                const accessKey = 'd398ab55-1d02-4d4c-b985-160d6654d72a'; // API Key
-
+                const accessKey = '<spring:eval expression="@environment.getProperty('similarity.api.key')" />'; // API Key
                 const requestObject = {
                     argument: {
                         sentence1: name1,
@@ -660,6 +679,31 @@
                     };
                 }
             }
+            
+            
+            // 요구사항 유사도 검사 버튼 호출 
+            document.addEventListener("DOMContentLoaded", function() {
+                const similarityTest = document.getElementById("similarityTest");
+
+                similarityTest.addEventListener("click", function() {
+
+                    checkSimilarity(requestList)
+                        .then(similarList => {
+                            if (similarList.length === 0) {
+                                console.log('유사한 요구사항 없음');
+                            } else {
+                                for (const pair of similarList) {
+                                    console.log('유사한 요구사항 : ' , pair[0], pair[1]);
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+
+
         </script>
         <script src="/monitoring/js/user/search.js"></script>
     </body>

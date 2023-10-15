@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pubilc.sw.monitoring.SessionManager;
+import pubilc.sw.monitoring.dto.SessionDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.UserService;
 
@@ -27,10 +30,16 @@ import pubilc.sw.monitoring.service.UserService;
 public class UserController {
     
     private final UserService userService; // UserService 클래스 사용을 위한 변수
+    private final SessionManager sessionManager;
     
     @GetMapping("/register")
     public String register(){
         return "register";
+    }
+    
+    @GetMapping("/findUser")
+    public String findUser(){
+        return "findUser";
     }
     
     @GetMapping("/login")
@@ -40,7 +49,7 @@ public class UserController {
     
     @GetMapping("/update")
     public String updateUser(Model model){
-        model.addAttribute("user", userService.getUserInfo());
+        model.addAttribute("user", userService.getUserInfo(sessionManager.getUserId()));
         return "details";
     }
     
@@ -52,9 +61,10 @@ public class UserController {
      * @return 로그인 성공 여부에 따른 URL 전송
      */
     @PostMapping("/login")
-    public String signIn(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
-        if(userService.login(userDTO)){
-            attrs.addFlashAttribute("msg", "로그인에 성공하였습니다.");
+    public String login(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
+        UserDTO userInfo = userService.login(userDTO);
+        if(userInfo != null){
+            sessionManager.setUserInfo(userInfo);
             return "redirect:/project/main";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
@@ -76,6 +86,41 @@ public class UserController {
         }else{
             attrs.addFlashAttribute("msg", "회원가입에 실패하였습니다.");
             return "redirect:/register";
+        }
+    }
+    
+    @PostMapping("/findId")
+    public String findIdSuccess(@ModelAttribute UserDTO userDTO, Model model){
+        String id = userService.findId(userDTO);
+        if(id == null){
+            return "findUser";
+        }else{
+            model.addAttribute("userId", id);
+        return "findIdSuccess";
+        }
+    }
+    
+   @PostMapping("/findPw")
+    public String findPwSuccess(@ModelAttribute UserDTO userDTO){
+        if(userService.findPw(userDTO)){
+            sessionManager.setUserInfo(userDTO);
+            return "findPwSuccess";
+        }else{
+            return "findUser";
+        }
+    }
+    
+    /**
+     * 비밀번호를 변경하는 컨트롤러
+     * @param pw2
+     * @return 변경에 성공여부에 따른 url
+     */
+    @PostMapping("/chagePw")
+    public String chagePw(@RequestParam("pw2") String pw2){
+        if(userService.changPw(sessionManager.getUserId(), pw2)){
+            return "login";
+        }else{
+            return "findPwSuccess";
         }
     }
     

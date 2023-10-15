@@ -2,28 +2,28 @@
 <%@ page pageEncoding="UTF-8" %>
 <div class="d-none d-lg-block">
     <div class="text-center">
-        <a href="${pageContext.request.contextPath}/project/main" class="navbar-brand">
-            <img src="${pageContext.request.contextPath}/asset/logo.png" style="width: 3rem;">
-            <h5 class="my-0 fw-900 mt-2 px-4">프로젝트명</h5>
+        <a href="/monitoring/project/main" class="navbar-brand">
+            <img src="/monitoring/asset/logo.png" style="width: 3rem;">
+            <h5 class="my-0 fw-900 mt-2 px-4">SCRUMBLE</h5>
         </a>
     </div>
     <div class="mt-5">
         <ul class="nav flex-column" id="dashboardMenu">
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/${sessionScope.pid}" class="mb-0 ps-0 text-gray nav-link"><img src="${pageContext.request.contextPath}/asset/dashboard.png"
+                <a href="/monitoring/project/${sessionScope.myInfo.pid}" class="mb-0 ps-0 text-gray nav-link"><img src="/monitoring/asset/dashboard.png"
                                                                                                                                    class="me-2">대시보드</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/update/${sessionScope.pid}" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/setting.png"
+                <a href="/monitoring/project/update/${sessionScope.myInfo.pid}" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/setting.png"
                                                                                                                                                       class="me-2">프로젝트 관리</a>
             </li>
 
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/calendar.png"
+                <a href="/monitoring/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/calendar.png"
                                                                                                                                     class="me-2">일정</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/request/request" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="${pageContext.request.contextPath}/asset/papaerPencil.png"
+                <a href="/monitoring/project/request/request" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
                                                                                                                                            class="me-2">요구사항</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
@@ -37,16 +37,13 @@
                 <li><a class="dropdown-item text-gray py-2" href="/monitoring/project/kanban">칸반보드</a></li>
             </ul>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/board/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/clip.png"
+                <a href="/monitoring/project/board/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/clip.png"
                                                                                   class="me-2">게시판</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="${pageContext.request.contextPath}/project/meeting/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
+                <a href="/monitoring/project/meeting/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
                                                                                   class="me-2">회의록</a>
             </li>
-
-
-
         </ul>
     </div>
 </div>
