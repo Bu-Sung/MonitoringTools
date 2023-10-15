@@ -468,28 +468,41 @@ public class RequestService {
     public void changeSprint(Long frid, String stage) {
         Optional<RequestEntity> entity = requestRepository.findById(frid);
         RequestEntity oldEntity = entity.get();
-        String oldStage = oldEntity.getStage(); // 기존 스프린트
-        String oldTarget = oldEntity.getTarget(); // 기존 반복주기
-        if (stage.equals("clear")) {
-            oldEntity.setStage("완료");
-        } else if (stage.equals("backlog")) {
-            oldEntity.setStage("대기");
-            oldEntity.setTarget("false");
-        } else if (stage.equals("test")) {
-            oldEntity.setStage("테스트");
-        } else if (stage.equals("todo")) {
-            oldEntity.setTarget("fales");
-        } else if (stage.equals("progress")) {
-            if (oldEntity.getStage().equals("완료") || oldEntity.getStage().equals("테스트")) {
-                oldEntity.setTarget("true");
-                oldEntity.setStage("구현");
-            } else if (oldEntity.getStage().equals("대기")) {
-                oldEntity.setTarget("true");
-                oldEntity.setStage("분석");
-            } else {
-                oldEntity.setTarget("true");
-            }
-
+        String oldStage = oldEntity.getStage(); // 기존 스프린트 단계
+        switch (stage) {
+            case "clear":
+                // 새로 배정된 위치가 '완료'일 때
+                oldEntity.setStage("완료");
+                oldEntity.setTarget("false");
+                break;
+            case "backlog":
+                // 새로 배정된 위치가 '백로그'일 떼
+                oldEntity.setStage("대기");
+                oldEntity.setTarget("false");
+                break;
+            case "test":
+                // 새로 배정된 위치가 '테스트'일 때
+                oldEntity.setStage("테스트");
+                oldEntity.setTarget("false");
+                break;
+            case "todo":
+                // 새로 배정된 위치가 '할 일'일 때
+                if("테스트".equals(oldStage) || "완료".equals(oldStage) || "대기".equals(oldStage)){
+                    oldEntity.setStage("분석");
+                }   
+                oldEntity.setTarget("false");
+                break;
+            case "progress":
+                // 새로 배정된 위치가 '진행 중'일 때
+                if (oldEntity.getStage().equals("대기") || oldEntity.getStage().equals("완료")) {
+                    oldEntity.setTarget("true");
+                    oldEntity.setStage("분석");
+                } else {
+                    oldEntity.setTarget("true");
+                }   
+                break;
+            default:
+                break;
         }
         requestRepository.save(oldEntity);
     }
