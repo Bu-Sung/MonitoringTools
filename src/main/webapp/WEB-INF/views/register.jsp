@@ -38,94 +38,96 @@
             </div>
         </nav>
         <form id="registerForm" action="register" method="POST" onsubmit="return checkSignUp()">
-            <!-- 정보 입력 영역 -->
-            <div class="card mb-3 col-lg-6 col-md-9 col-11">
-                <div class="card-body mt-3">
-                    <h5 class="card-title fw-600 mb-5">개인정보입력<span class="text-danger"
-                                                                   style="font-size: 1rem;">(*필수입력)</span>
-                    </h5>
-                    <table class="table table-borderless">
-                        <tr>
-                            <th style="width:25%"><label for="id">아이디<span class="text-danger">*</span></label>
-                            </th>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <input type="text" id="id" name="id" class="form-control me-3" required>
-                                    <button type="button" class="btn btn-gray" id="checkid" style="width: 10rem;">중복확인</button>
-                                </div>
-                                <small class="form-text text-muted mb-3">아이디는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
-                            </td>
-                        </tr>
+            <div class="mt-6 d-flex justify-content-center">
+                <!-- 정보 입력 영역 -->
+                <div class="card mb-3 col-lg-6 col-md-9 col-12">
+                    <div class="card-body mt-3 mx-md-4">
+                        <h5 class="card-title fw-600 mb-5">개인정보입력<span class="text-danger"
+                            style="font-size: 1rem;">(*필수입력)</span>
+                        </h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th style="width:25%"><label for="id">아이디<span class="text-danger">*</span></label>
+                                </th>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <input type="text" id="id" name="id" class="form-control me-3" required>
+                                        <button type="button" class="btn btn-gray" id="checkid" style="width: 10rem;">중복확인</button>
+                                    </div>
+                                    <small class="form-text text-muted mb-3">아이디는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th><label for="pw">비밀번호<span class="text-danger">*</span></label></th>
-                            <td>
-                                <input type="password" id="pw" name="pw" class="form-control" required>
-                                <small class="form-text text-muted mb-3">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
-                            </td>
-                        </tr>
+                            <tr>
+                                <th><label for="pw">비밀번호<span class="text-danger">*</span></label></th>
+                                <td>
+                                    <input type="password" id="pw" name="pw" class="form-control" required>
+                                    <small class="form-text text-muted mb-3">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th><label for="pw2">비밀번호<br>확인<span class="text-danger">*</span></label></th>
-                            <td>
-                                <input type="password" id="pw2" name="pw2" class="form-control mb-4" required>
-                                <small id="pw-result"  style="display: none;"></small>
-                            </td>
-                        </tr>
+                            <tr>
+                                <th><label for="pw2">비밀번호<br>확인<span class="text-danger">*</span></label></th>
+                                <td>
+                                    <input type="password" id="pw2" name="pw2" class="form-control mb-4" required>
+                                    <small id="pw-result"  style="display: none;"></small>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th><label for="name">이름<span class="text-danger">*</span></label></th>
-                            <td>
-                                <input type="text" id="name" name="name" class="form-control mb-4" required>
-                            </td>
-                        </tr>
+                            <tr>
+                                <th><label for="name">이름<span class="text-danger">*</span></label></th>
+                                <td>
+                                    <input type="text" id="name" name="name" class="form-control mb-4" required>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th><label for="phone">전화번호<span class="text-danger">*</span></label></th>
-                            <td>
-                                <div class="d-flex">
-                                    <select id="phone1" class="form-select ps-2" style="width: 6rem;">
-                                        <option value="010" selected>010</option>
-                                        <option value="011">011</option>
-                                    </select>
-                                    <input type="text" class="form-control mx-2" style="width: 6rem;" id="phone2" required>
-                                    <input type="text" class="form-control mb-4" style="width: 6rem;" id="phone3" required>
-                                </div>
-                                <input type="text" id="phone" name="phone" hidden >
-                            </td>
-                        </tr>
+                            <tr>
+                                <th><label for="phone">전화번호<span class="text-danger">*</span></label></th>
+                                <td>
+                                    <div class="d-flex">
+                                        <select id="phone1" class="form-select ps-2" style="width: 6rem;">
+                                            <option value="010" selected>010</option>
+                                            <option value="011">011</option>
+                                        </select>
+                                        <input type="text" class="form-control mx-2" style="width: 6rem;" id="phone2" required>
+                                        <input type="text" class="form-control mb-4" style="width: 6rem;" id="phone3" required>
+                                    </div>
+                                    <input type="text" id="phone" name="phone" hidden >
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th><label for="birth">생년월일<span class="text-danger">*</span></label></th>
-                            <td>
-                                <div class="d-flex">
-                                    <select id="year" class="form-select me-2 ps-2 mb-4" style="width: 6rem;" required>
-                                        <option value="년" hidden>년</option>
-                                    </select>
-                                    <select id="month" class="form-select me-2 ps-2" style="width: 6rem;" required>
-                                        <option value="월" hidden>월</option>
-                                    </select>
-                                    <select id="day" class="form-select ps-2" style="width: 6rem;" required>
-                                        <option value="일" hidden>일</option>
-                                    </select>
-                                    <input type="text" id="birth" name="birth" hidden >
-                                </div>
-                            </td>
-                        </tr>
+                            <tr>
+                                <th><label for="birth">생년월일<span class="text-danger">*</span></label></th>
+                                <td>
+                                    <div class="d-flex">
+                                        <select id="year" class="form-select me-2 ps-2 mb-4" style="width: 6rem;" required>
+                                            <option value="년" hidden>년</option>
+                                        </select>
+                                        <select id="month" class="form-select me-2 ps-2" style="width: 6rem;" required>
+                                            <option value="월" hidden>월</option>
+                                        </select>
+                                        <select id="day" class="form-select ps-2" style="width: 6rem;" required>
+                                            <option value="일" hidden>일</option>
+                                        </select>
+                                        <input type="text" id="birth" name="birth" hidden >
+                                    </div>
+                                </td>
+                            </tr>
 
-                        <!-- email type은 required가 있어야 유효성 검사를 함 -->
-                        <tr>
-                            <th><label for="email">이메일<span class="text-danger">*</span></label></th>
-                            <td><input type="email" id="email" name="email" class="form-control mb-5" required></td>
-                        </tr>
+                            <!-- email type은 required가 있어야 유효성 검사를 함 -->
+                            <tr>
+                                <th><label for="email">이메일<span class="text-danger">*</span></label></th>
+                                <td><input type="email" id="email" name="email" class="form-control mb-5" required></td>
+                            </tr>
 
-                        <tr>
-                            <td colspan="2" class="text-center">
-                                <button type="submit" class="btn btn-primary fw-500"
-                                        style="width: 8rem; height: 3rem;">가입하기</button>
-                            </td>
-                        </tr>
-                    </table>
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    <button type="submit" class="btn btn-primary fw-500"
+                                            style="width: 8rem; height: 3rem;">가입하기</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </form>

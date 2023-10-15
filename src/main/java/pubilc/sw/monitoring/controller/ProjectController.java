@@ -58,8 +58,8 @@ public class ProjectController {
     public String project(@PathVariable Long pid, Model model) throws JsonProcessingException {
 
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
-        sessionManager.setProjectId(pid);
-        sessionManager.setProjectRight(projectService.hasRight(sessionManager.getUserId(), pid));
+        sessionManager.setProjectInfo(projectDTO,projectService.hasRight(sessionManager.getUserId(), pid));
+        
         model.addAttribute("project", projectDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -296,15 +296,13 @@ public class ProjectController {
     /**
      * 프로젝트 팀원 삭제
      *
-     * @param selectedMember 삭제할 팀원 리스트
-     * @param pid 프로젝트 아이디
-     * @param attrs
-     * @return manageMember 프로젝트 멤버 관리 페이지
+     * @param uids 삭제할 팀원 리스트
+     * @return 
      */
-    @GetMapping("/deleteMember/{uid}")
+    @PostMapping("/deleteMember")
     public @ResponseBody
-    boolean removeMember(@PathVariable String uid) {
-        projectService.deleteMember(uid, sessionManager.getProjectId());
+    boolean removeMember(@RequestBody List<String> uids) {
+        projectService.deleteMember(uids, sessionManager.getProjectId());
         return true;
     }
 
@@ -350,5 +348,28 @@ public class ProjectController {
     public String sprint(Model model){
         model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
         return "/project/sprintList";
+    }
+    
+    
+    // 카테고리 목록 
+    @GetMapping("/getCategory")
+    public @ResponseBody
+    List<String> getCategory() {
+        return projectService.getProjectCategory(sessionManager.getProjectId());
+    }
+    
+    // 카테고리 삭제 
+    @PostMapping("/deleteCategory")
+    public @ResponseBody
+    boolean deleteCategory (@RequestBody List<String> cats) {
+        projectService.deleteCategory(cats, sessionManager.getProjectId());
+        return true;
+    }
+    
+    // 카테고리 추가 
+    @PostMapping("/addCategory")
+    public @ResponseBody
+    boolean addCategory(@RequestBody String addCat) {
+        return projectService.addCategory(addCat, sessionManager.getProjectId());
     }
 }

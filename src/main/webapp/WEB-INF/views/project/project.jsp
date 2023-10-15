@@ -144,7 +144,7 @@
                                         <!-- 종민리 그래프 -->
                                         <div id="requestDiv">
 
-                                            <select id="requestMember">
+                                            <select id="requestMember" class="border p-1 fw-400 mb-2">
                                                 <option value="all">전체</option>
                                             </select>
                                             <div id="requestGraph" style="width: 95%; margin: auto;">  
@@ -153,7 +153,7 @@
                                         </div>
                                         <!--번다운 차트-->
                                         <div id="burndownDiv" style="display: none;">
-                                            <select id="burndownMember">
+                                            <select id="burndownMember" class="border p-1 fw-400 mb-2">
                                                 <option value="all">전체</option>
                                             </select>
                                             <div id="burndownGraph" >
