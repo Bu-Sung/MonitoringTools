@@ -120,7 +120,7 @@ public class RequestController {
     public String createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());  // 요구사항 목록 
 
-        if (requestService.createRequestExcel(requestDTOs)) {
+        if (requestService.createRequestExcel(requestDTOs,sessionManager.getProjectId() )) {
             attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 성공하였습니다.");
         } else {
             attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 실패하였습니다.");

@@ -212,14 +212,10 @@ public class RequestService {
      * @param requestDTOs
      * @return 엑셀 파일 생성 성공 여부
      */
-    public boolean createRequestExcel(List<RequestDTO> requestDTOs) {
+    public boolean createRequestExcel(List<RequestDTO> requestDTOs, Long pid) {
         boolean status = false;
 
         try {
-            
-            if (requestDTOs.isEmpty()) {  // 요구사항이 없을 경우 
-                return false;
-            }
             
             Workbook workbook = new XSSFWorkbook();  // 엑셀 파일 생성
             Sheet sheet = workbook.createSheet("요구사항 목록");  // 시트 생성
@@ -233,24 +229,26 @@ public class RequestService {
                 headerCell.setCellValue(headers[i]);
             }
 
-            // 데이터 생성
-            int rowNum = 1;
-            for (RequestDTO requestDTO : requestDTOs) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(rowNum - 1);
-                row.createCell(1).setCellValue(requestDTO.getName());
-                row.createCell(2).setCellValue(requestDTO.getContent());
-                row.createCell(3).setCellValue(requestDTO.getDate());
-                row.createCell(4).setCellValue(requestDTO.getRank());
-                row.createCell(5).setCellValue(requestDTO.getStage());
-                row.createCell(6).setCellValue(requestDTO.getTarget());
-                row.createCell(7).setCellValue(requestDTO.getUsername());
-                row.createCell(8).setCellValue(requestDTO.getNote());
+            if (!requestDTOs.isEmpty()) {
+                // 데이터 생성
+                int rowNum = 1;
+                for (RequestDTO requestDTO : requestDTOs) {
+                    Row row = sheet.createRow(rowNum++);
+                    row.createCell(0).setCellValue(rowNum - 1);
+                    row.createCell(1).setCellValue(requestDTO.getName());
+                    row.createCell(2).setCellValue(requestDTO.getContent());
+                    row.createCell(3).setCellValue(requestDTO.getDate());
+                    row.createCell(4).setCellValue(requestDTO.getRank());
+                    row.createCell(5).setCellValue(requestDTO.getStage());
+                    row.createCell(6).setCellValue(requestDTO.getTarget());
+                    row.createCell(7).setCellValue(requestDTO.getUsername());
+                    row.createCell(8).setCellValue(requestDTO.getNote());
+                }
             }
 
             LocalDateTime now = LocalDateTime.now();
             String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd")) + ".xlsx";
-            File file = new File(ctx.getRealPath(requestFolderPath) + File.separator + requestDTOs.get(0).getPid(), fileName);
+            File file = new File(ctx.getRealPath(requestFolderPath) + File.separator + pid, fileName);
 
             saveFile(workbook, file.getParentFile().getAbsolutePath(), file.getName());  // 파일 저장 
             status = true;
@@ -533,7 +531,7 @@ public class RequestService {
 
                 // 오늘 날짜가 주기 날짜 또는 주기 하루 전 날짜와 같으면 요구사항 엑셀 파일 생성 
                 if (dateFormat.format(cycleDate).equals(dateFormat.format(todayDate)) || dateFormat.format(dayBeforeCycleDate).equals(dateFormat.format(todayDate))) {
-                    createRequestExcel(getRequests(project.getId()));  // 요구사항 엑셀 생성 메서드
+                    createRequestExcel(getRequests(project.getId()), project.getId());  // 요구사항 엑셀 생성 메서드
                 }
 
                 // 주기만큼 날짜를 더함 
