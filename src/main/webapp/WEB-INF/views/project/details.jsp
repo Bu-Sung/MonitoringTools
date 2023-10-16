@@ -263,6 +263,7 @@
     
     
             document.addEventListener('DOMContentLoaded', function () {
+                searchUsersList();
                 getMemberList().then(() => {
                     reloadBaseTeam();
                 });
