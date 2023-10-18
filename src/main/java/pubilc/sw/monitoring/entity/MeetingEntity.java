@@ -35,7 +35,7 @@ public class MeetingEntity {
     private Long id;
     
     @Column(name="project_id")
-    private int projectId;
+    private Long projectId;
     
     @Column(name="meeting_title")
     private String title;

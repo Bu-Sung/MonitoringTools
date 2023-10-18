@@ -23,6 +23,7 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
+        <%@include file="/jspf/msg.jspf"%>
     </head>
 
     <body>
@@ -96,14 +97,8 @@
                 </div>
             </div>
 
+            <!--<script charset="UTF-8" src="/monitoring/js/recycleSetting.js"></script>-->
 
-            <script>
-                const dashboardMenu = document.getElementById("dashboardMenu");
-                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-
-                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-            </script>
             <!-- 부트스트랩 script -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

@@ -1,77 +1,110 @@
-/*회의록 본문 관련 키 다운 이벤트 함수*/
 
+let explanation = explanationCheck();
+
+function explanationCheck() {
+    var url = window.location.href;
+
+    if (url.includes("meeting")) {
+        return `<div class="document-content-explanation">
+                                            <h2>단축키 설명</h2>
+                                            <div style="text-align: left;" class="mb-5">
+                                                # => h1<br>
+                                                ## => h2<br>
+                                                ### => h3<br>
+                                                - => •<br>
+                                                /일정 => 일정 등록<br>
+                                            </div>
+                                        </div>`;
+    } else {
+        return `<div class="document-content-explanation">
+                                            <h2>단축키 설명</h2>
+                                            <div style="text-align: left;" class="mb-5">
+                                                # => h1<br>
+                                                ## => h2<br>
+                                                ### => h3<br>
+                                                - => •<br>
+                                            </div>
+                                        </div>`;
+    }
+}
 
 /* 본문 작성할 div 생성 */
-function createDiv(eventDiv) { 
-    const content = $("<div>", {
-        contenteditable: "true"
-    }).addClass("document-content-div");
+function createDiv(eventDiv) {
+    var contentWrap = document.createElement("div");
+    contentWrap.classList = "document-content-wrap";
 
-    content.on("focusin", function (event) {  // focusin시 placeholder 속성 적용
+    var content = document.createElement("div");
+    content.setAttribute("contenteditable", "true");
+    content.classList.add("document-content-div");
+
+    content.addEventListener("focusin", function (event) {
         focusing(event.target);
     });
 
-    content.on("blur", function (event) {  // blur시 placeholder 속성 해제
-       unfocusing(event.target);
+    content.addEventListener("blur", function (event) {
+        unfocusing(event.target);
     });
 
-    if(eventDiv.classList.contains("document-content")){
-        eventDiv.innerHTML="";
-        $(eventDiv).append(content);
-    }else{
-        $(eventDiv).after(content);
+    if (eventDiv.parentNode.nodeName === 'LI') {
+        var newItem = document.createElement('li');
+        newItem.appendChild(content);
+        contentWrap.appendChild(newItem);
+    } else {
+        contentWrap.appendChild(content);
     }
-    content.focus();
+    return contentWrap;
 }
 
 /* 본문 div 삭제 */
-function deleteDiv(eventDiv, contentDiv) {
-    if(eventDiv.innerHTML===""){
-        const preDiv = eventDiv.previousElementSibling;
-        const nextDiv = eventDiv.nextElementSibling;
-        eventDiv.remove();
-        if(preDiv){
-            preDiv.focus();
-        }else if(contentDiv.children.length === 0){
-            contentDiv.innerHTML=`<div class="document-content-explanation">
-                                                                    <h2>단축키 설명</h2>
-                                                                    <div style="text-align: left;">
-                                                                    # => h1<br>
-                                                                    ## => h2<br>
-                                                                    ### => h3<br>
-                                                                    - => •<br>
-                                                                    </div>
-                                                                </div>`;
-        }else if(nextDiv){
-            nextDiv.focus();
+function deleteDiv(eventDiv) {
+    contentWrap = eventDiv.parentNode;
+
+    if (eventDiv.innerHTML === "") {
+        const preDiv = contentWrap.previousElementSibling;
+        const nextDiv = contentWrap.nextElementSibling;
+        var name = contentWrap.querySelector('div').getAttribute('name'); // name 속성 값을 가져옵니다.
+        if (name) { // 만약 name이 존재한다면
+            console.log(name);
+            scheduleList.splice(scheduleList.findIndex(function (item) {
+                return item.msid === Number(name);
+            }), 1);
+            console.log(scheduleList);
+        }
+        contentWrap.remove();
+        if (preDiv) {
+            preDiv.querySelector('.document-content-div').focus();
+        } else if (nextDiv) {
+            nextDiv.querySelector('.document-content-div').focus();
+        } else {
+            document.getElementById("content").innerHTML = explanation;
         }
     }
 }
 
 /* 윗쪽 화살표 : 위로 커서 이동 */
 function cursorFocusUp(eventDiv) {
-    const newFocusDiv = eventDiv.previousElementSibling;
+    const newFocusDiv = eventDiv.parentNode.previousElementSibling;
     if (newFocusDiv) {
-        newFocusDiv.focus();
+        newFocusDiv.querySelector('.document-content-div').focus();
     }
 }
 
 /* 아래쪽 화살표 : 아래로 커서 이동 */
 function cursorFocusDown(eventDiv) {
-    const newFocusDiv = eventDiv.nextElementSibling;
+    const newFocusDiv = eventDiv.parentNode.nextElementSibling;
     if (newFocusDiv) {
-        newFocusDiv.focus();
+        newFocusDiv.querySelector('.document-content-div').focus();
     }
 }
 
 /* focusing 되었을 때 */
-function focusing(eventDiv){
+function focusing(eventDiv) {
     eventDiv.setAttribute("placeholder", "여기에 텍스트를 입력하세요");
     moveCursorEnd(eventDiv);
 }
 
 /* focusing에서 벗어났을 때 */
-function unfocusing(eventDiv){
+function unfocusing(eventDiv) {
     eventDiv.removeAttribute("placeholder");
 }
 
@@ -88,11 +121,27 @@ function moveCursorEnd(eventDiv) {
 }
 
 /* Tab을 선택 시 */
-function insertTab(eventDiv){
-    eventDiv.classList.add("tab");
+function insertTab(eventDiv) {
+    contentWrap = eventDiv.parentNode;
+    var paddingValue = parseFloat(contentWrap.style.paddingLeft);
+
+    if (isNaN(paddingValue)) {
+        paddingValue = 0;
+    }
+
+    paddingValue += 1.5;
+    contentWrap.style.paddingLeft = paddingValue + 'em';
 }
 
 /* Shift + Tab 선택 시 */
-function deleteTab(eventDiv){
-    eventDiv.classList.remove("tab");
+function deleteTab(eventDiv) {
+    contentWrap = eventDiv.parentNode;
+    var paddingValue = parseFloat(contentWrap.style.paddingLeft);
+
+    if (isNaN(paddingValue)) {
+        paddingValue = 0;
+    }
+
+    paddingValue -= 1.5;
+    contentWrap.style.paddingLeft = paddingValue + 'em';
 }

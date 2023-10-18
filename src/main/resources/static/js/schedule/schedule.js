@@ -58,7 +58,31 @@ document.addEventListener('DOMContentLoaded', function () {
     var saveScheduleButton = document.getElementById("saveSchedule");
     saveScheduleButton.addEventListener("click", function () {
         if (confirm("저장하시겠습니까??") == true) {
-            var memberListId = [];
+            var item = scheduleItem();
+            fetch("schedule/addSchedule", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            location.reload();
+                        } else {
+                            alert("저장에 실패하였습니다.");
+                        }
+                    })
+                    .catch((error) => console.error('Error:', error));
+        } else {
+            return false;
+        }
+
+    });
+    
+    function scheduleItem(){
+        var memberListId = [];
             memberList.forEach(item => {
                 memberListId.push(item.id);
             });
@@ -83,28 +107,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 end: endDateValue,
                 memberList: memberListId
             };
-            fetch("schedule/addSchedule", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item)
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            location.reload();
-                        } else {
-                            alert("저장에 실패하였습니다.");
-                        }
-                    })
-                    .catch((error) => console.error('Error:', error));
-        } else {
-            return false;
-        }
-
-    });
-
+            return item;
+    }
+    
     var updateScheduleButton = document.getElementById("updateSchedule");
     updateScheduleButton.addEventListener("click", function () {
         if (confirm("수정하시겠습니까??") == true) {
@@ -192,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function scheduleModal() {
     var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
-
     myModal.show();
 }
 

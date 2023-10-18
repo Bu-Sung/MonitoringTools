@@ -108,17 +108,153 @@
         </div>
     </div>
 
+   <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <div class="w-100 d-flex justify-content-between align-items-center">
+                   <h3 class="modal-title fw-600" id="modalTitle">일정</h3>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+           </div>
+           <div class="modal-body">
+               <table class="table table-borderless">
+                   <tr>
+                       <th style="width:25%"><label for="title">제목<span class="text-danger">*</span></label>
+                       </th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="text" id="scheduleTitle" class="form-control" required>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="startDate">시작 날짜<span class="text-danger">*</span></label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="date" id="startDate" class="form-control">
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="endDate">종료 날짜<span class="text-danger">*</span></label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="date" id="endDate" class="form-control">
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th></th>
+                       <td>
+                           <div class="d-flex align-items-center justify-content-end">
+                               <button id="changeTypeBtn" type="button" class="btn btn-gray fw-500" style="width: 8rem;">시간 사용하기</button>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="content">내용</label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <textArea id="content" class="form-control"></textArea>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr id="colorSelectDiv">
+                       <th><label for="colorSelect">배경</label></th>
+                       <td>
+                           <div class="w-100">
+                               <select id="colorSelect" class="w-100" style="background-color: #43aef2; appearance: none;">
+                                   <option value="#43aef2" class="m-1" style="background-color: #43aef2;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                   <option value="#84e45c" class="m-1" style="background-color: #84e45c;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                   <option value="#f24d43" class="m-1" style="background-color: #f24d43;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                               </select>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="addMember">팀원</label></th>
+                       <td>
+                           <div id="addMemberDiv">
+                               <div class=" d-flex align-items-center w-100">
+                                   <div style="position: relative; width: auto;">
+                                       <input type="text" id="addMember" class="form-control"  autocomplete="off">
+                                       <div id="searchMember" class="dropdown-menu">
+                                       </div>
+                                   </div>
+                                   <button id="addMemberBtn" type="button" class="btn btn-gray fw-500 ms-2" style="width: 8rem;">추가</button>
+                               </div>
+                           </div>
+                           <div id="memberListDiv" class="p-1">
+                           </div>
+                       </td>
+                   </tr>
+               </table> 
+           </div>
+           <div class="modal-footer">
+               <button type="button" id="addSchedule" class="btn btn-primary fw-500"
+                   style="width: 8rem; height: 3rem;">등록하기</button>
+               <button type="button" id="editSchedule" class="btn btn-primary fw-500"
+                       style="width: 8rem; height: 3rem;">수정하기</button>
+           </div>
+       </div>
+    </div>
+                                    
+    
+    <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
+    <script charset="UTF-8" src="/monitoring/js/document/document.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/document/keyEvent.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/document/mdFunction.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <script>
         const dashboardMenu = document.getElementById("dashboardMenu");
         const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
 
         // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
         offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-    </script>
-    <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
-    <script charset="UTF-8" src="/monitoring/js/document/document.js"></script>
-    <script charset="UTF-8" src="/monitoring/js/document/keyEvent.js"></script>
-    <script charset="UTF-8" src="/monitoring/js/document/mdFunction.js"></script>
+
+
+        let pageSchedule = document.querySelectorAll("div[name]");
+
+        scheduleList = ${scheduleList};
+
+        // scheduleList에서 모든 msid 값을 추출
+        let msidValues = scheduleList.map(schedule => schedule.msid);
+
+        // 각 pageSchedule 요소를 순회하며 이름이 msidValues에 포함되어 있는지 확인
+        pageSchedule.forEach(element => {
+            setScheduleClickEvent(element);
+            if (!msidValues.includes(Number(element.getAttribute('name')))) {
+                element.remove();
+            }
+        });
+        
+//        var divs = document.querySelectorAll('div[name]'); // class가 'scheduleDiv'이며 name 속성을 가진 모든 div 요소를 가져옵니다.
+//        let max = 0;
+//        for (var i = 0; i < divs.length; i++) { // 각각의 div에 대하여
+//            setScheduleClickEvent(divs[i]);
+//            var nameValue = Number(divs[i].getAttribute('name')); // name 속성 값을 숫자로 변환합니다.
+//            if (!isNaN(nameValue)) { // 만약 nameValue가 유효한 숫자라면
+//                listCount = Math.max(max, nameValue); // 현재 최대값과 비교하여 더 큰 값으로 업데이트합니다.
+//                listCount++;
+//            }
+//        }
+        
+        let max = 0;
+        scheduleList.forEach(element => {
+            
+            var nameValue = element.msid; // name 속성 값을 숫자로 변환합니다.
+            if (!isNaN(nameValue)) { // 만약 nameValue가 유효한 숫자라면
+                listCount = Math.max(max, nameValue); // 현재 최대값과 비교하여 더 큰 값으로 업데이트합니다.
+                listCount++;
+            }
+            console.log(listCount);
+        });
+        console.log(scheduleList);
+
+        </script>
     <!-- 부트스트랩 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

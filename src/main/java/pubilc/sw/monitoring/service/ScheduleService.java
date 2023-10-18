@@ -6,12 +6,13 @@ package pubilc.sw.monitoring.service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import static java.time.LocalDateTime.now;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,10 @@ public class ScheduleService {
     public boolean addSchedule(ScheduleDTO scheduleDTO, Long pid) {
 
         DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
-
+        if (!scheduleDTO.getStart().contains("T") && !scheduleDTO.getEnd().contains("T")) {
+            scheduleDTO.setStart(scheduleDTO.getStart() + "T00:00");
+            scheduleDTO.setEnd(scheduleDTO.getEnd() + "T00:00");
+        }
         ScheduleEntity newEntity = scheduleRepository.save(ScheduleEntity.builder()
                 .pid(pid)
                 .title(scheduleDTO.getTitle())
@@ -50,6 +54,8 @@ public class ScheduleService {
                 .start(LocalDateTime.parse(scheduleDTO.getStart(), InputFormatter))
                 .end(LocalDateTime.parse(scheduleDTO.getEnd(), InputFormatter))
                 .member(scheduleDTO.getMemberList().isEmpty() ? "" : String.join(",", scheduleDTO.getMemberList()))
+                .mid(0L)
+                .msid(-1L)
                 .build());
         return newEntity != null;
     }
@@ -112,14 +118,18 @@ public class ScheduleService {
             uidList.add(UserDTO.builder()
                     .id(user.get("id").toString())
                     .name(user.get("name").toString())
-                    .email(user.get("email").toString())
-                    .birth(user.get("birth").toString())
-                    .phone(user.get("phone").toString())
                     .build());
         }
         return uidList;
     }
 
+    /**
+     * 자신이 관련된 일정을 가져온다.
+     *
+     * @param pid 프로젝트 아이디
+     * @param uid 사용자 아이디
+     * @return 자신이 태그된 일정 목록
+     */
     public List<ScheduleDTO> findSchedules(Long pid, String uid) {
         List<ScheduleEntity> entityList = scheduleRepository.findSchedules(pid, uid);
         List<ScheduleDTO> dtoList = new ArrayList();
@@ -128,9 +138,9 @@ public class ScheduleService {
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             String start = "";
             String end = "";
-            if(entity.getAllTime() == 1){
-                 start = timeFormat.format(entity.getStart());
-                 end = timeFormat.format(entity.getEnd());
+            if (entity.getAllTime() == 1) {
+                start = timeFormat.format(entity.getStart());
+                end = timeFormat.format(entity.getEnd());
             }
             dtoList.add(ScheduleDTO.builder()
                     .sid(entity.getSid())
@@ -144,5 +154,120 @@ public class ScheduleService {
                     .build());
         }
         return dtoList;
+    }
+
+    public boolean addScheduleList(List<ScheduleDTO> scheduleDTOS, Long id, Long pid) {
+        DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
+        List<ScheduleEntity> scheduleEntitys = new ArrayList();
+        List<ScheduleEntity> newEntitys;
+        try {
+            for (ScheduleDTO s : scheduleDTOS) {
+                if (!s.getStart().contains("T") && !s.getEnd().contains("T")) {
+                    s.setStart(s.getStart() + "T00:00");
+                    s.setEnd(s.getEnd() + "T00:00");
+                }
+                scheduleEntitys.add(ScheduleEntity.builder()
+                        .pid(pid)
+                        .title(s.getTitle())
+                        .allTime(s.getAllTime())
+                        .content(s.getContent())
+                        .color(s.getColor())
+                        .start(LocalDateTime.parse(s.getStart(), InputFormatter))
+                        .end(LocalDateTime.parse(s.getEnd(), InputFormatter))
+                        .member(s.getMemberList().isEmpty() ? "" : String.join(",", s.getMemberList()))
+                        .mid(id)
+                        .msid(s.getMsid())
+                        .build());
+            }
+
+            newEntitys = (List<ScheduleEntity>) scheduleRepository.saveAll(scheduleEntitys);
+        } catch (Exception e) {
+            newEntitys = new ArrayList();
+        }
+
+        return !newEntitys.isEmpty();
+    }
+
+    /**
+     * 페이지 내에 있는 일정을 모두 가져온다.
+     *
+     * @param id 페이지 번호
+     * @return 페이지 내 일정 리스트
+     */
+    public List<ScheduleDTO> getPageScheduleList(Long id) {
+        List<ScheduleDTO> scheduleDTOS = new ArrayList();
+        List<ScheduleEntity> scheduleEntitys = scheduleRepository.findByMid(id);
+        DateTimeFormatter formatter;
+        for (ScheduleEntity s : scheduleEntitys) {
+            formatter = DateTimeFormatter.ofPattern(dateInputFormatter);
+            if (s.getAllTime() == 0) {
+                formatter = DateTimeFormatter.ofPattern(dateFormatter);
+            }
+            scheduleDTOS.add(ScheduleDTO.builder()
+                    .sid(s.getSid())
+                    .title((s.getTitle().isEmpty()) ? "" : s.getTitle())
+                    .color(s.getColor())
+                    .content((s.getContent().isEmpty()) ? "" : s.getContent())
+                    .allTime(s.getAllTime())
+                    .start(s.getStart().format(formatter))
+                    .end(s.getEnd().format(formatter))
+                    .memberList(Arrays.asList(s.getMember().split(",")))
+                    .mid(s.getMid())
+                    .msid(s.getMsid())
+                    .build());
+        }
+        return scheduleDTOS;
+    }
+
+    public boolean deletePageSchedule(Long mid) {
+        if (scheduleRepository.existsByMid(mid)) {
+            scheduleRepository.deleteByMid(mid);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updatePageSchdule(Long id, List<ScheduleDTO> scheduleDTOS, Long pid) {
+        System.out.println("-----------------------------------------------------------------------------------");
+        System.out.println(scheduleDTOS);
+        System.out.println("-----------------------------------------------------------------------------------");
+        DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
+        List<ScheduleEntity> scheduleEntitys = new ArrayList();
+        List<ScheduleEntity> newEntitys;
+        try {
+            for (ScheduleDTO s : scheduleDTOS) {
+                if (!s.getStart().contains("T") && !s.getEnd().contains("T")) {
+                    s.setStart(s.getStart() + "T00:00");
+                    s.setEnd(s.getEnd() + "T00:00");
+                }
+                scheduleEntitys.add(ScheduleEntity.builder()
+                        .sid(s.getSid() == 0 ? null : s.getSid())
+                        .pid(pid)
+                        .title(s.getTitle())
+                        .allTime(s.getAllTime())
+                        .content(s.getContent())
+                        .color(s.getColor())
+                        .start(LocalDateTime.parse(s.getStart(), InputFormatter))
+                        .end(LocalDateTime.parse(s.getEnd(), InputFormatter))
+                        .member((!s.getMemberList().isEmpty() && s.getMemberList().get(0) != null) ? String.join(",", s.getMemberList()) : "")
+                        .mid(id)
+                        .msid(s.getMsid())
+                        .build());
+                System.out.println("--------------------");
+                System.out.println(s.getSid());
+                System.out.println("--------------------");
+            }
+            newEntitys = (List<ScheduleEntity>) scheduleRepository.saveAll(scheduleEntitys);
+        } catch (Exception e) {
+            newEntitys = new ArrayList();
+        }
+        if (!newEntitys.isEmpty()) {
+            Set<Long> updatedIds = newEntitys.stream()
+                    .map(ScheduleEntity::getSid)
+                    .collect(Collectors.toSet());
+            scheduleRepository.deleteAllExceptIds(updatedIds, id);
+        }
+        return !newEntitys.isEmpty();
     }
 }
