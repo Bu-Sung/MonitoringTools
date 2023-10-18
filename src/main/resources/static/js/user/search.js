@@ -118,6 +118,9 @@ function searchUsersList() {
 
 /* 검색 창에 나오는 div 형식 */
 function createProfileCard(name, id) {
+    if(id !== ''){
+        
+    }
     // Create main div
     var newDiv = document.createElement("div");
     newDiv.classList.add("d-flex", "p-1");

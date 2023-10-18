@@ -85,11 +85,12 @@
                                     <div id="content" class="document-content">
                                         <div class="document-content-explanation">
                                             <h2>단축키 설명</h2>
-                                            <div style="text-align: left;">
+                                            <div style="text-align: left;" class="mb-5">
                                                 # => h1<br>
                                                 ## => h2<br>
                                                 ### => h3<br>
                                                 - => •<br>
+                                                /일정 => 일정 등록<br>
                                             </div>
                                         </div>
                                     </div>
@@ -117,8 +118,6 @@
                </div>
            </div>
            <div class="modal-body">
-               <input id="sid" type="text" hidden>
-               <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
                <table class="table table-borderless">
                    <tr>
                        <th style="width:25%"><label for="title">제목<span class="text-danger">*</span></label>

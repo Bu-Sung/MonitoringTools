@@ -4,6 +4,7 @@
  */
 package pubilc.sw.monitoring.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ScheduleDTO {
     private Long sid; // 일정 아이디
     private int allTime; // 날짜만 사용하는 일정 : 0, 시간을 사용하면 1

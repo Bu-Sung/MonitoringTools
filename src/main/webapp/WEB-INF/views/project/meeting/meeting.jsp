@@ -44,7 +44,7 @@
                             <div id="meeting">
                                 <div class="d-flex justify-content-between">
                                     <div class="meeing-title" style="font-size: 2rem; height: 4rem;">${meeting.title}</div>
-                                    <c:if test="${sessionScope.hasRight == 1 || (sessionScope.hasRight == 2 && sessionScope.user.name == meeting.writer)}">
+                                    <c:if test="${sessionScope.myInfo.hasRight == 1 || (sessionScope.myInfo.hasRight == 2 && sessionScope.myInfo.uname == meeting.writer)}">
                                         <div>
                                             <a href="update/${meeting.id}"><button type="button" class="btn btn-primary">수정</button></a>
                                             <a href="delete/${meeting.id}"><button type="button" class="btn btn-danger">삭제</button></a>
@@ -96,13 +96,155 @@
         </div>
     </div>
 
+    <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="w-100 d-flex justify-content-between align-items-center">
+                        <h3 class="modal-title fw-600" id="modalTitle">일정</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <input id="sid" type="text" hidden>
+                    <table class="table table-borderless">
+                        <tr>
+                            <th style="width:25%"><label for="title">제목<span class="text-danger">*</span></label>
+                            </th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" id="scheduleTitle" class="form-control" readonly>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="startDate">시작 날짜<span class="text-danger">*</span></label></th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <input type="date" id="startDate" class="form-control" readonly>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="endDate">종료 날짜<span class="text-danger">*</span></label></th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <input type="date" id="endDate" class="form-control" readonly>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="content">내용</label></th>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <textArea id="content" class="form-control" readonly></textArea>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr id="colorSelectDiv">
+                       <th><label for="colorSelect">배경</label></th>
+                       <td>
+                           <div class="w-100" >
+                               <div id="colorSelect" class="w-100" >&nbsp</div>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="addMember">팀원</label></th>
+                       <td>
+                           <div id="memberListDiv" class="p-1">
+                           </div>
+                       </td>
+                   </tr>
+               </table> 
+           </div>
+       </div>
+    </div>
+                                
     <script>
-        const dashboardMenu = document.getElementById("dashboardMenu");
-        const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+            const dashboardMenu = document.getElementById("dashboardMenu");
+            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
 
-        // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-        offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-    </script>
+            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+
+            let scheduleList = [];
+
+            document.addEventListener('DOMContentLoaded', function () {
+                let editableElements = document.querySelectorAll('[contenteditable="true"]');
+
+                editableElements.forEach(function (element) {
+                    element.setAttribute('contenteditable', 'false');
+                });
+
+                let pageSchedule = document.querySelectorAll("div[name]");
+
+                scheduleList = ${scheduleList};
+
+                // scheduleList에서 모든 msid 값을 추출
+                let msidValues = scheduleList.map(schedule => schedule.msid);
+                console.log(scheduleList);
+                // 각 pageSchedule 요소를 순회하며 이름이 msidValues에 포함되어 있는지 확인
+                pageSchedule.forEach(element => {
+                    if (!msidValues.includes(Number(element.getAttribute('name')))) {
+                        element.remove();
+                    }
+                });
+
+                document.querySelectorAll('small').forEach(function (element) {
+                    element.addEventListener('click', function (event) {
+                        settingReadSchedule(event);
+                        var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
+                        myModal.show();
+                    });
+                });
+
+
+            });
+
+            async function settingReadSchedule(event) {
+                var eventDiv = null;
+                if (!event.target.getAttribute('name')) {
+                    eventDiv = event.target.parentNode;
+                } else {
+                    eventDiv = event.target;
+                }
+                var item = scheduleList.find(function (element) {
+                    return element.msid === Number(eventDiv.getAttribute('name'));
+                });
+                var start = toLocalISOString(item.start);
+                var end = toLocalISOString(item.end);
+                var dateType = "datetime-local";
+                var startDateValue = start;
+                var endDateValue = end;
+                if (!item.allDay) {
+                    dateType = "date";
+                    startDateValue = changeDateTimeToDate(start);
+                    var tmp = new Date(end);
+                    endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
+                }
+                document.getElementById("scheduleTitle").value = item.title;
+                document.getElementById("startDate").type = dateType;
+                document.getElementById("startDate").value = startDateValue;
+                document.getElementById("endDate").type = dateType;
+                document.getElementById("endDate").value = endDateValue;
+                document.getElementById("content").value = item.content;
+                document.getElementById("colorSelect").style.backgroundColor = item.color;
+                memberList = item.memberList;
+                memberList = await getScheduleMemberList(item.sid);
+                if (memberList.length > 0) {
+                    memberListDiv.innerHTML = '';
+                    memberList.forEach(element => {
+                        var newDiv = createProfileCard(element.name, element.id);
+                        memberListDiv.appendChild(newDiv);
+                    });
+                }
+            }
+
+                                </script>
+            <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
+            <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
     <!-- 부트스트랩 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

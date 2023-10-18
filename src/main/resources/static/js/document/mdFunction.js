@@ -1,27 +1,19 @@
 var point = null;
 var listCount = 0;
 var scheduleList = [];
-var delScheduleList = [];
 var myModal = document.getElementById('openModal');
 
 document.addEventListener('DOMContentLoaded', function () {
-    var divs = document.querySelectorAll('div.scheduleDiv[name]'); // class가 'scheduleDiv'이며 name 속성을 가진 모든 div 요소를 가져옵니다.
-
-    for (var i = 0; i < divs.length; i++) { // 각각의 div에 대하여
-        var nameValue = Number(divs[i].getAttribute('name')); // name 속성 값을 숫자로 변환합니다.
-        if (!isNaN(nameValue)) { // 만약 nameValue가 유효한 숫자라면
-            listCount = Math.max(max, nameValue); // 현재 최대값과 비교하여 더 큰 값으로 업데이트합니다.
-        }
-    }
     document.getElementById("addSchedule").addEventListener("click", function () {
         replaceSchdule();
         var bsModal = bootstrap.Modal.getInstance(myModal);
         bsModal.hide();
     });
+
     document.getElementById("editSchedule").addEventListener("click", function () {
         var name = point.getAttribute('name');
         var scheduleItem = scheduleList.find(function (item) {
-            return item.listId === Number(name);
+            return item.msid === Number(name);
         });
         if (scheduleItem) {
             var allTime = 1;
@@ -35,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var day = ("0" + date.getDate()).slice(-2);
                 endDateValue = year + '-' + month + '-' + day;
             }
-            scheduleItem.listId = name;
+            scheduleItem.msid = name;
             scheduleItem.allTime = allTime;
             scheduleItem.title = document.getElementById("scheduleTitle").value;
             scheduleItem.content = document.getElementById("content").value;
@@ -48,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         point.innerText = '';
         var small = document.createElement('small');
         small.className = 'scheduleText';
-        if (document.getElementById("endDate").value === '') {
+        if (document.getElementById("endDate").value === document.getElementById("startDate").value) {
             small.textContent = document.getElementById("startDate").value;
         } else {
             small.textContent = document.getElementById("startDate").value + ' ~ ' + document.getElementById("endDate").value;
@@ -57,7 +49,34 @@ document.addEventListener('DOMContentLoaded', function () {
         memberList = [];
         var bsModal = bootstrap.Modal.getInstance(myModal);
         bsModal.hide();
-        console.log(scheduleList);
+    });
+
+    var form = document.getElementById('documentForm');
+    form.addEventListener('submit', function () {
+        event.preventDefault(); // 기본 제출 동작 방지
+
+        scheduleList.forEach(function (item) {
+            let memberIdList = [];
+            item.memberList.forEach(function (member) {
+                memberIdList.push(member.id);
+            });
+            item.memberList = memberIdList;
+        });
+
+        // JSON 형식으로 변환
+        var scheduleListJson = JSON.stringify(scheduleList);
+
+        // hidden input 요소를 생성하여 scheduleList 값을 추가
+        var scheduleInput = document.createElement('input');
+        scheduleInput.type = 'hidden';
+        scheduleInput.name = 'scheduleList';
+        scheduleInput.value = scheduleListJson;
+
+        form.appendChild(scheduleInput);
+
+        // 추가적인 작업 수행
+
+        form.submit();  // 폼 제출
     });
 });
 
@@ -78,15 +97,16 @@ function checkMD(eventDiv) {
     } else if (markDownKey === '/일정') {
         if (eventDiv.previousElementSibling === null) {
             scheduleModal();
-            var item = {
-                title: '',
-                content: '',
-                color: '#43aef2',
-                datetype: "date",
-                start: '',
-                end: ''
-            };
-            setModal(item);
+            let today = new Date();
+            let todayText = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+            document.getElementById("scheduleTitle").value = '';
+            document.getElementById("startDate").type = "date";
+            document.getElementById("startDate").value = todayText;
+            document.getElementById("endDate").type = "date";
+            document.getElementById("endDate").value = todayText;
+            document.getElementById("content").value = '';
+            document.getElementById("colorSelect").value = '#43aef2';
+            addMember.value = '';
             document.getElementById("memberListDiv").innerHTML = '';
             memberList = [];
             document.getElementById("addSchedule").hidden = false;
@@ -125,37 +145,14 @@ function replaceSchdule() {
     div.setAttribute('name', listCount);
     var small = document.createElement('small');
     small.className = 'scheduleText';
-    if (document.getElementById("endDate").value === '') {
+    if (document.getElementById("endDate").value === document.getElementById("startDate").value) {
         small.textContent = document.getElementById("startDate").value;
     } else {
         small.textContent = document.getElementById("startDate").value + ' ~ ' + document.getElementById("endDate").value;
     }
 
     div.appendChild(small);
-    div.addEventListener("click", function (event) {
-        var eventDiv = null;
-        if (!event.target.getAttribute('name')) {
-            eventDiv = event.target.parentNode;
-        } else {
-            eventDiv = event.target;
-        }
-        scheduleModal();
-        var schecduleItem = scheduleList.find(function (item) {
-            return item.listId === Number(eventDiv.getAttribute('name'));
-        });
-        setModal(schecduleItem);
-        memberList = schecduleItem.memberList;
-        if (memberList.length > 0) {
-            memberListDiv.innerHTML = '';
-            memberList.forEach(element => {
-                var newDiv = createProfileCard(element.name, element.id);
-                memberListDiv.appendChild(newDiv);
-            });
-        }
-        document.getElementById("addSchedule").hidden = true;
-        document.getElementById("editSchedule").hidden = false;
-        point = eventDiv;
-    });
+    setScheduleClickEvent(div);
     point.insertAdjacentElement('beforebegin', div);
     var allTime = 1;
     var endDateValue = endDate.value;
@@ -170,7 +167,7 @@ function replaceSchdule() {
     }
 
     var item = {
-        listId: listCount,
+        msid: listCount,
         sid: 0,
         allTime: allTime,
         title: document.getElementById("scheduleTitle").value,
@@ -184,14 +181,58 @@ function replaceSchdule() {
     scheduleList.push(item);
     memberList = [];
     listCount++;
+    console.log(item);
+}
+
+function setScheduleClickEvent(div) {
+    div.addEventListener("click", function (event) {
+        var eventDiv = null;
+        if (!event.target.getAttribute('name')) {
+            eventDiv = event.target.parentNode;
+        } else {
+            eventDiv = event.target;
+        }
+        scheduleModal();
+        var schecduleItem = scheduleList.find(function (item) {
+            return item.msid === Number(eventDiv.getAttribute('name'));
+        });
+        setModal(schecduleItem);
+        memberList = schecduleItem.memberList;
+        let memberListDiv = document.getElementById("memberListDiv");
+        if (memberList.length > 0) {
+            memberListDiv.innerHTML = '';
+            memberList.forEach(element => {
+                if (element !== '') {
+                    var newDiv = createProfileCard(element.name, element.id);
+                    memberListDiv.appendChild(newDiv);
+                }
+            });
+        }
+        document.getElementById("addSchedule").hidden = true;
+        document.getElementById("editSchedule").hidden = false;
+        point = eventDiv;
+    });
 }
 
 async function setModal(item) {
+
+    var start = toLocalISOString(item.start);
+    var end = toLocalISOString(item.end);
+    var dateType = "datetime-local";
+    var startDateValue = start;
+    var endDateValue = end;
+    if (item.allTime === 0) {
+        dateType = "date";
+        startDateValue = changeDateTimeToDate(start);
+        var tmp = new Date(end);
+        endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
+    }
+
     document.getElementById("scheduleTitle").value = item.title;
-    document.getElementById("startDate").type = item.datetype;
-    document.getElementById("startDate").value = item.start;
-    document.getElementById("endDate").type = item.datetype;
-    document.getElementById("endDate").value = item.end;
+    document.getElementById("startDate").type = dateType;
+    document.getElementById("startDate").value = startDateValue;
+    document.getElementById("endDate").type = dateType;
+    document.getElementById("endDate").value = endDateValue;
     document.getElementById("content").value = item.content;
     document.getElementById("colorSelect").value = item.color;
     addMember.value = '';

@@ -37,10 +37,6 @@ public class ScheduleController {
     
     @PostMapping("/addSchedule")
     public @ResponseBody boolean addCaledar(@RequestBody ScheduleDTO scheduleDTO){
-        if(!scheduleDTO.getStart().contains("T") && !scheduleDTO.getEnd().contains("T")){
-            scheduleDTO.setStart(scheduleDTO.getStart() + "T00:00");
-            scheduleDTO.setEnd(scheduleDTO.getEnd() + "T00:00");
-        }
         return scheduleService.addSchedule(scheduleDTO, sessionManager.getProjectId());
     }
     

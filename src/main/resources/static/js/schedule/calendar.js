@@ -4,9 +4,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
-            left: 'prev,next today',
+            left: '',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            right: 'prev,next today'
         },
         locale: 'ko',
         initialDate:  new Date(),
@@ -38,7 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
             scheduleModal();
             // 해당 일정에 대한 시간 처리
             var start = toLocalISOString(arg.event.start);
-            var end = toLocalISOString(arg.event.end);
+            var end;
+            if(arg.event.end === null){
+                end = toLocalISOString(arg.event.start);
+            }else{
+                end = toLocalISOString(arg.event.end);
+            }
             var startDateType = "datetime-local";
             var endDateType = "datetime-local";
             var startDateValue = start;

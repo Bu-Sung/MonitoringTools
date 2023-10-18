@@ -16,5 +16,5 @@ import pubilc.sw.monitoring.entity.MeetingEntity;
  */
 @Repository
 public interface MeetingRepository extends JpaRepository<MeetingEntity, Long>{
-    List<MeetingEntity> findByProjectId(int num, Pageable pageable );
+    List<MeetingEntity> findByProjectId(Long projectId, Pageable pageable );
 }
