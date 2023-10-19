@@ -117,7 +117,7 @@
                                 <td colspan="2" class="text-center">
                                     <button type="submit" class="btn btn-primary fw-500"
                                             style="width: 8rem; height: 3rem;">수정하기</button>
-                                    <button type="submit" class="btn btn-outline-danger fw-500"
+                                    <button id="deleteUser" type="button" class="btn btn-danger fw-500"
                                             style="width: 8rem; height: 3rem;">탈퇴하기</button>
                                 </td>
                             </tr>

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
-import pubilc.sw.monitoring.dto.SessionDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.UserService;
 
@@ -43,7 +43,9 @@ public class UserController {
     }
     
     @GetMapping("/login")
-    public String login(){
+    public String login(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
         return "login";
     }
     
@@ -90,10 +92,11 @@ public class UserController {
     }
     
     @PostMapping("/findId")
-    public String findIdSuccess(@ModelAttribute UserDTO userDTO, Model model){
+    public String findIdSuccess(@ModelAttribute UserDTO userDTO, Model model, RedirectAttributes attrs){
         String id = userService.findId(userDTO);
         if(id == null){
-            return "findUser";
+            attrs.addFlashAttribute("msg", "정보와 일치하는 아이디가 존재하지 않습니다.");
+            return "redirect:/findUser";
         }else{
             model.addAttribute("userId", id);
         return "findIdSuccess";
@@ -140,9 +143,14 @@ public class UserController {
      * @param pw
      * @return 
      */
-    @PostMapping("/pwcheck/{id}/{pw}")
-    public @ResponseBody boolean pwCheck(@PathVariable String id, @PathVariable String pw){
-        return userService.pwCheck(id, pw);
+    @PostMapping("/pwcheck")
+    public String pwCheck(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
+        if(userService.pwCheck(sessionManager.getUserId(), userDTO.getPw())){
+            return "redirect:/update";
+        }else{
+            attrs.addFlashAttribute("msg", "비밀번호를 다시 확인해주세요!");
+            return "redirect:/checkPassword";
+        }
     }
     
     /**
@@ -167,10 +175,9 @@ public class UserController {
      * @param request
      * @return 
      */
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable String id, HttpServletRequest request){
-        userService.deleteUser(id, request.getParameter("pw"));
-        return "redirect:/login";
+    @PostMapping("/deleteUser")
+    public @ResponseBody boolean deleteUser(RedirectAttributes attrs){
+        return userService.deleteUser(sessionManager.getUserId()); 
     }
     
     @GetMapping("/logout")
@@ -179,5 +186,10 @@ public class UserController {
         session.invalidate();
         attrs.addFlashAttribute("msg","로그아웃 하였습니다.");
         return "redirect:/login";
+    }
+    
+    @GetMapping("/checkPassword")
+    public String checkPassword(){
+        return "checkPassword";
     }
 }

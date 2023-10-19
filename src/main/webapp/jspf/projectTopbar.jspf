@@ -23,7 +23,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="/monitoring/project/main">프로젝트 나가기</a></li>
-                    <li><a class="dropdown-item" href="/monitoring/update">회원정보관리</a></li>
+                    <li><a class="dropdown-item" href="/monitoring/checkPassword">회원정보관리</a></li>
                     <li><a class="dropdown-item" href="/monitoring/logout">로그아웃</a></li>
                 </ul>
             </div>
@@ -46,12 +46,13 @@
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown"
                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="ms-3 my-0 pe-2 text-center">
+                    <div class="ms-3 my-0 pe-2">
                         <p class="fw-500 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                         <small class="text-gray">${hasRight == 1 ? '관리자' : '팀원'}</small>
                     </div>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/monitoring/checkPassword">회원정보관리</a>
                     <a class="dropdown-item" href="/monitoring/logout">로그아웃</a>
                 </div>
             </div>
