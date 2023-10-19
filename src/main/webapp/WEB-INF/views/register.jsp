@@ -31,7 +31,7 @@
                         <!-- 로고 이미지 -->
                         <img src="${pageContext.request.contextPath}/asset/logo.png" alt="Logo" class="img-fluid me-3" width="60rem" height="auto">
                         <!-- 프로젝트명 -->
-                        <h5 class="fw-900 m-auto">프로젝트명</h5>
+                        <h5 class="fw-900 m-auto">SCRUMBLE</h5>
                     </div>
                 </a>
                 <a href="login" class="text-gray fw-600">로그인</a>

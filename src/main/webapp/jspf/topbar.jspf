@@ -18,7 +18,7 @@
                     <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="/monitoring/update">회원정보관리</a></li>
+                    <li><a class="dropdown-item" href="/monitoring/checkPassword">회원정보관리</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -48,7 +48,7 @@
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown" role="button"
                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">${sessionScope.user.name}<span>님</span></p>
+                    <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">
                     <a class="dropdown-item" href="/monitoring/logout">로그아웃</a>
@@ -62,7 +62,7 @@
         <div id="offcanvasMenuContent"></div>
         <div class="nav flex-column">
             <div class="nav-item">
-                <a class="nav-link text-gray"><i class="bi bi-person-gear me-2"
+                <a class="nav-link text-gray" href="/monitoring/checkPassword"><i class="bi bi-person-gear me-2"
                                                  style="color: #369FFF; font-size: 1.3rem;"></i>회원정보관리</a>
             </div>
         </div>

@@ -24,10 +24,10 @@
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
         <script>
-        <c:if test="${!empty msg}">
+            <c:if test="${!empty msg}">
             alert("${msg}");
-        </c:if>
-            </script>
+            </c:if>
+        </script>
     </head>
 
     <body>
@@ -86,7 +86,6 @@
             /* 메뉴 탭 재사용을 위한 script*/
             const menuContent = document.getElementById("menuContent");
             const offcanvasMenuContent = document.getElementById("offcanvasMenuContent");
-
             // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
             offcanvasMenuContent.innerHTML = menuContent.innerHTML;
         </script>

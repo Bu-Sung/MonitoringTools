@@ -3,13 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-var messageElement = document.getElementById('message');
-var msg = messageElement.getAttribute('data-msg');
-
-if (msg) {
-    alert(msg);
-}
-
 /* 메뉴 탭 재사용을 위한 script*/
 const menuContent = document.getElementById("menuContent");
 const offcanvasMenuContent = document.getElementById("offcanvasMenuContent");

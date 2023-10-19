@@ -1,6 +1,5 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
-<div id="message" data-msg="${msg}"></div>
 <nav class="navbar navbar-expand-lg pt-2 pb-4">
     <div class="container-fluid d-flex justify-content-between">
         <ol class="breadcrumb position-absolute d-block d-lg-none d-flex"
@@ -24,6 +23,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="/monitoring/project/main">프로젝트 나가기</a></li>
+                    <li><a class="dropdown-item" href="/monitoring/checkPassword">회원정보관리</a></li>
                     <li><a class="dropdown-item" href="/monitoring/logout">로그아웃</a></li>
                 </ul>
             </div>
@@ -46,12 +46,13 @@
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown"
                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="ms-3 my-0 pe-2 text-center">
+                    <div class="ms-3 my-0 pe-2">
                         <p class="fw-500 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                         <small class="text-gray">${hasRight == 1 ? '관리자' : '팀원'}</small>
                     </div>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/monitoring/checkPassword">회원정보관리</a>
                     <a class="dropdown-item" href="/monitoring/logout">로그아웃</a>
                 </div>
             </div>
@@ -62,7 +63,7 @@
     <div class="offcanvas-body ps-3 ms-3">
         <div id="offcanvasDashboardMenu"></div>
         <div class="position-absolute bottom-0 mb-4">
-            <a href="main" class="text-gray nav-link"><i class="bi bi-box-arrow-up-right me-2"></i>프로젝트 나가기</a>
+            <a href="/monitoring/project/main" class="text-gray nav-link"><i class="bi bi-box-arrow-up-right me-2"></i>프로젝트 나가기</a>
         </div>
     </div>
 </div>
