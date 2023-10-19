@@ -125,6 +125,41 @@ public class RequestService {
         return requestRepository.save(requestEntity) != null;
     }
 
+    public boolean saveRequests(List<RequestDTO> requestDTOList) {
+        if (requestDTOList == null || requestDTOList.isEmpty()) {
+            return false;
+        }
+
+        List<RequestEntity> requestEntities = new ArrayList<>();
+        
+        for (RequestDTO requestDTO : requestDTOList) {
+            RequestEntity requestEntity = new RequestEntity();
+
+            if (requestDTO.getFrid() != null) {  // 수정의 경우 
+                requestEntity.setRid(String.valueOf(requestRepository.findRidByFrid(requestDTO.getFrid())));
+            } else {  // 추가의 경우 
+                requestEntity.setRid(requestDTO.getRid());
+            }
+
+            requestEntity.setFrid(requestDTO.getFrid());
+            requestEntity.setPid(requestDTO.getPid());
+            requestEntity.setName(requestDTO.getName());
+            requestEntity.setContent(requestDTO.getContent());
+            requestEntity.setDate(requestDTO.getDate());
+            requestEntity.setRank(requestDTO.getRank());
+            requestEntity.setStage(requestDTO.getStage());
+            requestEntity.setTarget(requestDTO.getTarget());
+            requestEntity.setUid(requestDTO.getUid());
+            requestEntity.setNote(requestDTO.getNote());
+
+            requestEntities.add(requestEntity);
+        }
+        List<RequestEntity> savedEntities = requestRepository.saveAll(requestEntities);
+
+        // 저장된 엔티티의 수와 원본 요청 수가 같으면 성공
+        return savedEntities.size() == requestDTOList.size();
+    }
+    
     /**
      * 입력한 이름을 기반으로 프로젝트 멤버 중 해당하는 이름 검색
      *

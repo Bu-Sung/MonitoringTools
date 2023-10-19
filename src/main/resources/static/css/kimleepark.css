@@ -190,9 +190,13 @@ a.text-gray:hover {
 
 .form-select {
     border-radius: 5px;
-    background: #EDF6FF;
+    background-color:#EDF6FF;
     height: 2.5rem;
-    border-style: none;
+    border: none;
+}
+
+.form-select option {
+    background: white;
 }
 
 .form-select-gray {
