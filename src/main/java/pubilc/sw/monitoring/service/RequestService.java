@@ -370,7 +370,7 @@ public class RequestService {
         int rowNum = 1;
         for (RequestDTO requestDTO : requestDTOs) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(rowNum - 1);
+            row.createCell(0).setCellValue(String.valueOf(rowNum - 1));
             row.createCell(1).setCellValue(requestDTO.getName());
             row.createCell(2).setCellValue(requestDTO.getContent());
             row.createCell(3).setCellValue(requestDTO.getDate());
