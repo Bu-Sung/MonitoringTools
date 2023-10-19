@@ -52,10 +52,10 @@
                                         <div>
                                             <div class="d-flex mt-4 justify-content-end">
                                                 <a id="similarityTest">
-                                                <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">문장 유사도 검사</button>
-                                                <a href="createExcel" class=" mx-2"><button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button></a>
-                                                <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
-                                                <button id="saveButton" class="btn btn-primary" style="display: none;">요구사항 저장</button>
+                                                    <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
+                                                    <a href="createExcel" class=" mx-2"><button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button></a>
+                                                    <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
+                                                    <button id="saveButton" class="btn btn-primary" style="display: none;">요구사항 저장</button>
                                             </div>
                                             <c:if test="${not empty excelNames}">
                                                 <c:forEach var="file" items="${excelNames}">
@@ -243,7 +243,7 @@
                                 <th style="vertical-align: middle;"><label for="uid">담당자<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <div style="position: relative; width: auto;">
+                                        <div style="width:100%;">
                                             <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
                                             <div id="searchMember" class="dropdown-menu">
                                             </div>
@@ -273,15 +273,19 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="similarModalLabel">문장 유사도 검사 결과</h5>
+                        <h5 class="modal-title" id="similarModalLabel">요구사항 유사도 검사 결과</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        아직 백쪽이랑 연결x
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border text-primary my-5" role="status" id="loadingSpinner">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="modalContent"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary">수정</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -349,7 +353,7 @@
                         })
                         .catch((error) => console.error('Error:', error));
             }
-            
+
             function settingRequestList() {
                 var idx = 1;
                 for (var item of requestList) {
@@ -551,7 +555,7 @@
 
             document.addEventListener('DOMContentLoaded', function () {
 
-                getRequestList();// 요구사항 설정
+                getRequestList(); // 요구사항 설정
                 getAllMemberInfo(); // 멤버 인원 설정
 
                 document.getElementById('saveRequest').addEventListener('click', function () {
@@ -635,7 +639,7 @@
             const resultsElement = document.getElementById('results');
 
 
-          
+
             // 요구사항 유사도 검사 함수 
             async function checkSimilarity(requestList) {
                 const similarList = [];
@@ -645,7 +649,7 @@
                         const requestA = requestList[i];
                         const requestB = requestList[j];
 
-                        const { isSimilar } = await similarityAPI(requestA.name, requestB.name);
+                        const {isSimilar} = await similarityAPI(requestA.name, requestB.name);
 
                         if (isSimilar) {
                             similarList.push([requestList[i], requestList[j]]);
@@ -731,7 +735,7 @@
                     textarea2.addEventListener('input', function () {
                         autoAdjustHeight(this);
                     });
-                    
+
                     cell2.appendChild(textarea2);
                     const cell3 = newRow.insertCell(2);
                     const textarea3 = document.createElement('textarea');
@@ -740,13 +744,13 @@
                     textarea3.addEventListener('input', function () {
                         autoAdjustHeight(this);
                     });
-                    
+
                     cell3.appendChild(textarea3);
                     const cell4 = newRow.insertCell(3);
                     const selectBox = document.createElement('select');
                     selectBox.classList.add('form-control', 'text-center', 'p-0');
                     selectBox.setAttribute('name', 'newColumn4');
-                    
+
                     // Option 요소 추가
                     const option1 = document.createElement('option');
                     option1.text = '1';
@@ -763,7 +767,7 @@
                     const selectBox2 = document.createElement('select');
                     selectBox2.classList.add('form-control', 'text-center', 'p-0');
                     selectBox2.setAttribute('name', 'newColumn5');
-                    
+
                     // Option 요소 추가
                     const optionTop = document.createElement('option');
                     optionTop.text = '상';
@@ -775,12 +779,12 @@
                     optionBottom.text = '하';
                     selectBox2.add(optionBottom);
                     cell5.appendChild(selectBox2);
-                    
+
                     const cell6 = newRow.insertCell(5);
                     const selectBox3 = document.createElement('select');
                     selectBox3.classList.add('form-control', 'text-center', 'p-0');
                     selectBox3.setAttribute('name', 'newColumn6');
-                    
+
                     // Option 요소 추가
                     const op1 = document.createElement('option');
                     op1.text = '대기';
@@ -801,12 +805,12 @@
                     op6.text = '완료';
                     selectBox3.add(op6);
                     cell6.appendChild(selectBox3);
-                    
+
                     const cell7 = newRow.insertCell(6);
                     const selectBox4 = document.createElement('select');
                     selectBox4.classList.add('form-control', 'text-center', 'p-0');
                     selectBox4.setAttribute('name', 'newColumn7');
-                    
+
                     // Option 요소 추가
                     const optionFalse = document.createElement('option');
                     optionFalse.text = 'false';
@@ -956,30 +960,74 @@
                     autoAdjustHeight(textarea);
                 });
             });
-            
-            // 요구사항 유사도 검사 버튼 호출 
-            document.addEventListener("DOMContentLoaded", function() {
-                const similarityTest = document.getElementById("similarityTest");
 
-                similarityTest.addEventListener("click", function() {
+            // 요구사항 유사도 검사 버튼 호출 
+            document.addEventListener("DOMContentLoaded", function () {
+                const similarityTest = document.getElementById("similarityTest");
+                const modalContent = document.getElementById("modalContent");
+                const loadingSpinner = document.getElementById("loadingSpinner"); // 추가된 Spinner 엘리먼트
+
+                // 모달이 열릴 때 내용 비우기
+                $('#similarModal').on('show.bs.modal', function () {
+                    modalContent.innerHTML = '';
+                });
+
+                similarityTest.addEventListener("click", function () {
+                    // Spinner 표시
+                    loadingSpinner.style.display = "block";
 
                     checkSimilarity(requestList)
-                        .then(similarList => {
-                            if (similarList.length === 0) {
-                                console.log('유사한 요구사항 없음');
-                            } else {
-                                for (const pair of similarList) {
-                                    console.log('유사한 요구사항 : ' , pair[0], pair[1]);
+                            .then(similarList => {
+                                if (similarList.length === 0) {
+                                    modalContent.innerHTML = '유사한 요구사항 없음';
+                                    console.log('유사한 요구사항 없음');
+                                } else {
+                                    let result = '';
+                                    for (const pair of similarList) {
+                                        const requestA = pair[0];
+                                        const requestB = pair[1];
+
+                                        result += '유사한 요구사항:';
+
+                                        // 결과를 나타내는 <ul> 생성
+                                        result += '<ul>';
+
+                                        // 요구사항 A와 B를 <li>로 나타내기
+                                        result += '<li>' + requestA.name + '</li>';
+                                        result += '<li>' + requestB.name + '</li>';
+
+                                        // </ul> 닫기
+                                        result += '</ul>';
+                                        result += '<br>';
+                                    }
+                                    // 결과를 모달에 추가
+                                    modalContent.innerHTML = result;
                                 }
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+
+                                // Spinner 감추기
+                                loadingSpinner.style.display = "none";
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+
+                                // Spinner 감추기 (에러 발생 시도)
+                                loadingSpinner.style.display = "none";
+                            });
                 });
             });
-            
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_request');
+
+                //사이드바에서 요구사항 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
+            });
         </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script src="/monitoring/js/user/search.js"></script>
     </body>
 </html>

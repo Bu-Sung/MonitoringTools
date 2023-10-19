@@ -23,7 +23,7 @@
                                                                                                                                     class="me-2">일정</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/request/request" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
+                <a href="/monitoring/project/request/request" id="side_request" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
                                                                                                                                            class="me-2">요구사항</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
