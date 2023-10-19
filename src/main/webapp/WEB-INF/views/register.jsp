@@ -51,33 +51,33 @@
                                 </th>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <input type="text" id="id" name="id" class="form-control me-3" required>
+                                        <input type="text" id="id" name="id" class="form-control me-3" required minlength="5" maxlength="20">
                                         <button type="button" class="btn btn-gray" id="checkid" style="width: 10rem;">중복확인</button>
                                     </div>
-                                    <small class="form-text text-muted mb-3">아이디는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                    <small class="form-text text-muted mb-3 p-1">아이디는 영문, 숫자를 포함하여 5자 이상 입력해주세요.</small>
                                 </td>
                             </tr>
 
                             <tr>
                                 <th><label for="pw">비밀번호<span class="text-danger">*</span></label></th>
                                 <td>
-                                    <input type="password" id="pw" name="pw" class="form-control" required>
-                                    <small class="form-text text-muted mb-3">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                    <input type="password" id="pw" name="pw" class="form-control" required  minlength="8" maxlength="20">
+                                    <small class="form-text text-muted mb-3 p-1">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
                                 </td>
                             </tr>
 
                             <tr>
                                 <th><label for="pw2">비밀번호<br>확인<span class="text-danger">*</span></label></th>
-                                <td>
-                                    <input type="password" id="pw2" name="pw2" class="form-control mb-4" required>
-                                    <small id="pw-result"  style="display: none;"></small>
+                                <td class="position-relative">
+                                    <input type="password" id="pw2" name="pw2" class="form-control" required  maxlength="20">
+                                    <small id="pw-result" class=" px-1 position-absolute"></small>
                                 </td>
                             </tr>
 
                             <tr>
-                                <th><label for="name">이름<span class="text-danger">*</span></label></th>
+                                <th><label for="name" class="mt-4">이름<span class="text-danger">*</span></label></th>
                                 <td>
-                                    <input type="text" id="name" name="name" class="form-control mb-4" required>
+                                    <input type="text" id="name" name="name" class="form-control mt-4 mb-4" required maxlength="20">
                                 </td>
                             </tr>
 
@@ -117,7 +117,7 @@
                             <!-- email type은 required가 있어야 유효성 검사를 함 -->
                             <tr>
                                 <th><label for="email">이메일<span class="text-danger">*</span></label></th>
-                                <td><input type="email" id="email" name="email" class="form-control mb-5" required></td>
+                                <td><input type="email" id="email" name="email" class="form-control mb-5" required maxlength="30"></td>
                             </tr>
 
                             <tr>

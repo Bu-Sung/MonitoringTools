@@ -53,19 +53,19 @@
             </div>
         </nav>
         <div class="d-flex justify-content-center">
-            <div class="card mt-8 col-lg-5 col-md-9 col-12">
+            <div class="card mt-8 col-lg-7 col-md-9 col-12">
                 <div class="card-body mt-3 mx-4">
                     <h5 class="fw-700">✨ 비밀번호 찾기 결과 ✨</h5>
                     <small class="text-gray">비밀번호를 재설정하세요.</small>
                     <form id="chagePwForm" action="chagePw" method="POST"  onsubmit="return checkPwAndPw2()">
-                        <div class="d-flex align-items-center mb-4 mt-5">
+                        <div class="d-flex align-items-center mt-5">
                             <b class="me-3" style="white-space: nowrap; width: 9rem;">비밀번호</b>
-                            <div class="w-100">
+                            <div class="w-100 position-relative">
                                 <input type="password" id="pw" name="pw" class="form-control" required>
-                                <small class="form-text text-muted mb-3">영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                <small class="form-text text-muted px-1 position-absolute">영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center mb-3">
+                        <div class="d-flex align-items-center mt-5 mb-3">
                             <b class="me-3" style="white-space: nowrap; width: 9rem;">비밀번호 확인</b>
                             <input type="password" id="pw2" name="pw2" class="form-control" required>
                         </div>
