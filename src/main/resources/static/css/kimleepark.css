@@ -1061,3 +1061,12 @@ input[type="file"]::-webkit-file-upload-button {
 .w-auto {
     width: auto;
 }
+
+#projectlist {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+#projectlist:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 123, 200, 0.2);
+}
+
