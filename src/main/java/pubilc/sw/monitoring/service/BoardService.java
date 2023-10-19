@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -38,22 +39,17 @@ public class BoardService {
     @Value("${page.limit}")
     private int pageLimit;
 
-    public List<BoardDTO> getProjectCategoryBoards(Long pid, String category, int nowPage) {
+    public Page<BoardDTO> getProjectCategoryBoards(Long pid, String category, int nowPage) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
-        List<BoardDTO> boardDTOList = new ArrayList();
-        List<BoardEntity> boardEntityList = boardRepository.findByPidAndCategory(pid.intValue(), category, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
-
-        for (BoardEntity entity : boardEntityList) {
-            boardDTOList.add(BoardDTO.builder()
+        Page<BoardDTO> boardDTOList;
+        Page<BoardEntity> boardEntityList = boardRepository.findByPidAndCategory(pid, category, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
+        return  boardEntityList.map(entity -> BoardDTO.builder()
                     .bid(entity.getBid())
                     .title(entity.getTitle())
                     .writer(entity.getWriter())
                     .date(entity.getDate().format(formatter))
                     .category(entity.getCategory())
                     .build());
-        }
-
-        return boardDTOList;
     }
 
     public boolean addBoard(BoardDTO boardDTO, List<MultipartFile> files) {

@@ -47,7 +47,7 @@
                                     <div class="meeing-title" style="font-size: 2rem; height: 4rem;">
                                         ${board.title}</div>
                                         <c:if
-                                            test="${sessionScope.hasRight == 1 || (sessionScope.hasRight == 2 && sessionScope.user.name == meeting.writer)}">
+                                            test="${sessionScope.myInfo.hasRight == 1 || (sessionScope.myInfo.hasRight == 2 && sessionScope.myInfo.name == meeting.writer)}">
                                         <div>
                                             <a href="update/${board.bid}"><button type="button"
                                                                                   class="btn btn-primary">수정</button></a>
@@ -69,17 +69,14 @@
                                         <span>작성자</span>
                                         <div class="text-gray">${board.writer}</div>
                                     </div>
-
                                 </div>
-                                <div class="mb-4 p-2 border" style="background-color:#fff; border-radius: 5px;">
-                                    <ul class='list-unstyled m-0' id="ulfile">
-                                        <c:forEach var="file" items="${board.files}">
-                                            <li><a href="download?filename=${file}&bid=${board.bid}">${file}</a></li>
-                                            </c:forEach>
-                                    </ul>
-                                    <div id="content" class="document-content p-0">
-                                        ${board.content}
-                                    </div>
+                                <ul class='list-unstyled m-0' id="ulfile">
+                                    <c:forEach var="file" items="${board.files}">
+                                        <li><a href="download?filename=${file}&bid=${board.bid}">${file}</a></li>
+                                        </c:forEach>
+                                </ul>
+                                <div id="content" class="document-content p-0">
+                                    ${board.content}
                                 </div>
                             </div>
                             <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" data-bs-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">댓글 보기</button>
