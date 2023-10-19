@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +25,12 @@ import pubilc.sw.monitoring.entity.ProjectEntity;
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     ProjectEntity findById(long pid);
+    
+    @Query("SELECT p FROM ProjectEntity p WHERE p.id IN :ids")
+    Page<ProjectEntity> findByIds(@Param("ids") List<Long> ids, Pageable pageable);
+
+    @Query("SELECT p FROM ProjectEntity p WHERE p.id IN :ids AND p.name LIKE %:name%")
+    Page<ProjectEntity> findByIdsAndName(@Param("ids") List<Long> ids, @Param("name") String name, Pageable pageable);
 
     // 프로젝트에서 카테고리 가져오기
     @Query("SELECT p.category FROM ProjectEntity p WHERE p.id = :pid")

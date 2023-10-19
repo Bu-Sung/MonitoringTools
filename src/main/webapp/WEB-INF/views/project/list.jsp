@@ -58,13 +58,13 @@
                     <!-- 참여되어 있는 프로젝트 목록 -->
                     <div class="mb-4 d-flex justify-content-between align-items-center">
                         <h5 class="fw-600 mb-0">프로젝트 목록</h5>
-                        <form class="d-flex">
+                        <form id="searchProject" class="d-flex" action="list">
                             <input id="search" class="form-control me-2" type="search">
                             <button class="btn btn-primary" style="width: 5rem;">검색</button>
                         </form>
                     </div>
                     <div class="col-12 p-0 mb-3">
-                        <c:forEach var="project" items="${projects}">
+                        <c:forEach var="project" items="${list.getContent()}">
                             <div id="projectlist" class="p-3 rounded border border-gray mb-2">
                                 <a href="${project.pid}">
                                     <div class="d-flex justify-content-between">
@@ -82,6 +82,7 @@
                             </div>
                         </c:forEach>
                     </div>
+                    <%@include file="/jspf/listNav.jspf" %>
                 </div>
 
             </div>
@@ -93,6 +94,13 @@
             const offcanvasMenuContent = document.getElementById("offcanvasMenuContent");
             // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
             offcanvasMenuContent.innerHTML = menuContent.innerHTML;
+            
+            document.addEventListener('DOMContentLoaded', function () {
+                document.getElementById("searchProject").addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    window.location.href = this.action + "?name=" + encodeURIComponent(document.getElementById("search").value);
+                });
+            });
         </script>
 
         <!-- 부트스트랩 script -->

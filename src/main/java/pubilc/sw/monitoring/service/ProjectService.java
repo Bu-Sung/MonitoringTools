@@ -18,6 +18,12 @@ import pubilc.sw.monitoring.dto.ProjectDTO;
 import pubilc.sw.monitoring.entity.ProjectEntity;
 import pubilc.sw.monitoring.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import pubilc.sw.monitoring.dto.MemberDTO;
@@ -38,7 +44,10 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
-
+    
+    @Value("${page.limit}")
+    private int pageLimit;
+    
     /**
      * 프로젝트 추가 함수 (project 테이블 및 member 테이블에 정보 추가)
      *
@@ -84,21 +93,27 @@ public class ProjectService {
      * @param uid 본인이 해당하는 프로젝트를 얻기 위한 사용자 아이디
      * @return 해당 사용자의 프로젝트 정보를 담은 DTO 리스트
      */
-    public List<ProjectDTO> getProjectsByUserId(String uid) {
+    public Page<ProjectDTO> getProjectsByUserId(String uid, int nowPage, String name) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // 사용자 아이디를 기반으로 프로젝트 멤버 조회 
         List<MemberEntity> memberEntities = memberRepository.findByUid(uid);
         List<ProjectDTO> projectDTOs = new ArrayList<>();  // 프로젝트 엔티티 리스트 
-
+        List<Long> projectIdList = new ArrayList();
         for (MemberEntity memberEntity : memberEntities) {
-            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) {  // 초대 상태가 0(생성자)이거나 2(초대 수락)인 프로젝트
-                // 본인이 해당하는 프로젝트 아이디 
-                long pid = memberEntity.getPid();
-                ProjectEntity projectEntity = projectRepository.findById(pid);
-
-                if (projectEntity != null) {
-                    // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환
+            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) { 
+                projectIdList.add(memberEntity.getPid());
+            }
+        }
+        Page<ProjectEntity> projectEntityList;
+        if(name.equals("") || name == null){
+            projectEntityList = projectRepository.findByIds(projectIdList, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
+        }else{
+            projectEntityList = projectRepository.findByIdsAndName(projectIdList, name,PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
+        }
+        
+        for(ProjectEntity projectEntity : projectEntityList.getContent()){
+            // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 
                     Instant startInstant = projectEntity.getStart().toInstant();
                     Instant endInstant = projectEntity.getEnd().toInstant();
                     // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
@@ -110,17 +125,43 @@ public class ProjectService {
                             .pid(projectEntity.getId())
                             .name(projectEntity.getName())
                             .content(projectEntity.getContent())
-                            .start(startDate.format(formatter))
-                            .end(endDate.format(formatter))
+                            .start(projectEntity.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)) // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 후 Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+                            .end(projectEntity.getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter))
                             .category(projectEntity.getCategory())
                             .cycle(projectEntity.getCycle())
                             .build();
                     projectDTOs.add(projectDTO);
-                }
-            }
         }
+//        for (MemberEntity memberEntity : memberEntities) {
+//            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) {  // 초대 상태가 0(생성자)이거나 2(초대 수락)인 프로젝트
+//                // 본인이 해당하는 프로젝트 아이디 
+//                long pid = memberEntity.getPid();
+//                ProjectEntity projectEntity = projectRepository.findById(pid);
+//
+//                if (projectEntity != null) {
+//                    // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 
+//                    Instant startInstant = projectEntity.getStart().toInstant();
+//                    Instant endInstant = projectEntity.getEnd().toInstant();
+//                    // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+//                    LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+//                    LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+//
+//                    // 프로젝트 정보를 DTO로 변환하여 리스트에 추가
+//                    ProjectDTO projectDTO = ProjectDTO.builder()
+//                            .pid(projectEntity.getId())
+//                            .name(projectEntity.getName())
+//                            .content(projectEntity.getContent())
+//                            .start(projectEntity.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)) // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 후 Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+//                            .end(projectEntity.getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter))
+//                            .category(projectEntity.getCategory())
+//                            .cycle(projectEntity.getCycle())
+//                            .build();
+//                    projectDTOs.add(projectDTO);
+//                }
+//            }
+//        }
 
-        return projectDTOs;
+        return new PageImpl<>(projectDTOs, projectEntityList.getPageable(), projectEntityList.getTotalElements());
     }
 
     /**

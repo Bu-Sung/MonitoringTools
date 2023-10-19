@@ -2,7 +2,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <div class="d-none d-lg-block">
     <div class="text-center">
-        <a href="/monitoring/project/main" class="navbar-brand">
+        <a href="/monitoring/project/list" class="navbar-brand">
             <img src="/monitoring/asset/logo.png" style="width: 3rem;">
             <h5 class="my-0 fw-900 mt-2 px-4">SCRUMBLE</h5>
         </a>
