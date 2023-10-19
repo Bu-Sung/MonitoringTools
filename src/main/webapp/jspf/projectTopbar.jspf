@@ -23,7 +23,7 @@
                     </div>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="main">프로젝트 나가기</a></li>
+                    <li><a class="dropdown-item" href="/monitoring/project/main">프로젝트 나가기</a></li>
                     <li><a class="dropdown-item" href="/monitoring/logout">로그아웃</a></li>
                 </ul>
             </div>

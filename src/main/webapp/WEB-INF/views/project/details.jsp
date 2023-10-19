@@ -92,9 +92,9 @@
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
                                             data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">저장하기</button>
+                                <button type="submit" class="btn btn-primary w-100" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>저장하기</button>
                             </form>
-                            <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2">삭제하기</button></a>
+                            <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2"  ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제하기</button></a>
                         </div>
                     </div>
                 </div>
@@ -114,11 +114,11 @@
                         <!-- 입력 폼 -->
                         <div class="d-flex justify-content-between mb-4">
                             <input type="text" class="form-control form-control-secondary me-2" id="taskInput" placeholder="작업 내용">
-                            <button type="button" class="btn btn-secondary" style="width: 5rem;" id="addTask">추가</button>
+                            <button type="button" class="btn btn-secondary" style="width: 5rem;" id="addTask" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <p class="fw-600 m-0">카테고리 목록</p>
-                            <button id="deleteTasks" class="text-danger" style="border-style: none; background-color: #fff;">삭제</button>
+                            <button id="deleteTasks" class="text-danger" style="border-style: none; background-color: #fff;" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제</button>
                         </div>
                         <div id="taskList">
                             <c:forEach var="cat" items="${project.categoryList}">
@@ -153,11 +153,11 @@
                                        placeholder="팀원의 아이디를 입력하세요" autocomplete="off">
                                 <div id="searchMember" class="dropdown-menu "></div>
                             </div>
-                            <button type="button" class="btn btn-secondary" style="width: 4rem" id="addTeamMember">추가</button>
+                            <button type="button" class="btn btn-secondary" style="width: 4rem" id="addTeamMember" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="fw-400 mt-2" style="width: 8rem;">팀원 목록</p>
-                            <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers">삭제</button>
+                            <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제</button>
                         </div>
                         <div id="teamList">
                         </div>
