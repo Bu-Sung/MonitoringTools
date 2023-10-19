@@ -10,16 +10,16 @@
     <div class="mt-5">
         <ul class="nav flex-column" id="dashboardMenu">
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/${sessionScope.myInfo.pid}" class="mb-0 ps-0 text-gray nav-link"><img src="/monitoring/asset/dashboard.png"
+                <a href="/monitoring/project/${sessionScope.myInfo.pid}" id="side_project" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/dashboard.png"
                                                                                                                                    class="me-2">대시보드</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/update/${sessionScope.myInfo.pid}" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/setting.png"
+                <a href="/monitoring/project/update/${sessionScope.myInfo.pid}" id="side_details" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/setting.png"
                                                                                                                                                       class="me-2">프로젝트 관리</a>
             </li>
 
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/schedule" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/calendar.png"
+                <a href="/monitoring/project/schedule" id="side_calendar" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/calendar.png"
                                                                                                                                     class="me-2">일정</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
@@ -27,21 +27,21 @@
                                                                                                                                            class="me-2">요구사항</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="#sprintCollapse" class="mb-0 ps-0 text-gray nav-link" data-bs-toggle="collapse"
+                <a href="#sprintCollapse" id="sprintLink" class="mb-0 ps-0 text-dark nav-link img-opacity" data-bs-toggle="collapse"
                    role="button" aria-expanded="true">
                     <img src="/monitoring/asset/sprint.png" class="me-2">스프린트
                 </a>
             </li>
             <ul class="collapse" id="sprintCollapse">
-                <li><a class="dropdown-item text-gray" href="/monitoring/project/sprint">스프린트 목록</a></li>
-                <li><a class="dropdown-item text-gray py-2" href="/monitoring/project/kanban">칸반보드</a></li>
+                <li><a class="dropdown-item text-dark img-opacity" id="side_sprintList" href="/monitoring/project/sprint">스프린트 목록</a></li>
+                <li><a class="dropdown-item text-dark img-opacity py-2" id="side_kanban" href="/monitoring/project/kanban">칸반보드</a></li>
             </ul>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/board/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/clip.png"
+                <a href="/monitoring/project/board/list" id="side_list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/clip.png"
                                                                                   class="me-2">게시판</a>
             </li>
             <li class="nav-item d-flex align-items-center py-2">
-                <a href="/monitoring/project/meeting/list" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
+                <a href="/monitoring/project/meeting/list" id="side_meeting" class="mb-0 ps-0 text-dark nav-link img-opacity"><img src="/monitoring/asset/papaerPencil.png"
                                                                                   class="me-2">회의록</a>
             </li>
         </ul>

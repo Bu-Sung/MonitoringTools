@@ -170,12 +170,6 @@
                 // 뷰포트의 세로 길이
                 var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
-                const dashboardMenu = document.getElementById("dashboardMenu");
-                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-
-                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-
                 document.addEventListener('DOMContentLoaded', function () {
                     let lastDragStartEvent; // 메모지를 선택 했을 때 memo-list의 제목 값을 담을 외부 변수
                     let draggedItem = null;
@@ -259,6 +253,31 @@
                         });
                     });
                 });
+                
+                document.addEventListener("DOMContentLoaded", function () {
+                var sprintElement = document.getElementById('sprintCollapse');
+                if (sprintElement) {
+                    sprintElement.classList.add('show'); // 스프린트를 기본적으로 펼쳐진 상태
+                }
+
+                var sprintListElement = document.getElementById('side_kanban');
+                if (sprintListElement) {
+                    sprintListElement.classList.remove('img-opacity'); // 칸반에서 'img-opacity' 클래스 제거
+                }
+
+                var sprintLinkElement = document.getElementById('sprintLink'); // 스프린트 링크 요소 가져오기
+                if (sprintLinkElement) {
+                    sprintLinkElement.classList.remove('img-opacity'); // 스프린트 링크에서 'img-opacity' 클래스 제거
+                }
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                // offcanvas에서 칸반 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
             </script>
 
             <!-- 부트스트랩 script -->

@@ -168,10 +168,6 @@
 
 
         <script>
-            const dashboardMenu = document.getElementById("dashboardMenu");
-            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
             /*카테고리 관리*/
 //            document.addEventListener('DOMContentLoaded', function () {
 //                const input = document.getElementById('taskInput');
@@ -578,6 +574,24 @@
 
             observer.observe(teamModal, {
                 attributes: true
+            });
+            
+            document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_details');
+
+                //사이드바에서 요구사항 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
+
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 요구사항 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
             });
         </script>
         <script src="/monitoring/js/user/search.js"></script>

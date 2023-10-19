@@ -1024,6 +1024,15 @@
                 if (linkElement) {
                     linkElement.classList.remove('img-opacity');
                 }
+
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 요구사항 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
             });
         </script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
