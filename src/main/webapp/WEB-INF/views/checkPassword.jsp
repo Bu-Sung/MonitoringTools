@@ -36,7 +36,7 @@
             <div class="row">
                 <!-- side bar -->
                 <%@include file="/jspf/sidebar.jspf"%>
-                <div class="col-lg-9 col-11 mt-4 mx-auto">
+                <div class="col-lg-9 col-md-9 col-11">
                     <div class="d-flex justify-content-center">
                         <div class="card mt-8 ">
                             <form method="POST" action="pwcheck">
@@ -55,6 +55,25 @@
         </div>
         <script src="/monitoring/js/recycleSetting.js"></script>
 
+        <script>
+            window.addEventListener('load', function () {
+                var sideMainLink = document.getElementById('side_main');
+
+                if (sideMainLink) {
+                    // 현재 클래스명에서 text-dark를 찾아 text-gray로 대체
+                    var classes1 = sideMainLink.className.replace('text-dark', 'text-gray');
+                    sideMainLink.className = classes1;
+                }
+
+                var offcanvasMenuContent = document.getElementById('offcanvasMenuContent');
+                var menuContent = document.getElementById('menuContent');
+
+                if (offcanvasMenuContent && menuContent) {
+                    // menuContent의 내용을 offcanvasMenuContent의 내용으로 설정
+                    menuContent.innerHTML = offcanvasMenuContent.innerHTML;
+                }
+            });
+        </script>
         <!-- 부트스트랩 script -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -81,7 +81,7 @@
                                         </select>
                                         <input  type="text" class="form-control mx-2" style="width: 6rem;" id="phone2" required>
                                         <input  type="text" class="form-control mb-4" style="width: 6rem;"
-                                               id="phone3" required>
+                                                id="phone3" required>
                                     </div>
                                     <input type="text" id="phone" name="phone" value="${user.phone}" hidden >
                                 </td>
@@ -128,6 +128,25 @@
                 <script src="/monitoring/js/user/user.js"></script>
                 <script src="/monitoring/js/recycleSetting.js"></script>
 
+                <script>
+                        window.addEventListener('load', function () {
+                            var sideMainLink = document.getElementById('side_main');
+
+                            if (sideMainLink) {
+                                // 현재 클래스명에서 text-dark를 찾아 text-gray로 대체
+                                var classes1 = sideMainLink.className.replace('text-dark', 'text-gray');
+                                sideMainLink.className = classes1;
+                            }
+
+                            var offcanvasMenuContent = document.getElementById('offcanvasMenuContent');
+                            var menuContent = document.getElementById('menuContent');
+
+                            if (offcanvasMenuContent && menuContent) {
+                                // menuContent의 내용을 offcanvasMenuContent의 내용으로 설정
+                                menuContent.innerHTML = offcanvasMenuContent.innerHTML;
+                            }
+                        });
+                </script>
                 <!-- 부트스트랩 script -->
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
