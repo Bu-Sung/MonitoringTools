@@ -71,7 +71,7 @@ public class UserController {
         UserDTO userInfo = userService.login(userDTO);
         if(userInfo != null){
             sessionManager.setUserInfo(userInfo);
-            return "redirect:/project/main";
+            return "redirect:/project/list";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
             return "redirect:/login";
