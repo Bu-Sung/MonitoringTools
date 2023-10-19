@@ -49,7 +49,7 @@ public class MeetingController {
 
     @GetMapping("/list")
     public String meeting(@RequestParam(value = "page", defaultValue = "1") int nowPage, Model model) {
-        model.addAttribute("meetingList", meetingService.getMeetingList(sessionManager.getProjectId(), nowPage));
+        model.addAttribute("list", meetingService.getMeetingList(sessionManager.getProjectId(), nowPage));
         model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId()));
         return "project/meeting/list";
     }
