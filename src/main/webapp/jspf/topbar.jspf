@@ -10,7 +10,7 @@
             </div>
         </a>
         <!-- 메뉴 탭 (md 사이즈 미만) -->
-        <div class="d-none d-lg-block">
+        <div class="d-none d-md-block">
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="profileDropdown" role="button"
                    data-bs-toggle="dropdown" aria-expanded="false">
@@ -26,7 +26,7 @@
                 </ul>
             </div>
         </div>
-        <button class="navbar-toggler border-0 d-block d-lg-none" type="button" data-bs-toggle="offcanvas"
+        <button class="navbar-toggler border-0 d-block d-md-none" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
             <img src="/monitoring/asset/menu.png" width="25rem;">
         </button>
@@ -50,20 +50,22 @@
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="/monitoring/logout">로그아웃</a>
-                </div>
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="/monitoring/checkPassword">회원정보관리</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="/monitoring/logout">로그아웃</a></li>
+                </ul>
             </div>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <hr class="m-0 mx-auto" width="85%">
     <div class="offcanvas-body">
-        <div id="offcanvasMenuContent"></div>
         <div class="nav flex-column">
             <div class="nav-item">
-                <a class="nav-link text-gray" href="/monitoring/checkPassword"><i class="bi bi-person-gear me-2"
-                                                 style="color: #369FFF; font-size: 1.3rem;"></i>회원정보관리</a>
+                <div class="nav-link" id="offcanvasMenuContent"></div>
             </div>
         </div>
     </div>

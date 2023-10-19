@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li class="py-2">
-                    <a href="/monitoring/project/save" class="text-gray">
+                    <a href="/monitoring/project/save" id="side_save" class="text-gray">
                         <div class="d-flex justify-content-start">
                             <i class="bi bi-file-earmark-arrow-up me-2"
                                style="color: #369FFF; font-size: 1.3rem;"></i>
