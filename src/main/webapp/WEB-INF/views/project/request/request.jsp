@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -49,6 +51,7 @@
                                     <div class='d-none d-lg-block'>
                                         <div>
                                             <div class="d-flex mt-4 justify-content-end">
+                                                <a id="similarityTest">
                                                 <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">문장 유사도 검사</button>
                                                 <a href="createExcel" class=" mx-2"><button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button></a>
                                                 <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
@@ -239,9 +242,9 @@
                             <tr>
                                 <th style="vertical-align: middle;"><label for="uid">담당자<span class="text-danger">*</span></label></th>
                                 <td>
-                                    <div class="d-flex justify-content-start align-items-center">
-                                        <div style="width:100%;">
-                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off">
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div style="position: relative; width: auto;">
+                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
                                             <div id="searchMember" class="dropdown-menu">
                                             </div>
                                         </div>
@@ -346,7 +349,7 @@
                         })
                         .catch((error) => console.error('Error:', error));
             }
-
+            
             function settingRequestList() {
                 var idx = 1;
                 for (var item of requestList) {
@@ -632,32 +635,31 @@
             const resultsElement = document.getElementById('results');
 
 
-            // 유사도 함수 실행 및 결과 출력
-            async function checkSimilarity(request) {
-                similarList = [];
-                for (let item of requestList) {
+          
+            // 요구사항 유사도 검사 함수 
+            async function checkSimilarity(requestList) {
+                const similarList = [];
 
-                    if (item.frid === request.frid) {
-                        continue;
-                    }
+                for (let i = 0; i < requestList.length; i++) {
+                    for (let j = i + 1; j < requestList.length; j++) {
+                        const requestA = requestList[i];
+                        const requestB = requestList[j];
 
-                    const comparison = item.name;
-                    const {isSimilar} = await similarityAPI(comparison, request.name);
-                    if (isSimilar) {
-                        similarList.push([item.name, request.name]);
+                        const { isSimilar } = await similarityAPI(requestA.name, requestB.name);
+
+                        if (isSimilar) {
+                            similarList.push([requestList[i], requestList[j]]);
+                        }
                     }
                 }
-                if (similarList.length === 0) { // 배열이 비어있는지 확인
-                    return true;
-                }
-                return false;
+
+                return similarList;
             }
 
             // 서버의 API를 호출하여 유사성을 확인하는 함수
             async function similarityAPI(name1, name2) {
                 const openApiURL = 'http://aiopen.etri.re.kr:8000/ParaphraseQA';
-                const accessKey = 'd398ab55-1d02-4d4c-b985-160d6654d72a'; // API Key
-
+                const accessKey = '<spring:eval expression="@environment.getProperty('similarity.api.key')" />'; // API Key
                 const requestObject = {
                     argument: {
                         sentence1: name1,
@@ -694,6 +696,7 @@
                     };
                 }
             }
+
             // 뷰포트의 세로 길이
             var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
@@ -951,6 +954,28 @@
                 const textareas = document.querySelectorAll('textarea');
                 textareas.forEach(function (textarea) {
                     autoAdjustHeight(textarea);
+                });
+            });
+            
+            // 요구사항 유사도 검사 버튼 호출 
+            document.addEventListener("DOMContentLoaded", function() {
+                const similarityTest = document.getElementById("similarityTest");
+
+                similarityTest.addEventListener("click", function() {
+
+                    checkSimilarity(requestList)
+                        .then(similarList => {
+                            if (similarList.length === 0) {
+                                console.log('유사한 요구사항 없음');
+                            } else {
+                                for (const pair of similarList) {
+                                    console.log('유사한 요구사항 : ' , pair[0], pair[1]);
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
                 });
             });
             

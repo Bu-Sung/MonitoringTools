@@ -1,5 +1,6 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
+<div id="message" data-msg="${msg}"></div>
 <nav class="navbar navbar-expand-lg pt-2 pb-4">
     <div class="container-fluid d-flex justify-content-between">
         <ol class="breadcrumb position-absolute d-block d-lg-none d-flex"
@@ -46,7 +47,7 @@
                 <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown"
                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="ms-3 my-0 pe-2 text-center">
-                        <p class="fw-500 mb-0 text-dark">${sessionScope.user.name}<span>님</span></p>
+                        <p class="fw-500 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
                         <small class="text-gray">${hasRight == 1 ? '관리자' : '팀원'}</small>
                     </div>
                 </a>

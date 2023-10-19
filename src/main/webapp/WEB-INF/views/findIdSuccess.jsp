@@ -45,7 +45,7 @@
             <div class="card mt-8 col-lg-5 col-md-8 col-sm-11">
                 <div class="card-body my-4 text-center mx-4">
                     <h5 class="fw-700 mb-4">✨ 아이디 찾기 결과 ✨</h5>
-                    <div class="d-flex justify-content-center">아이디는&nbsp<h5 class="text-primary">아이디값 불러오기</h5>&nbsp입니다.</div>
+                        <div class="d-flex justify-content-center">아이디는&nbsp<h5 class="text-primary">${userId}</h5>&nbsp입니다.</div>
                     <a href="login" class="btn btn-outline-primary mt-4">로그인 페이지로 이동</a>
                 </div>
             </div>

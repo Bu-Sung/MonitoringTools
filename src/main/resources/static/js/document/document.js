@@ -1,18 +1,20 @@
-/*본문 관련 JQery 및 함수*/
-const contentDiv = document.querySelector("#content");
-// 본문 Div안 키를 위한 if 문
+// 본문 관련 함수
+const contentDiv = document.getElementById("content")
+// 본문 Div안 키다운 를 위한 if 문
 contentDiv.addEventListener("keydown", function (event) {
     if (event.key === "Enter") { // 생성하기
         if (!event.shiftKey) {
             event.preventDefault();
-            createDiv(event.target);
+            const newDiv = createDiv(event.target);
+            event.target.parentNode.insertAdjacentElement('afterend', newDiv);
+            newDiv.querySelector('div.document-content-div').focus();
         }
     } else if (event.key === "ArrowUp") { //  focusing 위로
         cursorFocusUp(event.target);
     } else if (event.key === "ArrowDown") { // focusing 아래로
         cursorFocusDown(event.target);
     } else if (event.key === "Backspace") { // 지우기
-        deleteDiv(event.target, contentDiv);
+        deleteDiv(event.target);
     } else if (event.key === 'Tab') {
         event.preventDefault();
         if (!event.shiftKey) {
@@ -23,6 +25,7 @@ contentDiv.addEventListener("keydown", function (event) {
     }
 });
 
+// 마크다운 확인을 위한 함수
 contentDiv.addEventListener("keyup", function (event) {
     if (event.key === ' ') {
         checkMD(event.target);
@@ -32,8 +35,12 @@ contentDiv.addEventListener("keyup", function (event) {
 //본문 시작
 contentDiv.addEventListener("click", function (event) {
     const innerDiv = contentDiv.querySelector('div');
+    
     if (innerDiv && innerDiv.classList.contains('document-content-explanation')) {
-        createDiv(event.currentTarget);
+        const newDiv = createDiv(event.currentTarget);
+        contentDiv.innerHTML = "";
+        contentDiv.appendChild(newDiv);
+        newDiv.querySelector('div.document-content-div').focus();
     }
 });
 

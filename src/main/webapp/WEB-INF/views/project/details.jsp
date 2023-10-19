@@ -129,10 +129,10 @@
                             </c:forEach>
                         </div>
                     </div>
-                    <div class=" modal-footer">
-                        <!--                        <button type="button" class="btn btn-danger" id="deleteTasks">삭제</button>-->
+<!--                    <div class=" modal-footer">
+                                                <button type="button" class="btn btn-danger" id="deleteTasks">삭제</button>
                         <button type="button" class="btn btn-primary" id="saveTasks" >저장</button>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -173,93 +173,218 @@
             // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
             offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
             /*카테고리 관리*/
+//            document.addEventListener('DOMContentLoaded', function () {
+//                const input = document.getElementById('taskInput');
+//                const addTaskButton = document.getElementById('addTask');
+//                const taskList = document.getElementById('taskList');
+//                const deleteTasksButton = document.getElementById('deleteTasks');
+//                const saveTaskButton = document.getElementById("saveTasks");
+//                const noticeCheckbox = document.getElementById('noticeCheckbox');
+//                const existingCheckboxes = Array.from(document.querySelectorAll('.modal-body .form-check .form-check-input'));
+//                //추가된 체크박스 리스트
+//                let baseCat = existingCheckboxes;
+//                let checkboxes = [];
+//                // 추가 버튼 클릭 시 체크박스 추가
+//                addTaskButton.addEventListener('click', function () {
+//                    const taskContent = input.value.trim();
+//                    if (taskContent) {
+//                        const taskItem = document.createElement('div');
+//                        taskItem.classList.add('form-check', 'mb-2');
+//                        const checkbox = document.createElement('input');
+//                        checkbox.type = 'checkbox';
+//                        checkbox.classList.add('form-check-input');
+//                        checkbox.setAttribute('data-cat', taskContent);
+//                        taskItem.appendChild(checkbox);
+//                        const label = document.createElement('label');
+//                        label.classList.add('form-check-label', 'ms-2');
+//                        label.textContent = taskContent;
+//                        taskItem.appendChild(label);
+//                        taskList.appendChild(taskItem);
+//                        // 입력 필드 비우기
+//                        // 체크박스 리스트에 추가
+//                        input.value = '';
+//                        checkboxes.push(checkbox);
+//                    }
+//                });
+//                // 삭제 버튼 클릭 시 체크된 체크박스 삭제
+//                deleteTasksButton.addEventListener('click', function () {
+//                    baseCat = baseCat.filter(function (checkbox) {
+//                        if (checkbox.checked) {
+//                            checkbox.closest('.form-check').remove();
+//                            return false; // 삭제된 체크박스는 리스트에서 제외
+//                        }
+//                        return true; // 그 외의 체크박스는 리스트에 유지
+//                    });
+//                    checkboxes = checkboxes.filter(function (checkbox) {
+//                        if (checkbox.checked) {
+//                            checkbox.closest('.form-check').remove();
+//                            return false; // 삭제된 체크박스는 리스트에서 제외
+//                        }
+//                        return true; // 그 외의 체크박스는 리스트에 유지
+//                    });
+//                    });
+//                //저장하기 버튼
+//                saveTaskButton.addEventListener('click', function () {
+//                    let saveList = [];
+//                    baseCat.forEach(item => {
+//                        saveList.push(item.dataset.cat);
+//                    });
+//                    checkboxes.forEach(item => { // 오타를 수정하였습니다.
+//                        saveList.push(item.dataset.cat);
+//                    });
+//                    const data = {
+//                        str: saveList.join(',')
+//                    };
+//                    fetch("/monitoring/project/updateCategory", {
+//                        method: 'POST', // or ''
+//                        headers: {
+//                            'Content-Type': 'application/json',
+//                        },
+//                        body: JSON.stringify(data),
+//                    })
+//                            .then(response => response.text())
+//                            .then(data => {
+//
+//                                if (data) {
+//                                    location.reload();
+//                                }
+//                            })
+//                            .catch((error) => {
+//                                console.error('Error:', error);
+//                            });
+//                });
+//                searchUsersList();
+//                getMemberList().then(() => {
+//                    reloadBaseTeam();
+//                });
+//
+//            });
+       
+    
+    
             document.addEventListener('DOMContentLoaded', function () {
-                const input = document.getElementById('taskInput');
-                const addTaskButton = document.getElementById('addTask');
-                const taskList = document.getElementById('taskList');
-                const deleteTasksButton = document.getElementById('deleteTasks');
-                const saveTaskButton = document.getElementById("saveTasks");
-                const noticeCheckbox = document.getElementById('noticeCheckbox');
-                const existingCheckboxes = Array.from(document.querySelectorAll('.modal-body .form-check .form-check-input'));
-                //추가된 체크박스 리스트
-                let baseCat = existingCheckboxes;
-                let checkboxes = [];
-                // 추가 버튼 클릭 시 체크박스 추가
-                addTaskButton.addEventListener('click', function () {
-                    const taskContent = input.value.trim();
-                    if (taskContent) {
-                        const taskItem = document.createElement('div');
-                        taskItem.classList.add('form-check', 'mb-2');
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.classList.add('form-check-input');
-                        checkbox.setAttribute('data-cat', taskContent);
-                        taskItem.appendChild(checkbox);
-                        const label = document.createElement('label');
-                        label.classList.add('form-check-label', 'ms-2');
-                        label.textContent = taskContent;
-                        taskItem.appendChild(label);
-                        taskList.appendChild(taskItem);
-                        // 입력 필드 비우기
-                        // 체크박스 리스트에 추가
-                        input.value = '';
-                        checkboxes.push(checkbox);
-                    }
-                });
-                // 삭제 버튼 클릭 시 체크된 체크박스 삭제
-                deleteTasksButton.addEventListener('click', function () {
-                    baseCat = baseCat.filter(function (checkbox) {
-                        if (checkbox.checked) {
-                            checkbox.closest('.form-check').remove();
-                            return false; // 삭제된 체크박스는 리스트에서 제외
-                        }
-                        return true; // 그 외의 체크박스는 리스트에 유지
-                    });
-                    checkboxes = checkboxes.filter(function (checkbox) {
-                        if (checkbox.checked) {
-                            checkbox.closest('.form-check').remove();
-                            return false; // 삭제된 체크박스는 리스트에서 제외
-                        }
-                        return true; // 그 외의 체크박스는 리스트에 유지
-                    });
-                });
-                //저장하기 버튼
-                saveTaskButton.addEventListener('click', function () {
-                    let saveList = [];
-                    baseCat.forEach(item => {
-                        saveList.push(item.dataset.cat);
-                    });
-                    checkboxes.forEach(item => { // 오타를 수정하였습니다.
-                        saveList.push(item.dataset.cat);
-                    });
-                    const data = {
-                        str: saveList.join(',')
-                    };
-                    fetch("/monitoring/project/updateCategory", {
-                        method: 'POST', // or ''
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data),
-                    })
-                            .then(response => response.text())
-                            .then(data => {
-
-                                if (data) {
-                                    location.reload();
-                                }
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error);
-                            });
-                });
                 searchUsersList();
                 getMemberList().then(() => {
                     reloadBaseTeam();
                 });
+            });
+            
+            
+            // 카테고리 관리 
+            let basecat = [];
+
+            function getCategoryList() {
+                basecat = [];
+                return fetch('/monitoring/project/getCategory')  // fetch 요청은 Promise를 반환합니다.
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(item => {
+                                basecat.push(item);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+            }
+
+            const addTaskButton = document.getElementById('addTask');
+            const taskInput = document.getElementById('taskInput');
+            const deleteTaskButton = document.getElementById('deleteTasks');
+            const saveTaskButton = document.getElementById('saveTasks');
+
+            function reloadBaseCategory() {
+                const taskList = document.getElementById('taskList');
+                
+                taskList.innerHTML = '';
+                for (let item of basecat) {
+                    // 체크박스 생성
+                    const taskcheckbox = document.createElement('input');
+                    taskcheckbox.type = 'checkbox';
+                    taskcheckbox.className = 'form-check-input me-2';
+                    // 라벨 생성
+                    const tasklabel = document.createElement('label');
+                    tasklabel.className = 'form-check-label mx-2';
+                    tasklabel.textContent = item;
+                    
+                    // 공지사항인 체크박스 비활성화 
+                    if (item === '공지사항') {
+                        taskcheckbox.disabled = true;
+                    }
+
+                    // 모든 요소를 함께 랩핑
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'form-check mb-2 d-flex';
+                    taskDiv.appendChild(taskcheckbox);
+                    taskDiv.appendChild(tasklabel);
+
+                    // 리스트에 추가
+                    taskList.appendChild(taskDiv);
+                }
+            }
+
+            addTaskButton.addEventListener('click', function () {
+                const cate = taskInput.value.trim();
+                if (cate === '') {
+                    alert("카테고리를 입력해주세요.");
+                    return;
+                }
+                
+                fetch('/monitoring/project/addCategory', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: cate
+                })
+                .then(response => response.json())
+                .then(isAvailable => {
+                    if (isAvailable) {
+                        getCategoryList().then(() => {
+                            reloadBaseCategory();
+                        });
+                    } else {
+                        alert("이미 존재하는 카테고리입니다.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
 
             });
 
+            deleteTaskButton.addEventListener('click', function () {
+                const taskcheckboxes = taskList.querySelectorAll('input[type="checkbox"]:checked');
+                let tasks = [];
+                taskcheckboxes.forEach(function (taskcheckbox) {
+                    // 가장 가까운 '.form-check' 요소를 찾습니다.
+                    const taskDiv = taskcheckbox.closest('.form-check');
+                    // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
+                    const tasklabel = taskDiv.querySelector('.form-check-label');
+                    task = tasklabel.textContent;
+                    tasks.push(task);
+
+                });
+                
+                if (tasks.length === 0) {
+                    alert("선택된 카테고리가 없습니다.");
+                    return;
+                }
+    
+                fetch(`/monitoring/project/deleteCategory`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(tasks)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    getCategoryList().then(() => {
+                        reloadBaseCategory();
+                    });
+                })
+                        .catch(error => console.error('Error:', error));
+            });
+            
+            
             let baseteam = [];
 
             function getMemberList() {
@@ -383,9 +508,15 @@
                                     body: JSON.stringify({uid: memberName})
                                 })
                                         .then(response => response.json())
-                                        .then(data => getMemberList().then(() => {
-                                                reloadBaseTeam();
-                                            }))
+                                        .then(isAvailable => {
+                                            if (isAvailable) {
+                                                getMemberList().then(() => {
+                                                    reloadBaseTeam();
+                                                });
+                                            } else {
+                                                alert("이미 참여 중인 팀원입니다.");
+                                            }
+                                        })
                                         .catch(error => console.error('Error:', error));
 
 //                                }
@@ -402,23 +533,35 @@
 
             deleteButton.addEventListener('click', function () {
                 const checkboxes = teamList.querySelectorAll('input[type="checkbox"]:checked');
-                let uid;
+                let uids = [];
                 checkboxes.forEach(function (checkbox) {
                     // 가장 가까운 '.form-check' 요소를 찾습니다.
                     const memberDiv = checkbox.closest('.form-check');
                     // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
                     const label = memberDiv.querySelector('.form-check-label');
                     uid = label.textContent;
-
+                    uids.push(uid);
 
                 });
-                fetch(`/monitoring/project/deleteMember/` + uid, {// uid 값을 URL에 포함시켜야 합니다.
-                    method: 'GET',
+                
+                if (uids.length === 0) {
+                    alert("선택된 팀원이 없습니다.");
+                    return;
+                }
+    
+                fetch(`/monitoring/project/deleteMember`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(uids)
                 })
-                        .then(response => response.json())
-                        .then(data => getMemberList().then(() => {
-                                reloadBaseTeam();
-                            }))
+                .then(response => response.json())
+                .then(data => {
+                    getMemberList().then(() => {
+                        reloadBaseTeam();
+                    });
+                })
                         .catch(error => console.error('Error:', error));
             });
 

@@ -50,7 +50,7 @@
                                 <form id="documentForm" method="POST" action="addMeeting" enctype="multipart/form-data"
                                     onsubmit="saveDocument()">
                                     <input class="form-control mb-4" style="font-size: 2rem; height: 4rem;" type="text"
-                                        id="title" class="document-title" placeholder="제목을 입력하세요" name="title">
+                                           id="title" class="document-title" placeholder="제목을 입력하세요" name="title" required="">
                                     <div class="row">
                                         <div class="col-md-6"> <!-- 중간 크기 이상의 화면에서는 날짜 영역을 절반의 너비로 표시 -->
                                             <table style="width: 100%;">
@@ -60,12 +60,12 @@
                                                         <div class="d-flex align-items-center mb-2">
                                                             <span style="width: 3rem;">시작</span>
                                                             <input class="form-control form-control-sm"
-                                                                type="datetime-local" id="inputDateStart" name="start">
+                                                                   type="datetime-local" id="inputDateStart" name="start" required="">
                                                         </div>
                                                         <div class="d-flex align-items-center mb-md-5 mb-4">
                                                             <span style="width: 3rem;">종료</span>
                                                             <input class="form-control form-control-sm"
-                                                                type="datetime-local" id="inputDateEnd" name="end">
+                                                                type="datetime-local" id="inputDateEnd" name="end" required>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -90,11 +90,13 @@
                                                 ## => h2<br>
                                                 ### => h3<br>
                                                 - => •<br>
+                                                /일정 => 일정 등록<br>
                                             </div>
                                         </div>
                                     </div>
+                                    
                             </div>
-                            <button class="btn btn-primary sticky-bottom" style="bottom:2rem;"
+                            <button class="btn btn-primary sticky-bottom mt-2" style="bottom:2rem;"
                                 type="submit">저장하기</button>
                             </form>
                         </div>
@@ -102,6 +104,100 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <div class="w-100 d-flex justify-content-between align-items-center">
+                   <h3 class="modal-title fw-600" id="modalTitle">일정</h3>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+           </div>
+           <div class="modal-body">
+               <table class="table table-borderless">
+                   <tr>
+                       <th style="width:25%"><label for="title">제목<span class="text-danger">*</span></label>
+                       </th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="text" id="scheduleTitle" class="form-control" required>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="startDate">시작 날짜<span class="text-danger">*</span></label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="date" id="startDate" class="form-control">
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="endDate">종료 날짜<span class="text-danger">*</span></label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <input type="date" id="endDate" class="form-control">
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th></th>
+                       <td>
+                           <div class="d-flex align-items-center justify-content-end">
+                               <button id="changeTypeBtn" type="button" class="btn btn-gray fw-500" style="width: 8rem;">시간 사용하기</button>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="content">내용</label></th>
+                       <td>
+                           <div class="d-flex align-items-center">
+                               <textArea id="content" class="form-control"></textArea>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr id="colorSelectDiv">
+                       <th><label for="colorSelect">배경</label></th>
+                       <td>
+                           <div class="w-100">
+                               <select id="colorSelect" class="w-100" style="background-color: #43aef2; appearance: none;">
+                                   <option value="#43aef2" class="m-1" style="background-color: #43aef2;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                   <option value="#84e45c" class="m-1" style="background-color: #84e45c;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                   <option value="#f24d43" class="m-1" style="background-color: #f24d43;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                               </select>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <th><label for="addMember">팀원</label></th>
+                       <td>
+                           <div id="addMemberDiv">
+                               <div class=" d-flex align-items-center w-100">
+                                   <div style="position: relative; width: auto;">
+                                       <input type="text" id="addMember" class="form-control"  autocomplete="off">
+                                       <div id="searchMember" class="dropdown-menu">
+                                       </div>
+                                   </div>
+                                   <button id="addMemberBtn" type="button" class="btn btn-gray fw-500 ms-2" style="width: 8rem;">추가</button>
+                               </div>
+                           </div>
+                           <div id="memberListDiv" class="p-1">
+                           </div>
+                       </td>
+                   </tr>
+               </table> 
+           </div>
+           <div class="modal-footer">
+               <button type="button" id="addSchedule" class="btn btn-primary fw-500"
+                   style="width: 8rem; height: 3rem;">등록하기</button>
+               <button type="button" id="editSchedule" class="btn btn-primary fw-500"
+                       style="width: 8rem; height: 3rem;">수정하기</button>
+           </div>
+       </div>
     </div>
 
     <script>
@@ -115,6 +211,8 @@
     <script charset="UTF-8" src="/monitoring/js/document/document.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/keyEvent.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/mdFunction.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
+    <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <!-- 부트스트랩 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

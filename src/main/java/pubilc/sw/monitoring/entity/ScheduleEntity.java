@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  *
@@ -55,5 +56,13 @@ public class ScheduleEntity {
     
     @Column(name="schedule_member")
     private String member; // 일정 멤버  
+    
+    @Column(name="schedule_meeting_id")
+    @ColumnDefault("-1")
+    private Long msid; // 회의록 내 일정에 대한 아이디
+    
+    @Column(name="meeting_id")
+    @ColumnDefault("0")
+    private Long mid; // 회의록 아이디
 
 }

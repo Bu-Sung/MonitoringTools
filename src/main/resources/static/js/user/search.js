@@ -55,7 +55,7 @@ function getAllMemberInfo() {
     var addMemberInput = document.getElementById("uid");
     var searchMemberDropdown = document.getElementById("searchMember");
 
-    addMemberInput.addEventListener('keyup', function () {
+    addMemberInput.addEventListener('click', function () {
         fetch('/monitoring/project/getAllMemberInfo', {})
                 .then(response => response.json())
                 .then(data => {
@@ -118,6 +118,9 @@ function searchUsersList() {
 
 /* 검색 창에 나오는 div 형식 */
 function createProfileCard(name, id) {
+    if(id !== ''){
+        
+    }
     // Create main div
     var newDiv = document.createElement("div");
     newDiv.classList.add("d-flex", "p-1");
