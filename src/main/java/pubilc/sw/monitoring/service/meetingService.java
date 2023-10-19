@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -74,21 +75,26 @@ public class meetingService {
         return true;
     }
 
-    public List<MeetingDTO> getMeetingList(Long pid, int nowPage) {
+    public Page<MeetingDTO> getMeetingList(Long pid, int nowPage) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
-        List<MeetingDTO> meetingDTO = new ArrayList();
 
-        List<MeetingEntity> meetingEntity = meetingRepository.findByProjectId(pid, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
-        for (MeetingEntity entity : meetingEntity) {
-            meetingDTO.add(MeetingDTO.builder()
+        Page<MeetingEntity> meetingEntityList = meetingRepository.findByProjectId(pid, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
+//        for (MeetingEntity entity : meetingEntity) {
+//            meetingDTO.add(MeetingDTO.builder()
+//                    .id(entity.getId())
+//                    .projectId(entity.getProjectId())
+//                    .title(entity.getTitle())
+//                    .writer(entity.getWriter())
+//                    .date(entity.getDate().format(formatter))
+//                    .build());
+//        }
+        return meetingEntityList.map(entity ->MeetingDTO.builder()
                     .id(entity.getId())
                     .projectId(entity.getProjectId())
                     .title(entity.getTitle())
                     .writer(entity.getWriter())
                     .date(entity.getDate().format(formatter))
                     .build());
-        }
-        return meetingDTO;
     }
 
     public MeetingDTO getMeeting(Long mid, Long pid) {

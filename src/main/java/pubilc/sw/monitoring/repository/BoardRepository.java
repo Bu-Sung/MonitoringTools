@@ -4,7 +4,7 @@
  */
 package pubilc.sw.monitoring.repository;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +16,5 @@ import pubilc.sw.monitoring.entity.BoardEntity;
  */
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Long>{
-    List<BoardEntity> findByPidAndCategory(int num, String category, Pageable pageable );
+    Page<BoardEntity> findByPidAndCategory(Long pid, String category, Pageable pageable );
 }
