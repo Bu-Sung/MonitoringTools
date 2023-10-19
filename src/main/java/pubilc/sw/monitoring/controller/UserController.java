@@ -53,6 +53,10 @@ public class UserController {
         return "details";
     }
     
+    @GetMapping("/changePwSuccess")
+    public String changePwSuccess(){
+        return "changePwSuccess";
+    }
     
     /**
      * 로그인을 진행하는 함수
@@ -118,7 +122,7 @@ public class UserController {
     @PostMapping("/chagePw")
     public String chagePw(@RequestParam("pw2") String pw2){
         if(userService.changPw(sessionManager.getUserId(), pw2)){
-            return "login";
+            return "changePwSuccess";
         }else{
             return "findPwSuccess";
         }
