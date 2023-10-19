@@ -27,74 +27,7 @@
 
     <body>
         <!-- navbar 영역 -->
-        <nav class="navbar navbar-expand-lg bg-white">
-            <div class="container-fluid col-lg-8 col-md-10">
-                <!-- 프로젝트 로고 및 이름 -->
-                <a class="navbar-brand" href="main">
-                    <div class="row px-2 py-3">
-                        <img src="${pageContext.request.contextPath}/asset/logo.png" alt="Logo" class="col-auto" style="width: 5rem;" height="auto">
-                        <h5 class="fw-900 m-auto col-auto">프로젝트명</h5>
-                    </div>
-                </a>
-                <!-- 메뉴 탭 (md 사이즈 미만) -->
-                <div class="d-none d-lg-block">
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle d-flex align-items-center" id="profileDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="/monitoring/asset/person.png">
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/update">회원정보관리</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout">로그아웃</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <button class="navbar-toggler border-0 d-block d-lg-none" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                    <img src="resources/img/menu.png" width="25rem;">
-                </button>
-            </div>
-        </nav>
-        <hr class="m-0">
-
-
-        <!-- offcanvas는 data-bs-target으로 컴포넌트 id를 찾기 때문에 소스코드 위치는 이동해도 상관x -->
-
-        <!-- 회원정보관리 탭 offcanvas -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header mx-3">
-                <div class="d-flex align-items-center">
-                    <!-- 프로필 이미지(동적으로 불러오기) -->
-                    <img class="rounded-circle overflow-hidden my-3" style="width: 3.5rem; height: 3.5rem;"
-                         src="resources/img/profile.png" alt="profile image">
-                    <!-- 사용자명(동적으로 불러오기) -->
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle d-flex align-items-center" id="userDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <p class="fw-500 ms-3 my-0 pe-2 mb-0 text-dark">사용자<span>님</span></p>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">로그아웃</a>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <hr class="m-0 mx-auto" width="85%">
-            <div class="offcanvas-body">
-                <div id="offcanvasMenuContent"></div>
-                <div class="nav flex-column">
-                    <div class="nav-item">
-                        <a class="nav-link text-gray"><i class="bi bi-person-gear me-2"
-                                                         style="color: #369FFF; font-size: 1.3rem;"></i>회원정보관리</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <%@include file="/jspf/topbar.jspf" %>
 
         <div class="container-fluid col-lg-8 col-md-10 mt-5">
             <div class="row">
@@ -192,8 +125,8 @@
                     </form>
                 </div>
 
-                <script src="${pageContext.request.contextPath}/js/user/user.js"></script>
-                <script src="${pageContext.request.contextPath}/js/recycleSetting.js"></script>
+                <script src="/monitoring/js/user/user.js"></script>
+                <script src="/monitoring/js/recycleSetting.js"></script>
 
                 <!-- 부트스트랩 script -->
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

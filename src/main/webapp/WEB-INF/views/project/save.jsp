@@ -30,7 +30,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
     </head>
     <body>
-        <%@include file="/jspf/topbar.jspf" %>
+        <%@include file="/jspf/topbar.jspf"%>
 
         <div class="container-fluid col-lg-8 col-md-10 mt-5">
             <div class="row">
@@ -88,6 +88,7 @@
                 </div>
             </div>
         </div>
-        <script src="${pageContext.request.contextPath}/js/recycleSetting.js"></script>
+        <script src="/monitoring/js/recycleSetting.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
