@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,14 +42,14 @@ public class BoardController {
     private final SessionManager sessionManager;
     
     @GetMapping("/list")
-    public String getProjectAllBoard(@RequestParam(value = "page", defaultValue = "1") int nowPage,Model model){
+    public String getProjectAllBoard(@RequestParam(value = "page", defaultValue = "1") int nowPage,@RequestParam(value = "category", defaultValue = "공지사항") String category,Model model){
         model.addAttribute("category", projectService.getProjectCategory(sessionManager.getProjectId()));
-        //model.addAttribute("boardList",boardService.getProjectAllBoard(pid, nowPage));
+        model.addAttribute("list", boardService.getProjectCategoryBoards(sessionManager.getProjectId(),category, nowPage));
         return "/project/board/list";
     }
     
     @PostMapping("/boards")
-    public @ResponseBody List<BoardDTO> getProjectCategoryBoards(@RequestBody Map<Object, Object> request) {
+    public @ResponseBody Page<BoardDTO> getProjectCategoryBoards(@RequestBody Map<Object, Object> request) {
         return boardService.getProjectCategoryBoards(sessionManager.getProjectId(),(String) request.get("category"), (int) request.get("page"));
     }
     
@@ -60,7 +61,7 @@ public class BoardController {
     
     @PostMapping("/addBoard")
     public String addBoard(@ModelAttribute BoardDTO boardDTO, @RequestParam(name="file", required=false) List<MultipartFile> file, RedirectAttributes attrs){
-        boardDTO.setPid(sessionManager.getProjectId().intValue());
+        boardDTO.setPid(sessionManager.getProjectId());
         boardDTO.setWriter(sessionManager.getUserName());
         if(boardService.addBoard(boardDTO, file)){
             attrs.addFlashAttribute("msg", "게시물이 등록되었습니다.");

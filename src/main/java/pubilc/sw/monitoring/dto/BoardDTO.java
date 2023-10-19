@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BoardDTO {
     private Long bid; // 게시물 아이디
-    private int pid;
+    private Long pid;
     private String writer; // 작성자
     private String title; // 제목
     private String content; // 본문 내용

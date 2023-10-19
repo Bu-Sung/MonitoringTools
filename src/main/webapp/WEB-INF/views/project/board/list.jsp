@@ -53,7 +53,7 @@
                                 </select>
                             </div>
                             <div class="card card-white-1 mt-3" style="height: 50vh;">
-                                <div class="card-body" style="overflow: auto; white-space: nowrap;">
+                                <div class="card-body">
                                     <table class="table">
                                         <thead>
                                             <tr class="text-primary">
@@ -64,10 +64,19 @@
                                             </tr>
                                         </thead>
                                         <tbody id="list">
+                                            <c:forEach items="${list.getContent()}" var="list">
+                                                <tr>
+                                                    <th>${list.category}</th>
+                                                    <th><a href="${list.bid}">${list.title}</a></th>
+                                                    <th>${list.writer}</th>
+                                                    <th>${list.date}</th>
+                                                </tr>
+                                            </c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            <%@include file="/jspf/listNav.jspf" %>
                         </div>
                     </div>
                 </div>
