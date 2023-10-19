@@ -12,7 +12,27 @@ const yearSelect = document.getElementById("year");
 const monthSelect = document.getElementById("month");
 const daySelect = document.getElementById("day");
 document.addEventListener('DOMContentLoaded', function () {
-    
+    if (window.location.href.includes("update")) {
+        document.getElementById("deleteUser").addEventListener("click", function () {
+            if (confirm("정말로 계정을 삭제하시겠습니까?")) {
+                fetch('deleteUser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            alert("회원정보가 삭제되었습니다.");
+                            window.location.href = "/monitoring";
+                        } else {
+                            alert("회원정보 삭제에 실패했습니다.")
+                        }
+                    })
+            }
+
+        });
+    }
     //비밀번호 확인
     document.getElementById("pw").addEventListener("blur", pwCheck);
     document.getElementById("pw2").addEventListener("blur", pwCheck);
@@ -26,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById("id").value === '') { // 회원 가입일 때
         //아이디 중복 확인 함수
         document.getElementById("checkid").addEventListener("click", idCheck);
-    }else{ // 회원 정보 수정일때
+    } else { // 회원 정보 수정일때
         yearSelect.value = birth.value.split('-')[0];
         monthSelect.value = birth.value.split('-')[1];
         daySelect.value = birth.value.split('-')[2];

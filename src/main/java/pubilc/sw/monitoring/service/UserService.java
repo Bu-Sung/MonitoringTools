@@ -101,9 +101,9 @@ public class UserService {
         return userRepository.updateUserInfo(userDTO.getId(), userDTO.getName(), userDTO.getEmail(), userDTO.getPhone(), userDTO.getBirth()) >=0;
     }
     
-    public boolean deleteUser(String id, String pw){
+    public boolean deleteUser(String id){
         Optional<UserEntity> userEntity = userRepository.findById(id);
-        if(userEntity.isPresent() && pw.equals(userEntity.get().getPw())){
+        if(userEntity.isPresent()){
             return userRepository.deleteUser(userEntity.get().getId()) > 0;
         }else {
             return false;
@@ -112,7 +112,12 @@ public class UserService {
     
     public String findId(UserDTO userDTO){
         String id = userRepository.findIdByNameAndPhoneAndState(userDTO.getName(), userDTO.getPhone());
-        return id.replaceAll("^(.{5}).*", "$1" + "*".repeat(id.length() - 5));
+        if(id == null){
+            return null;
+        }else{
+            return id.replaceAll("^(.{5}).*", "$1" + "*".repeat(id.length() - 5));
+        }
+        
     }
     
     public boolean findPw(UserDTO userDTO){
