@@ -44,10 +44,10 @@
                                        hidden name="pid">
 
                                 <div class="card card-white-1 p-3 mb-3">
-                                    <h6 class="mb-1 fw-600">프로젝트 명</h6>
+                                    <h6 class="mb-1 fw-600">프로젝트 명<span class="text-danger">*</span></h6>
                                     <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
                                     <input type="text" name="name" class="form-control form-control-primary"
-                                           value="${project.name}">
+                                           value="${project.name}" required>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
@@ -60,24 +60,24 @@
                                 <div class="card card-white-1 p-3 mb-3">
                                     <div class="row">
                                         <div class="col-md-6 col-12">
-                                            <h6 class="mb-3 fw-600"> 프로젝트 시작 기간</h6>
+                                            <h6 class="mb-3 fw-600"> 프로젝트 시작 기간<span class="text-danger">*</span></h6>
                                             <input type="date"
                                                    class="form-control form-control-primary mb-md-0 mb-4"
-                                                   value="${project.start}" name="start">
+                                                   value="${project.start}" name="start" required>
                                         </div>
                                         <div class="col-md-6 col-12">
-                                            <h6 class="mb-3 fw-600"> 프로젝트 종료 기간</h6>
+                                            <h6 class="mb-3 fw-600"> 프로젝트 종료 기간<span class="text-danger">*</span></h6>
                                             <input type="date" class="form-control form-control-primary"
-                                                   value="${project.end}" name="end">
+                                                   value="${project.end}" name="end" required>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
-                                    <h6 class="mb-1 fw-600">스프린트 주기</h6>
+                                    <h6 class="mb-1 fw-600">스프린트 주기<span class="text-danger">*</span></h6>
                                     <small class="text-gray mb-3">주기를 일(날짜) 단위로 작성해주세요</small>
                                     <input type="number" min="1" class="form-control form-control-primary"
-                                           value="${project.cycle}" name="cycle">
+                                           value="${project.cycle}" name="cycle" required>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
