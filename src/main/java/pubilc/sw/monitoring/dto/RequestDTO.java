@@ -27,7 +27,6 @@ public class RequestDTO {
     
     private String name;  // 요구사항 명 
     
-    private String content;  // 요구사항 상세 설명 
 
     private int date;  // 요구사항 추정치 
     
