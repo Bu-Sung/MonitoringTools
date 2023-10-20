@@ -82,33 +82,33 @@ public class GraphService {
                         Arrays.fill(allData, 0);
                         
                         for (Row row : sheet) {
-                            Cell cell3 = row.getCell(3);
-                            if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                int estimatedValue = (int) cell3.getNumericCellValue();
+                            Cell cell2 = row.getCell(2);
+                            if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                int estimatedValue = (int) cell2.getNumericCellValue();
                                 if (estimatedValue != -1) {  // 추정치 -1인 경우 제외하고 계산 
                             
                                     allData[2] = (int) allData[2] + 1;  // 총 요구사항 수 
 
-                                    Cell cell5 = row.getCell(5);
-                                    if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("완료")) {
+                                    Cell cell4 = row.getCell(4);
+                                    if (cell4 != null && cell4.getCellType() == CellType.STRING && cell4.getStringCellValue().equals("완료")) {
                                         allData[3] = (int) allData[3] + 1;  // 완료 요구사항 수 
 
-                                        if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                            allData[6] = (int) allData[6] + (int) cell3.getNumericCellValue();  // 완료 추정치 
+                                        if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                            allData[6] = (int) allData[6] + (int) cell2.getNumericCellValue();  // 완료 추정치 
                                         }
                                     }
 
-                                    Cell cell6 = row.getCell(6);
-                                    if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals("true")) {
+                                    Cell cell5 = row.getCell(5);
+                                    if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("true")) {
                                         allData[4] = (int) allData[4] + 1;  // 반복 요구사항 수 
 
-                                        if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                            allData[7] = (int) allData[7] + (int) cell3.getNumericCellValue();  // 반복 추정치 
+                                        if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                            allData[7] = (int) allData[7] + (int) cell2.getNumericCellValue();  // 반복 추정치 
                                         }
                                     }
 
-                                    if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                        allData[5] = (int) allData[5] + (int) cell3.getNumericCellValue();  // 총 추정치 
+                                    if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                        allData[5] = (int) allData[5] + (int) cell2.getNumericCellValue();  // 총 추정치 
                                     }
                                 }
                             }
@@ -166,7 +166,7 @@ public class GraphService {
                         Workbook workbook = new XSSFWorkbook(fis);
                         Sheet sheet = workbook.getSheetAt(0);
 
-                        // 엑셀의 7번째열에서 담당자 데이터 추출 
+                        // 엑셀의 6번째열에서 담당자 데이터 추출 
                         List<String> uidList = new ArrayList<>();
                         boolean firstRowSkipped = false; 
                         for (Row row : sheet) {
@@ -174,9 +174,9 @@ public class GraphService {
                                 firstRowSkipped = true;
                                 continue; // 첫 번째 행 값은 넣지않음 
                             }
-                            Cell cell7 = row.getCell(7);
-                            if (cell7 != null && cell7.getCellType() == CellType.STRING) {
-                                String uid = cell7.getStringCellValue();
+                            Cell cell6 = row.getCell(6);
+                            if (cell6 != null && cell6.getCellType() == CellType.STRING) {
+                                String uid = cell6.getStringCellValue();
                                 uidList.add(uid);
                             }
                         }
@@ -188,35 +188,35 @@ public class GraphService {
                             Arrays.fill(memberData, 0);
 
                             for (Row row : sheet) {
-                                Cell cell3 = row.getCell(3);
-                                if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                    int estimatedValue = (int) cell3.getNumericCellValue();
+                                Cell cell2 = row.getCell(2);
+                                if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                    int estimatedValue = (int) cell2.getNumericCellValue();
                                      if (estimatedValue != -1) {  // 추정치 -1인 경우 제외하고 계산 
                                          
-                                        Cell cell7 = row.getCell(7);
-                                        if (cell7 != null && cell7.getCellType() == CellType.STRING && cell7.getStringCellValue().equals(uid)) {
+                                        Cell cell6 = row.getCell(6);
+                                        if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals(uid)) {
                                             memberData[2] = (int) memberData[2] + 1;  // 총 요구사항 수 
 
-                                            Cell cell5 = row.getCell(5);
-                                            if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("완료")) {
+                                            Cell cell4 = row.getCell(4);
+                                            if (cell4 != null && cell4.getCellType() == CellType.STRING && cell4.getStringCellValue().equals("완료")) {
                                                 memberData[3] = (int) memberData[3] + 1;  // 완료 요구사항 수 
 
-                                                if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                                    memberData[6] = (int) memberData[6] + (int) cell3.getNumericCellValue();  // 완료 추정치 
+                                                if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                                    memberData[6] = (int) memberData[6] + (int) cell2.getNumericCellValue();  // 완료 추정치 
                                                 }
                                             }
 
-                                            Cell cell6 = row.getCell(6);
-                                            if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals("true")) {
+                                            Cell cell5 = row.getCell(5);
+                                            if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("true")) {
                                                 memberData[4] = (int) memberData[4] + 1;  // 반복 요구사항 수 
 
-                                                if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                                    memberData[7] = (int) memberData[7] + (int) cell3.getNumericCellValue();  // 반복 추정치 
+                                                if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                                    memberData[7] = (int) memberData[7] + (int) cell2.getNumericCellValue();  // 반복 추정치 
                                                 }
                                             }
 
-                                            if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                                memberData[5] = (int) memberData[5] + (int) cell3.getNumericCellValue();  // 총 추정치 
+                                            if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                                memberData[5] = (int) memberData[5] + (int) cell2.getNumericCellValue();  // 총 추정치 
                                             }
                                         }
                                     }
@@ -276,7 +276,7 @@ public class GraphService {
                         Workbook workbook = new XSSFWorkbook(fis);
                         Sheet sheet = workbook.getSheetAt(0);
 
-                        // 엑셀의 7번째열에서 담당자 데이터 추출 
+                        // 엑셀의 6번째열에서 담당자 데이터 추출 
                         List<String> uidList = new ArrayList<>();
                         boolean firstRowSkipped = false; 
                         for (Row row : sheet) {
@@ -284,9 +284,9 @@ public class GraphService {
                                 firstRowSkipped = true;
                                 continue; // 첫 번째 행 값은 넣지않음 
                             }
-                            Cell cell7 = row.getCell(7);
-                            if (cell7 != null && cell7.getCellType() == CellType.STRING) {
-                                String uid = cell7.getStringCellValue();
+                            Cell cell6 = row.getCell(6);
+                            if (cell6 != null && cell6.getCellType() == CellType.STRING) {
+                                String uid = cell6.getStringCellValue();
                                 uidList.add(uid);
                             }
                         }
@@ -298,16 +298,16 @@ public class GraphService {
                             Arrays.fill(memberData, 0);
 
                             for (Row row : sheet) {
-                                Cell cell7 = row.getCell(7);
-                                if (cell7 != null && cell7.getCellType() == CellType.STRING && (cell7.getStringCellValue().equals(uid) || uid.equals("all"))) {
-                                    Cell cell3 = row.getCell(3);
-                                    if (cell3 != null && cell3.getCellType() == CellType.NUMERIC) {
-                                        int date = (int) cell3.getNumericCellValue();
+                                Cell cell6 = row.getCell(6);
+                                if (cell6 != null && cell6.getCellType() == CellType.STRING && (cell6.getStringCellValue().equals(uid) || uid.equals("all"))) {
+                                    Cell cell2 = row.getCell(2);
+                                    if (cell2 != null && cell2.getCellType() == CellType.NUMERIC) {
+                                        int date = (int) cell2.getNumericCellValue();
                                         if (date != -1) {  // 추정치 -1인 경우 제외하고 계산 
                                             memberData[2] = (int) memberData[2] + date;  // 총 추정치 
 
-                                            Cell cell5 = row.getCell(5);
-                                            if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("완료")) {
+                                            Cell cell4 = row.getCell(4);
+                                            if (cell4 != null && cell4.getCellType() == CellType.STRING && cell4.getStringCellValue().equals("완료")) {
                                                 memberData[3] = (int) memberData[3] + date;  // 완료 추정치 
                                             }
                                         }
