@@ -36,7 +36,7 @@
             <div class="row">
                 <%@include file="/jspf/sidebar.jspf"%>
                 <div class="col-lg-9 col-md-9 col-12">
-                    <h5 class="card-title fw-600 mb-5 mt-2">프로젝트등록
+                    <h5 class="card-title fw-600 mb-5 mt-2">프로젝트 등록
                         <span class="text-danger" style="font-size: 1rem;">(*필수입력)</span>
                     </h5>
                     <form action="addProject" method="post">
@@ -52,25 +52,25 @@
                             </tr>
                             <!-- 프로젝트설명 -->
                             <tr>
-                                <th><label for="explanation">프로젝트<br>설명<span class="text-danger">*</span></label></th>
+                                <th><label for="explanation">프로젝트<br>설명</label></th>
                                 <td>
-                                    <input type="text" id="explanation" name="content" class="form-control" required>
+                                    <input type="text" id="explanation" name="content" class="form-control">
                                     <small class="form-text text-muted mb-3">n자 이하로 작성해주세요.</small>
                                 </td>
                             </tr>
                             <!-- 프로젝트기간 -->
                             <tr>
-                                <th><label for="date">프로젝트<br>기간</label></th>
+                                <th><label for="date">프로젝트<br>기간<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="input-group">
-                                        <input type="date" id="start_date" name="start" class="form-control">
+                                        <input type="date" id="start_date" name="start" class="form-control" required>
                                         <span class="mx-3 my-auto">-</span>
-                                        <input type="date" id="end_date" name="end" class="form-control">
+                                        <input type="date" id="end_date" name="end" class="form-control" required>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <th><label for="cycle">스프린트<br>주기</label></th>
+                                <th><label for="cycle">스프린트<br>주기<span class="text-danger">*</span></label></th>
                                 <td>
                                     <input type="number" id="cycle" name="cycle" class="form-control" required>
                                     <small class="form-text text-muted mb-3">일 단위로 작성해주세요.</small>
