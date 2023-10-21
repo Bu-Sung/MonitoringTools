@@ -7,7 +7,7 @@
         <div id="menuContent">
             <ul class="nav flex-column">
                 <li class="py-2">
-                    <a href="/monitoring/project/list" class=" text-dark">
+                    <a href="/monitoring/project/main" id="side_main" class="text-dark">
                         <div class="d-flex justify-content-start">
                             <i class="bi bi-list-ul me-2" style="color: #369FFF; font-size: 1.3rem;"></i>
                             <div class="my-auto">프로젝트 목록</div>

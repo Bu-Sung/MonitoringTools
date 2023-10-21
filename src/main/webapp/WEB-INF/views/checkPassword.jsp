@@ -33,22 +33,22 @@
         <%@include file="/jspf/topbar.jspf" %>
 
         <div class="container-fluid col-lg-8 col-md-10 mt-5">
-            <div class="row">
+            <div class="row justify-content-center">
                 <!-- side bar -->
                 <%@include file="/jspf/sidebar.jspf"%>
-                <div class="col-lg-9 col-md-9 col-11">
-                    <div class="d-flex justify-content-center">
-                        <div class="card mt-8 ">
-                            <form method="POST" action="pwcheck">
-                                <div class="card-body my-4 text-center mx-4">
-                                    <h5 class="fw-700 mb-4">비밀번호 확인</h5>
-                                    <div class="d-flex align-items-center">
-                                        <input class="form-control me-1" type="password" id="checkpw" name="pw" required/>
-                                        <button type="submit" class="btn btn-primary fw-500" style="width: 5rem; height: 3rem;">확인</button>
-                                    </div>
+                <div class="col-lg-9 col-md-9 col-11 mb-5 mt-2">
+                    <h5 class="fw-700 mb-4">회원정보 관리📌️</h5> <hr class="my-1"><hr class="m-0">
+                    <div class="row justify-content-center">
+                        <form method="POST" action="pwcheck" class=" col-lg-6 col-md-8 col-9">
+                            <div class="align-items-center text-center">
+                                <h5 class="fw-600 mt-8">비밀번호 확인</h5>
+                                <small class="text-muted" style="white-space: nowrap;">회원님의 정보를 안전하게 보관하기 위해<br>비밀번호를 한 번 더 확인하고 있어요!</small>
+                                <div class="d-flex mt-5 align-items-center">
+                                    <input class="form-control me-3" type="password" id="checkpw" name="pw" required maxlength="30"/>
+                                    <button type="submit" class="btn btn-primary fw-500" style="white-space: nowrap;">확인</button>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
