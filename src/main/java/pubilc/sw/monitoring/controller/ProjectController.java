@@ -347,6 +347,7 @@ public class ProjectController {
     @GetMapping("/sprint")
     public String sprint(Model model){
         model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
+        model.addAttribute("excelNames", requestService.getExcelNames(sessionManager.getProjectId()));// 엑셀 파일 리스트 
         return "/project/sprintList";
     }
     

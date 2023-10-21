@@ -61,11 +61,6 @@
                                                     <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
                                                     <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
                                             </div>
-                                            <c:if test="${not empty excelNames}">
-                                                <c:forEach var="file" items="${excelNames}">
-                                                    <a href="download?filename=${file}">${file}</a>
-                                                </c:forEach>
-                                            </c:if>
                                             <hr>
                                         </div>
                                         <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
