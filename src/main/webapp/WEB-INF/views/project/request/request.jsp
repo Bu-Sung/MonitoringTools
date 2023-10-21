@@ -53,9 +53,13 @@
                                             <div class="d-flex mt-4 justify-content-end">
                                                 <a id="similarityTest">
                                                     <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
-                                                    <a href="createExcel" class=" mx-2"><button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button></a>
+                                                    <a href="createExcel" class=" mx-2">
+                                                        <c:if test="${sessionScope.myInfo.hasRight != 3}">
+                                                            <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button>
+                                                        </c:if>
+                                                    </a>
                                                     <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
-                                                    <button id="saveButton" class="btn btn-primary" style="display: none;">요구사항 저장</button>
+                                                    <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
                                             </div>
                                             <c:if test="${not empty excelNames}">
                                                 <c:forEach var="file" items="${excelNames}">
@@ -121,7 +125,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <c:if test="${sessionScope.hasRight != 3}">
+                                        <c:if test="${sessionScope.myInfo.hasRight != 3}">
                                             <div class="row mx-1 my-4">
                                                 <button id="addRequestNew" class="btn btn-sm btn-outline-primary btn-block "><h5>+</h5></button>
                                             </div>
@@ -260,9 +264,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="saveRequest" class="btn btn-primary fw-500"
-                                style="width: 8rem; height: 3rem;">등록하기</button>
+                                style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>등록하기</button>
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
-                                style="width: 8rem; height: 3rem;" hidden>삭제하기</button>
+                                style="width: 8rem; height: 3rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
                     </div>
                 </div>
             </div>

@@ -83,14 +83,14 @@
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-3 fw-600">게시글 카테고리</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
-                                            data-bs-toggle="modal" data-bs-target="#categoryModal">카테고리
+                                            data-bs-toggle="modal" data-bs-target="#categoryModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>카테고리
                                         관리</button>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-5">
                                     <h6 class="mb-3 fw-600">팀원</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
-                                            data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
+                                            data-bs-toggle="modal" data-bs-target="#teamModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>팀원 관리</button>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>저장하기</button>
                             </form>

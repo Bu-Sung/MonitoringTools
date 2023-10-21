@@ -87,7 +87,6 @@ public class RequestService {
                     .pid(requestEntity.getPid())
                     .rid(requestEntity.getRid())
                     .name(requestEntity.getName())
-                    .content(requestEntity.getContent())
                     .date(requestEntity.getDate())
                     .rank(requestEntity.getRank())
                     .stage(requestEntity.getStage())
@@ -121,7 +120,6 @@ public class RequestService {
         requestEntity.setFrid(requestDTO.getFrid());
         requestEntity.setPid(requestDTO.getPid());
         requestEntity.setName(requestDTO.getName());
-        requestEntity.setContent(requestDTO.getContent());
         requestEntity.setDate(requestDTO.getDate());
         requestEntity.setRank(requestDTO.getRank());
         requestEntity.setStage(requestDTO.getStage());
@@ -151,7 +149,6 @@ public class RequestService {
             requestEntity.setFrid(requestDTO.getFrid());
             requestEntity.setPid(requestDTO.getPid());
             requestEntity.setName(requestDTO.getName());
-            requestEntity.setContent(requestDTO.getContent());
             requestEntity.setDate(requestDTO.getDate());
             requestEntity.setRank(requestDTO.getRank());
             requestEntity.setStage(requestDTO.getStage());
@@ -257,7 +254,7 @@ public class RequestService {
 
             // 헤더 생성
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"요구사항ID", "요구사항명", "상세설명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
+            String[] headers = {"요구사항ID", "요구사항명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
 
             for (int i = 0; i < headers.length; i++) {
                 Cell headerCell = headerRow.createCell(i);
@@ -271,13 +268,12 @@ public class RequestService {
                     Row row = sheet.createRow(rowNum++);
                     row.createCell(0).setCellValue(rowNum - 1);
                     row.createCell(1).setCellValue(requestDTO.getName());
-                    row.createCell(2).setCellValue(requestDTO.getContent());
-                    row.createCell(3).setCellValue(requestDTO.getDate());
-                    row.createCell(4).setCellValue(requestDTO.getRank());
-                    row.createCell(5).setCellValue(requestDTO.getStage());
-                    row.createCell(6).setCellValue(requestDTO.getTarget());
-                    row.createCell(7).setCellValue(requestDTO.getUsername());
-                    row.createCell(8).setCellValue(requestDTO.getNote());
+                    row.createCell(2).setCellValue(requestDTO.getDate());
+                    row.createCell(3).setCellValue(requestDTO.getRank());
+                    row.createCell(4).setCellValue(requestDTO.getStage());
+                    row.createCell(5).setCellValue(requestDTO.getTarget());
+                    row.createCell(6).setCellValue(requestDTO.getUsername());
+                    row.createCell(7).setCellValue(requestDTO.getNote());
                 }
             }
 
@@ -359,7 +355,7 @@ public class RequestService {
 
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"요구사항ID", "요구사항명", "상세설명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
+        String[] headers = {"요구사항ID", "요구사항명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
 
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
@@ -372,13 +368,12 @@ public class RequestService {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(String.valueOf(rowNum - 1));
             row.createCell(1).setCellValue(requestDTO.getName());
-            row.createCell(2).setCellValue(requestDTO.getContent());
-            row.createCell(3).setCellValue(requestDTO.getDate());
-            row.createCell(4).setCellValue(requestDTO.getRank());
-            row.createCell(5).setCellValue(requestDTO.getStage());
-            row.createCell(6).setCellValue(requestDTO.getTarget());
-            row.createCell(7).setCellValue(requestDTO.getUsername());
-            row.createCell(8).setCellValue(requestDTO.getNote());
+            row.createCell(2).setCellValue(requestDTO.getDate());
+            row.createCell(3).setCellValue(requestDTO.getRank());
+            row.createCell(4).setCellValue(requestDTO.getStage());
+            row.createCell(5).setCellValue(requestDTO.getTarget());
+            row.createCell(6).setCellValue(requestDTO.getUsername());
+            row.createCell(7).setCellValue(requestDTO.getNote());
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -415,7 +410,6 @@ public class RequestService {
                     .pid(requestEntity.getPid())
                     .rid(requestEntity.getRid())
                     .name(requestEntity.getName())
-                    .content(requestEntity.getContent())
                     .date(requestEntity.getDate())
                     .rank(requestEntity.getRank())
                     .stage(requestEntity.getStage())
@@ -462,20 +456,19 @@ public class RequestService {
                         Sheet sheet = workbook.getSheetAt(0);
 
                         for (Row row : sheet) {
-                            Cell cell6 = row.getCell(6);
-                            if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals("true")) {
+                            Cell cell5 = row.getCell(5);
+                            if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("true")) {
 
                                 RequestDTO requestDTO = new RequestDTO();
                                 requestDTO.setPid(pid);
                                 requestDTO.setRid((String) row.getCell(0).getStringCellValue());
                                 requestDTO.setName((String) row.getCell(1).getStringCellValue());
-                                requestDTO.setContent((String) row.getCell(2).getStringCellValue());
-                                requestDTO.setDate((int) row.getCell(3).getNumericCellValue());
-                                requestDTO.setRank((String) row.getCell(4).getStringCellValue());
-                                requestDTO.setStage((String) row.getCell(5).getStringCellValue());
-                                requestDTO.setTarget((String) row.getCell(6).getStringCellValue());
-                                requestDTO.setUsername((String) row.getCell(7).getStringCellValue());
-                                requestDTO.setNote((String) row.getCell(8).getStringCellValue());
+                                requestDTO.setDate((int) row.getCell(2).getNumericCellValue());
+                                requestDTO.setRank((String) row.getCell(3).getStringCellValue());
+                                requestDTO.setStage((String) row.getCell(4).getStringCellValue());
+                                requestDTO.setTarget((String) row.getCell(5).getStringCellValue());
+                                requestDTO.setUsername((String) row.getCell(6).getStringCellValue());
+                                requestDTO.setNote((String) row.getCell(7).getStringCellValue());
                                 requestDTO.setRequestDate(requestDateInt);  // 요구사항 파일 날짜 
 
                                 trueTargetMap.computeIfAbsent(requestDateInt, k -> new ArrayList<>()).add(requestDTO);
