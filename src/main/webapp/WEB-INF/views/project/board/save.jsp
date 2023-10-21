@@ -56,7 +56,7 @@
                                     </div>
                                     <input class="form-control mb-4"
                                            style="font-size: 2rem; height: 4rem;" type="text" id="title"
-                                           class="document-title" placeholder="제목을 입력하세요" name="title">
+                                           class="document-title" placeholder="제목을 입력하세요" name="title" maxlength="40" required>
 
                                     <input class="form-control border mb-3" type="file" name="file"
                                            multiple>

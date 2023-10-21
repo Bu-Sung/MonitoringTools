@@ -44,15 +44,15 @@
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
                                 <div class="d-flex justify-content-between">
-                                    <div class="meeing-title" style="font-size: 2rem; height: 4rem;">
+                                    <div class="meeing-title" style="font-size: 2rem;">
                                         ${board.title}</div>
                                         <c:if
                                             test="${sessionScope.myInfo.hasRight == 1 || (sessionScope.myInfo.hasRight == 2 && sessionScope.myInfo.name == meeting.writer)}">
-                                        <div>
-                                            <a href="update/${board.bid}"><button type="button"
-                                                                                  class="btn btn-primary">수정</button></a>
-                                            <a href="delete/${board.bid}"><button type="button"
-                                                                                  class="btn btn-danger">삭제</button></a>
+                                        <div class="d-flex">
+                                            <a href="update/${board.bid}" style="height:2rem;"><button type="button"
+                                                                                  class="btn btn-primary me-2" style="width:4rem;">수정</button></a>
+                                            <a href="delete/${board.bid}" style="height:2rem;"><button type="button"
+                                                                                  class="btn btn-danger" style="width:4rem;">삭제</button></a>
                                         </div>
                                     </c:if>
                                 </div>
@@ -79,7 +79,7 @@
                                     ${board.content}
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" data-bs-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">댓글 보기</button>
+                            <button type="button" class="btn btn-secondary mt-3 p-2" data-bs-toggle="collapse" data-bs-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">댓글 보기</button>
 
                             <!--여기서부터 댓글 div-->
                             <div id="commentContainer" class="collapse mt-3">
