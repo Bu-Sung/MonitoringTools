@@ -85,11 +85,6 @@
                                                         </th>
                                                         <th>
                                                             <div class="d-flex justify-content-center align-items-center">
-                                                                상세설명
-                                                            </div>
-                                                        </th>
-                                                        <th>
-                                                            <div class="d-flex justify-content-center align-items-center">
                                                                 추정치
                                                             </div>
                                                         </th>
@@ -159,7 +154,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="w-100 d-flex justify-content-between align-items-center">
-                            <h3 class="modal-title fw-600" id="modalTitle">요구사항 등록하기</h3>
+                            <p class="modal-title fw-600" id="modalTitle">요구사항</p>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
@@ -173,14 +168,6 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <input type="text" id="rname" name="rname" class="form-control"  autocomplete="off" required>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th style="vertical-align: middle;"><label for="content">설명</label></th>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <input type="text" id="content" name="content" class="form-control"  autocomplete="off">
                                     </div>
                                 </td>
                             </tr>
@@ -303,7 +290,6 @@
                 frid: 0,
                 rid: '',
                 name: '',
-                content: '',
                 date: 1,
                 rank: '하',
                 stage: "대기",
@@ -317,7 +303,6 @@
                 frid.value = request.frid;
                 rid.value = request.rid;
                 rname.value = request.name;
-                content.value = request.content;
                 date.value = request.date;
                 rank.value = request.rank;
                 stage.value = request.stage;
@@ -374,10 +359,7 @@
                     var name = document.createElement('td');
                     name.innerText = item.name;
                     tr.appendChild(name);
-
-                    var content = document.createElement('td');
-                    content.innerText = item.content;
-                    tr.appendChild(content);
+                    
 
                     var date = document.createElement('td');
                     var dateDiv = document.createElement('div');
@@ -440,7 +422,6 @@
                                 frid: tmp.frid,
                                 rid: tmp.rid,
                                 name: tmp.name,
-                                content: tmp.content,
                                 date: tmp.date,
                                 rank: tmp.rank,
                                 stage: this.value,
@@ -496,7 +477,6 @@
                                 frid: tmp.frid,
                                 rid: tmp.rid,
                                 name: tmp.name,
-                                content: tmp.content,
                                 date: tmp.date,
                                 rank: tmp.rank,
                                 stage: tmp.stage,
@@ -540,7 +520,6 @@
                                 frid: tmp.frid,
                                 rid: tmp.rid,
                                 name: tmp.name,
-                                content: tmp.content,
                                 date: tmp.date,
                                 rank: tmp.rank,
                                 stage: tmp.stage,
@@ -575,7 +554,6 @@
                                 frid: parseInt(frid.value),
                                 rid: requestList.length + 1,
                                 name: rname.value,
-                                content: content.value,
                                 date: date.value,
                                 rank: rank.value,
                                 stage: stage.value,
@@ -739,18 +717,9 @@
                     textarea2.addEventListener('input', function () {
                         autoAdjustHeight(this);
                     });
-
                     cell2.appendChild(textarea2);
-                    const cell3 = newRow.insertCell(2);
-                    const textarea3 = document.createElement('textarea');
-                    textarea3.classList.add('form-control', 'auto-height');
-                    textarea3.setAttribute('name', 'newColumn3');
-                    textarea3.addEventListener('input', function () {
-                        autoAdjustHeight(this);
-                    });
 
-                    cell3.appendChild(textarea3);
-                    const cell4 = newRow.insertCell(3);
+                    const cell3 = newRow.insertCell(2);
                     const selectBox = document.createElement('select');
                     selectBox.classList.add('form-control', 'text-center', 'p-0');
                     selectBox.setAttribute('name', 'newColumn4');
@@ -766,8 +735,9 @@
                         selectBox.add(option);
                     }
 
-                    cell4.appendChild(selectBox);
-                    const cell5 = newRow.insertCell(4);
+                    cell3.appendChild(selectBox);
+                    
+                    const cell4 = newRow.insertCell(3);
                     const selectBox2 = document.createElement('select');
                     selectBox2.classList.add('form-control', 'text-center', 'p-0');
                     selectBox2.setAttribute('name', 'newColumn5');
@@ -782,9 +752,9 @@
                     const optionBottom = document.createElement('option');
                     optionBottom.text = '하';
                     selectBox2.add(optionBottom);
-                    cell5.appendChild(selectBox2);
+                    cell4.appendChild(selectBox2);
 
-                    const cell6 = newRow.insertCell(5);
+                    const cell5 = newRow.insertCell(4);
                     const selectBox3 = document.createElement('select');
                     selectBox3.classList.add('form-control', 'text-center', 'p-0');
                     selectBox3.setAttribute('name', 'newColumn6');
@@ -808,9 +778,9 @@
                     const op6 = document.createElement('option');
                     op6.text = '완료';
                     selectBox3.add(op6);
-                    cell6.appendChild(selectBox3);
+                    cell5.appendChild(selectBox3);
 
-                    const cell7 = newRow.insertCell(6);
+                    const cell6 = newRow.insertCell(5);
                     const selectBox4 = document.createElement('select');
                     selectBox4.classList.add('form-control', 'text-center', 'p-0');
                     selectBox4.setAttribute('name', 'newColumn7');
@@ -822,25 +792,23 @@
                     const optionTrue = document.createElement('option');
                     optionTrue.text = 'true';
                     selectBox4.add(optionTrue);
-                    cell7.appendChild(selectBox4);
+                    cell6.appendChild(selectBox4);
 
-                    // cell8에 input 요소 추가
-                    const cell8 = newRow.insertCell(7);
+                    const cell7 = newRow.insertCell(6);
                     const input = document.createElement('input');
                     input.type = 'text';
                     input.classList.add('form-control');
                     input.setAttribute('name', 'newColumn8');
-                    cell8.appendChild(input);
+                    cell7.appendChild(input);
 
-                    // cell9에 textarea 요소 추가
-                    const cell9 = newRow.insertCell(8);
+                    const cell8 = newRow.insertCell(7);
                     const textarea = document.createElement('textarea');
                     textarea.classList.add('form-control', 'auto-height');
                     textarea.setAttribute('name', 'newColumn9');
                     textarea.addEventListener('input', function () {
                         autoAdjustHeight(this);
                     });
-                    cell9.appendChild(textarea);
+                    cell8.appendChild(textarea);
 
                     // + 버튼을 클릭하면 저장 버튼을 보이게 설정
                     saveButton.style.display = "inline";
@@ -878,13 +846,12 @@
                         const row = rows[i];
 
                         const textarea2 = row.cells[1].querySelector('textarea');
-                        const textarea3 = row.cells[2].querySelector('textarea');
-                        const selectBox = row.cells[3].querySelector('select');
-                        const selectBox2 = row.cells[4].querySelector('select');
-                        const selectBox3 = row.cells[5].querySelector('select');
-                        const selectBox4 = row.cells[6].querySelector('select');
-                        const input = row.cells[7].querySelector('input');
-                        const textarea = row.cells[8].querySelector('textarea');
+                        const selectBox = row.cells[2].querySelector('select');
+                        const selectBox2 = row.cells[3].querySelector('select');
+                        const selectBox3 = row.cells[4].querySelector('select');
+                        const selectBox4 = row.cells[5].querySelector('select');
+                        const input = row.cells[6].querySelector('input');
+                        const textarea = row.cells[7].querySelector('textarea');
 
                         if (textarea2 && input) {
                             if (textarea2.value.trim() === "") { //요구사항 공백인지 체크
@@ -901,7 +868,6 @@
                             requestData.push({
                                 rid: listCount + i,
                                 name: textarea2.value,
-                                content: textarea3.value,
                                 date: selectBox.value,
                                 rank: selectBox2.value,
                                 stage: selectBox3.value,
