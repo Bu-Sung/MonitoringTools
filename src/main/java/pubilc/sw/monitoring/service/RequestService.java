@@ -13,19 +13,20 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -431,21 +432,21 @@ public class RequestService {
     public Map<Integer, List<RequestDTO>> getTrueTarget(Long pid) {
         String directoryPath = ctx.getRealPath(requestFolderPath) + File.separator + pid;
         String fileNamePattern = "Request\\d{6}\\.xlsx";  // 파일 이름 패턴 
-
+DataFormatter dataFormatter = new DataFormatter();
         File directory = new File(directoryPath);
-        Map<Integer, List<RequestDTO>> trueTargetMap = new HashMap<>();
+        Map<Integer, List<RequestDTO>> trueTargetMap = new TreeMap<>(Comparator.reverseOrder());
 
         if (directory.exists() && directory.isDirectory()) {
             File[] files = directory.listFiles((dir, name) -> name.matches(fileNamePattern));  // 디렉토리 내에 해당 패턴을 가진 파일 목록
 
             if (files != null) {
                 // 파일을 날짜 순으로 정렬
-                Arrays.sort(files, (file1, file2) -> {
-                    String dateStr1 = file1.getName().replaceAll("[^0-9]", "");
-                    String dateStr2 = file2.getName().replaceAll("[^0-9]", "");
-                    return dateStr1.compareTo(dateStr2);
-                });
-
+//                Arrays.sort(files, (file1, file2) -> {
+//                    String dateStr1 = file1.getName().replaceAll("[^0-9]", "");
+//                    String dateStr2 = file2.getName().replaceAll("[^0-9]", "");
+//                    return dateStr2.compareTo(dateStr1);
+//                });
+                
                 for (File file : files) {
                     try {
                         String fileName = file.getName();
@@ -458,23 +459,23 @@ public class RequestService {
                         for (Row row : sheet) {
                             Cell cell5 = row.getCell(5);
                             if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("true")) {
-
+                                
                                 RequestDTO requestDTO = new RequestDTO();
                                 requestDTO.setPid(pid);
-                                requestDTO.setRid((String) row.getCell(0).getStringCellValue());
+                                requestDTO.setRid(dataFormatter.formatCellValue(row.getCell(0)));
                                 requestDTO.setName((String) row.getCell(1).getStringCellValue());
                                 requestDTO.setDate((int) row.getCell(2).getNumericCellValue());
                                 requestDTO.setRank((String) row.getCell(3).getStringCellValue());
                                 requestDTO.setStage((String) row.getCell(4).getStringCellValue());
                                 requestDTO.setTarget((String) row.getCell(5).getStringCellValue());
                                 requestDTO.setUsername((String) row.getCell(6).getStringCellValue());
-                                requestDTO.setNote((String) row.getCell(7).getStringCellValue());
+                                requestDTO.setNote("");
+                                
                                 requestDTO.setRequestDate(requestDateInt);  // 요구사항 파일 날짜 
 
                                 trueTargetMap.computeIfAbsent(requestDateInt, k -> new ArrayList<>()).add(requestDTO);
                             }
                         }
-
                         fis.close();
 
                     } catch (IOException e) {
@@ -487,7 +488,6 @@ public class RequestService {
         } else {
             log.error("디렉토리가 존재하지 않습니다.");
         }
-
         return trueTargetMap;
     }
 
