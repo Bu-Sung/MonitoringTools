@@ -33,10 +33,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         document.getElementById('pwChangeForm').addEventListener('submit', function (event) {
+            //전화번호 유효성 검사
+            const phone2Value = document.getElementById('phone2').value;
+            const phone3Value = document.getElementById('phone3').value;
             if (!checkPw) {
                 event.preventDefault();
                 alert("비밀번호를 확인하여주세요.");
+            } else if (!/^\d+$/.test(phone2Value) || phone2Value.length < 4 || !/^\d+$/.test(phone3Value) || phone3Value.length < 4) {
+                event.preventDefault();
+                alert('전화번호는 숫자여야 합니다.');
             }
+        });
+
+        document.getElementById("updateUserInfo").addEventListener('submit', function (event) {
+            birth.value = yearSelect.value + '-' + monthSelect.value + '-' + daySelect.value;
+            var phone1 = document.getElementById("phone1");
+            phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
         });
     }
     //비밀번호 확인
@@ -205,10 +217,4 @@ function checkSignUp() {
         phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
         return true;
     }
-}
-
-function updateUser() {
-    birth.value = yearSelect.value + '-' + monthSelect.value + '-' + daySelect.value;
-    var phone1 = document.getElementById("phone1");
-    phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
 }
