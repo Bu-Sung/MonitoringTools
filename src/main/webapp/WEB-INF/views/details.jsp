@@ -52,7 +52,7 @@
                     <div class="tab-content" id="myTabContent">
                         <!--회원정보 수정 탭-->
                         <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <form action="update/${user.getId()}" method="POST" onsubmit="return checkSignUp()">
+                            <form action="update/${user.getId()}" method="POST" onsubmit="updateUser()">
                                 <table class="table table-borderless mt-4">
                                     <!-- 아이디 -->
                                     <tr>
@@ -122,11 +122,11 @@
 
                         <!--비밀번호 변경 탭-->
                         <div class="tab-pane fade" id="edit-password" role="tabpanel" aria-labelledby="edit-password-tab">
-                            <form method="POST">
+                            <form id="pwChangeForm" method="POST" action="chagePw">
                                 <div class="d-flex row mt-5 mb-3 p-2">
                                     <b class="col-3" style="white-space: nowrap;">비밀번호<span class="text-danger">*</span></b>
                                     <div class="col-9">
-                                        <input type="password" id="pw" class="form-control" required maxlength="20">
+                                        <input type="password" id="pw" name="pw" class="form-control" required maxlength="20">
                                         <small class="form-text text-muted p-1">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
                                     </div>
                                 </div>
@@ -134,10 +134,11 @@
                                     <b class="col-3" style="white-space: nowrap;">비밀번호 확인<span class="text-danger">*</span></b>
                                     <div class="col-9">
                                         <input type="password" id="pw2" class="form-control" required maxlength="20">
+                                        <small id="pw-result" class=" px-1 position-absolute"></small>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mt-5">
-                                    <button class="btn btn-primary fw-500" style="width: 8rem; height: 3rem;">변경하기</button하기>
+                                    <button id="changePwBtn" type="submit" class="btn btn-primary fw-500" style="width: 8rem; height: 3rem;">변경하기</button>
                                 </div>
                             </form>
                         </div>
@@ -193,6 +194,7 @@
                                     }
                                 });
                 </script>
+                <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/user/user.js"></script>
                 <!-- 부트스트랩 script -->
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -21,16 +21,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                 }).then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            alert("회원정보가 삭제되었습니다.");
-                            window.location.href = "/monitoring";
-                        } else {
-                            alert("회원정보 삭제에 실패했습니다.")
-                        }
-                    })
+                        .then(data => {
+                            if (data) {
+                                alert("회원정보가 삭제되었습니다.");
+                                window.location.href = "/monitoring";
+                            } else {
+                                alert("회원정보 삭제에 실패했습니다.")
+                            }
+                        })
             }
+        });
 
+        document.getElementById('pwChangeForm').addEventListener('submit', function (event) {
+            if (!checkPw) {
+                event.preventDefault();
+                alert("비밀번호를 확인하여주세요.");
+            }
         });
     }
     //비밀번호 확인
@@ -53,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("phone1").value = phone.value.split('-')[0];
         phone2.value = phone.value.split('-')[1];
         phone3.value = phone.value.split('-')[2];
-        checkId = true;
     }
 });
 
@@ -186,7 +191,6 @@ function settingDays() {
     daySelect.value = 1;
 }
 
-
 //회원가입 확인
 function checkSignUp() {
     if (!checkId) {
@@ -201,4 +205,10 @@ function checkSignUp() {
         phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
         return true;
     }
+}
+
+function updateUser() {
+    birth.value = yearSelect.value + '-' + monthSelect.value + '-' + daySelect.value;
+    var phone1 = document.getElementById("phone1");
+    phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
 }
