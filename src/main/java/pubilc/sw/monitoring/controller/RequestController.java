@@ -45,9 +45,6 @@ public class RequestController {
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
         model.addAttribute("requestDTOs", requestDTOs);  // 요구사항 목록 
 
-        List<String> excelNames = requestService.getExcelNames(sessionManager.getProjectId());  // 엑셀 파일 리스트 
-        model.addAttribute("excelNames", excelNames);
-
         return "project/request/request";
     }
 

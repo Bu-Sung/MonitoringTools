@@ -49,25 +49,28 @@
                             <c:forEach var="entry" items="${requestMap}" varStatus="status">
                                 <div class="card card-white-1 mb-3">
                                     <div class="card-body" style="overflow: auto; white-space: nowrap;">
-                                        <p class="px-2 fw-600 mb-3 bg-yellow">No.<span>${fn:length(requestMap) - status.index}</span></p>
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <p class="px-2 fw-600 bg-yellow m-0">No.<span>${fn:length(requestMap) - status.index}</span><small class="text-gray">(${entry.key})</small></p>
+                                            <a href="request/download?filename=Request${entry.key}.xlsx"><button type="button" class="btn btn-primary" >파일 다운로드</button></a>
+                                        </div>
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th>진행날짜</th>
+                                                    <th class="text-center">구분</th>
                                                     <th>요구사항 명</th>
-                                                    <th>추정치</th>
-                                                    <th>진행사항</th>
-                                                    <th>담당자</th>
+                                                    <th class="text-center">추정치</th>
+                                                    <th class="text-center">진행사항</th>
+                                                    <th class="text-center">담당자</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <c:forEach var="list" items="${entry.value}">
                                                     <tr>
-                                                        <td>${list.requestDate}</td>
+                                                        <td class="text-center">${list.rid}</td>
                                                         <td>${list.name}</td>
-                                                        <td>${list.date}</td>
-                                                        <td>${list.stage}</td>
-                                                        <td>${list.username}</td>
+                                                        <td class="text-center">${list.date}</td>
+                                                        <td class="text-center">${list.stage}</td>
+                                                        <td class="text-center">${list.username}</td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
