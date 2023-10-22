@@ -64,55 +64,58 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <c:forEach var="list" items="${entry.value}">
-                                                    <tr>
-                                                        <td class="text-center">${list.rid}</td>
-                                                        <td>${list.name}</td>
-                                                        <td class="text-center">${list.date}</td>
-                                                        <td class="text-center">${list.stage}</td>
-                                                        <td class="text-center">${list.username}</td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            <c:if test="${empty entry.value[0]}" >
+                                                <tr><td colspan='5' style='text-align:center'>해당 기간의 스프린트 내역이 없습니다.</td></tr>
+                                            </c:if>
+                                            <c:forEach var="list" items="${entry.value}">
+                                                <tr>
+                                                    <td class="text-center">${list.rid}</td>
+                                                    <td>${list.name}</td>
+                                                    <td class="text-center">${list.date}</td>
+                                                    <td class="text-center">${list.stage}</td>
+                                                    <td class="text-center">${list.username}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </c:forEach>
-                        </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var sprintElement = document.getElementById('sprintCollapse');
-                if (sprintElement) {
-                    sprintElement.classList.add('show'); // 스프린트를 기본적으로 펼쳐진 상태
-                }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var sprintElement = document.getElementById('sprintCollapse');
+            if (sprintElement) {
+                sprintElement.classList.add('show'); // 스프린트를 기본적으로 펼쳐진 상태
+            }
 
-                var sprintListElement = document.getElementById('side_sprintList');
-                if (sprintListElement) {
-                    sprintListElement.classList.remove('img-opacity'); // 스프린트 목록에서 'img-opacity' 클래스 제거
-                }
+            var sprintListElement = document.getElementById('side_sprintList');
+            if (sprintListElement) {
+                sprintListElement.classList.remove('img-opacity'); // 스프린트 목록에서 'img-opacity' 클래스 제거
+            }
 
-                var sprintLinkElement = document.getElementById('sprintLink'); // 스프린트 링크 요소 가져오기
-                if (sprintLinkElement) {
-                    sprintLinkElement.classList.remove('img-opacity'); // 스프린트 링크에서 'img-opacity' 클래스 제거
-                }
+            var sprintLinkElement = document.getElementById('sprintLink'); // 스프린트 링크 요소 가져오기
+            if (sprintLinkElement) {
+                sprintLinkElement.classList.remove('img-opacity'); // 스프린트 링크에서 'img-opacity' 클래스 제거
+            }
 
-                const dashboardMenu = document.getElementById("dashboardMenu");
-                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+            const dashboardMenu = document.getElementById("dashboardMenu");
+            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
 
-                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-                // offcanvas에서 스프린트 목록 진하게 보이도록 수정
-                offcanvasDashboardMenu.classList.remove('img-opacity');
-            });
+            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+            // offcanvas에서 스프린트 목록 진하게 보이도록 수정
+            offcanvasDashboardMenu.classList.remove('img-opacity');
+        });
 
-        </script>
-        <!-- 부트스트랩 script -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    </script>
+    <!-- 부트스트랩 script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 
 </html>

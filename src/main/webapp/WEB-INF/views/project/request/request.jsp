@@ -28,6 +28,7 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="/monitoring/css/kimleepark.css">
+        <%@include file="/jspf/msg.jspf"%>
     </head>
     <body>
         <div class="d-flex col-11 mx-auto mt-5">
@@ -53,11 +54,11 @@
                                             <div class="d-flex mt-4 justify-content-end">
                                                 <a id="similarityTest">
                                                     <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
-                                                    <a href="createExcel" class=" mx-2">
+                                                    
                                                         <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                                            <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button>
+                                                            <a href="createExcel" class=" mx-2"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
+
                                                         </c:if>
-                                                    </a>
                                                     <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
                                                     <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
                                             </div>

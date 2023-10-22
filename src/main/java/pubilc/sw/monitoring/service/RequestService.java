@@ -282,8 +282,7 @@ public class RequestService {
             String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd")) + ".xlsx";
             File file = new File(ctx.getRealPath(requestFolderPath) + File.separator + pid, fileName);
 
-            saveFile(workbook, file.getParentFile().getAbsolutePath(), file.getName());  // 파일 저장 
-            status = true;
+            status = saveFile(workbook, file.getParentFile().getAbsolutePath(), file.getName());  // 파일 저장 
 
         } catch (IOException ex) {
             log.error("createRequestExcel() error: {} ", ex.getMessage());
@@ -293,9 +292,8 @@ public class RequestService {
     }
 
     // 파일 저장 
-    private void saveFile(Workbook workbook, String folderPath, String fileName) throws IOException {
+    private boolean saveFile(Workbook workbook, String folderPath, String fileName) throws IOException {
         File folder = new File(folderPath);
-
         // 파일 폴더가 존재하지 않는 경우 폴더 생성
         if (!folder.exists()) {
             folder.mkdirs();
@@ -305,6 +303,7 @@ public class RequestService {
         try (FileOutputStream fileOut = new FileOutputStream(file)) {
             workbook.write(fileOut);
         }
+        return file.exists();
     }
 
     /**
@@ -446,7 +445,7 @@ DataFormatter dataFormatter = new DataFormatter();
 //                    String dateStr2 = file2.getName().replaceAll("[^0-9]", "");
 //                    return dateStr2.compareTo(dateStr1);
 //                });
-                
+                boolean exist = false;
                 for (File file : files) {
                     try {
                         String fileName = file.getName();
@@ -459,7 +458,7 @@ DataFormatter dataFormatter = new DataFormatter();
                         for (Row row : sheet) {
                             Cell cell5 = row.getCell(5);
                             if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("true")) {
-                                
+                                exist = true;
                                 RequestDTO requestDTO = new RequestDTO();
                                 requestDTO.setPid(pid);
                                 requestDTO.setRid(dataFormatter.formatCellValue(row.getCell(0)));
@@ -476,6 +475,7 @@ DataFormatter dataFormatter = new DataFormatter();
                                 trueTargetMap.computeIfAbsent(requestDateInt, k -> new ArrayList<>()).add(requestDTO);
                             }
                         }
+                        trueTargetMap.computeIfAbsent(requestDateInt, k -> new ArrayList<>()).add(null);
                         fis.close();
 
                     } catch (IOException e) {
