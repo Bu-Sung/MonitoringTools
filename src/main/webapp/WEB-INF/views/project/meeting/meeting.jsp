@@ -43,15 +43,15 @@
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
                                 <div class="d-flex justify-content-between">
-                                    <div class="meeing-title" style="font-size: 2rem; height: 4rem;">${meeting.title}</div>
+                                    <div class="meeing-title" style="font-size: 2rem; overflow-wrap: break-word; word-break: break-all;">${meeting.title}</div>
                                     <c:if test="${sessionScope.myInfo.hasRight == 1 || (sessionScope.myInfo.hasRight == 2 && sessionScope.myInfo.uname == meeting.writer)}">
-                                        <div>
-                                            <a href="update/${meeting.id}"><button type="button" class="btn btn-primary">수정</button></a>
-                                            <a href="delete/${meeting.id}"><button type="button" class="btn btn-danger">삭제</button></a>
+                                        <div class="d-flex">
+                                            <a href="update/${meeting.id}" style="height: 2rem;"><button type="button" class="btn btn-primary me-2" style="width: 4rem;">수정</button></a>
+                                            <a href="delete/${meeting.id}" style="height: 2rem;"><button type="button" class="btn btn-danger" style="width: 4rem;">삭제</button></a>
                                         </div>
                                     </c:if>
                                 </div>
-                                <div class="row">
+                                <div class="row mt-3">
                                     <div class="col-md-6"> <!-- 중간 크기 이상의 화면에서는 날짜 영역을 절반의 너비로 표시 -->
                                         <table style="width: 100%;">
                                             <tr class="row">
@@ -146,7 +146,7 @@
                        <th><label for="colorSelect">배경</label></th>
                        <td>
                            <div class="w-100" >
-                               <div id="colorSelect" class="w-100" >&nbsp</div>
+                               <div id="colorSelect" class="w-100" style="height: 2.5rem; border-radius:0.3rem;">&nbsp</div>
                            </div>
                        </td>
                    </tr>
@@ -163,12 +163,6 @@
     </div>
                                 
     <script>
-            const dashboardMenu = document.getElementById("dashboardMenu");
-            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-
-            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-
             let scheduleList = [];
 
             document.addEventListener('DOMContentLoaded', function () {
@@ -241,6 +235,31 @@
                     });
                 }
             }
+            
+            document.addEventListener("DOMContentLoaded", function () {
+                    var linkElement = document.querySelector('#side_meeting');
+                    let paramPage = new URLSearchParams(window.location.search).get('page');
+                    //사이드바에서 회의록 진하게 보이도록 수정
+                    if (linkElement) {
+                        linkElement.classList.remove('img-opacity');
+                    }
+
+                    var liItems = document.querySelectorAll("#pageList .page-item a");
+                    liItems.forEach(function (item) {
+                        if (item.textContent.trim() === String(paramPage)) {
+                            item.style.backgroundColor = "#369FFF";
+                            item.style.color = "white";
+                        }
+                    });
+
+                    const dashboardMenu = document.getElementById("dashboardMenu");
+                    const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                    // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                    offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                    //offcanvas에서 회의록 진하게 보이도록 수정
+                    offcanvasDashboardMenu.classList.remove('img-opacity');
+                });
 
                                 </script>
             <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>

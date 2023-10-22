@@ -44,7 +44,7 @@
                             </h4>
                             <div class="d-flex justify-content-between align-items-center mt-5">
                                 <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                    <a href="save"><button class="btn btn-sm btn-primary">등록하기</button></a>
+                                    <a href="save"><button class="btn btn-primary">등록하기</button></a>
                                 </c:if>
                             </div>
                             <div class="card card-white-1 mt-3" style="height: 50vh;">
@@ -60,10 +60,10 @@
                                         <tbody>
                                             <c:forEach var="meeting" items="${list.getContent()}">
                                                 <tr>
-                                                    <td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;">
                                                         <a href="${meeting.id}"><c:out value="${meeting.title}"/></a>
                                                     </td>
-                                                    <td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;">
                                                         <c:out value="${meeting.writer}"/>
                                                     </td>
                                                     <td>

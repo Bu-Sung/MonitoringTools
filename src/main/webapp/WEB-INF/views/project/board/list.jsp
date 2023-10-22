@@ -53,7 +53,7 @@
                                 </select>
                             </div>
                             <div class="card card-white-1 mt-3" style="height: 50vh;">
-                                <div class="card-body">
+                                <div class="card-body" style="overflow: auto; white-space: nowrap;">
                                     <table class="table">
                                         <thead>
                                             <tr class="text-primary">
@@ -67,7 +67,7 @@
                                             <c:forEach items="${list.getContent()}" var="list">
                                                 <tr>
                                                     <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 7rem;">${list.category}</td>
-                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 20rem;"><a href="${list.bid}">${list.title}</a></td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;"><a href="${list.bid}">${list.title}</a></td>
                                                     <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 7rem;">${list.writer}</td>
                                                     <td>${list.date}</td>
                                                 </tr>

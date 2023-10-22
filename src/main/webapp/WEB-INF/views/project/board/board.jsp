@@ -44,8 +44,7 @@
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
                                 <div class="d-flex justify-content-between">
-                                    <div class="meeing-title" style="font-size: 2rem;">
-                                        ${board.title}</div>
+                                    <div class="meeing-title" style="font-size: 2rem; overflow-wrap: break-word; word-break: break-all;">${board.title}</div>
                                         <c:if
                                             test="${sessionScope.myInfo.hasRight == 1 || (sessionScope.myInfo.hasRight == 2 && sessionScope.myInfo.name == meeting.writer)}">
                                         <div class="d-flex">
@@ -85,7 +84,7 @@
                             <div id="commentContainer" class="collapse mt-3">
                                 <!--댓글 입력창 start-->
                                 <div class="d-flex mb-3">
-                                    <input type="text" id="comment" class="form-control me-2 border" style="background-color: #fff;" placeholder="댓글을 입력해주세요">
+                                    <input type="text" id="comment" class="form-control me-2 border" style="background-color: #fff;" placeholder="댓글을 입력해주세요" maxlength="100">
                                     <button class="btn btn-sm btn-outline-primary" id="commentButton" style="width: 4rem;">작성</button>
                                 </div>
                                 <!--댓글 입력창 end-->
@@ -103,11 +102,23 @@
     </div>
     <script charset="UTF-8" src="${pageContext.request.contextPath}/js/comment/comment.js"></script>
     <script>
-        const dashboardMenu = document.getElementById("dashboardMenu");
-        const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+        document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_list');
 
-        // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-        offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //사이드바에서 게시판 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
+
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 게시판 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
     </script>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
     <!-- 부트스트랩 script -->
