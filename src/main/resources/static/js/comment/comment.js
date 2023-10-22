@@ -44,6 +44,7 @@ function createCommentInput(id) {
     let inputElement = document.createElement('INPUT');
     inputElement.type = 'text';
     inputElement.id = 'childComment';
+    inputElement.maxLength = 100;
     inputElement.placeholder = '댓글을 입력해주세요';
     inputElement.style.backgroundColor="#fff";
     inputElement.classList.add('border', 'form-control', 'me-2');

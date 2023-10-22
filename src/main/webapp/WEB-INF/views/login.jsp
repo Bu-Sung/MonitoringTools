@@ -23,7 +23,7 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
-
+        <%@include file="/jspf/msg.jspf"%>
     </head>
     <body>
         <div class="d-flex justify-content-center align-items-center mt-9">

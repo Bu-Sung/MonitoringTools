@@ -44,10 +44,10 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
-    
+
     @Value("${page.limit}")
     private int pageLimit;
-    
+
     /**
      * 프로젝트 추가 함수 (project 테이블 및 member 테이블에 정보 추가)
      *
@@ -101,36 +101,36 @@ public class ProjectService {
         List<ProjectDTO> projectDTOs = new ArrayList<>();  // 프로젝트 엔티티 리스트 
         List<Long> projectIdList = new ArrayList();
         for (MemberEntity memberEntity : memberEntities) {
-            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) { 
+            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) {
                 projectIdList.add(memberEntity.getPid());
             }
         }
         Page<ProjectEntity> projectEntityList;
-        if(name.equals("") || name == null){
+        if (name.equals("") || name == null) {
             projectEntityList = projectRepository.findByIds(projectIdList, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
-        }else{
-            projectEntityList = projectRepository.findByIdsAndName(projectIdList, name,PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
+        } else {
+            projectEntityList = projectRepository.findByIdsAndName(projectIdList, name, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
         }
-        
-        for(ProjectEntity projectEntity : projectEntityList.getContent()){
-            // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 
-                    Instant startInstant = projectEntity.getStart().toInstant();
-                    Instant endInstant = projectEntity.getEnd().toInstant();
-                    // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
-                    LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
-                    LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
 
-                    // 프로젝트 정보를 DTO로 변환하여 리스트에 추가
-                    ProjectDTO projectDTO = ProjectDTO.builder()
-                            .pid(projectEntity.getId())
-                            .name(projectEntity.getName())
-                            .content(projectEntity.getContent())
-                            .start(projectEntity.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)) // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 후 Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
-                            .end(projectEntity.getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter))
-                            .category(projectEntity.getCategory())
-                            .cycle(projectEntity.getCycle())
-                            .build();
-                    projectDTOs.add(projectDTO);
+        for (ProjectEntity projectEntity : projectEntityList.getContent()) {
+            // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 
+            Instant startInstant = projectEntity.getStart().toInstant();
+            Instant endInstant = projectEntity.getEnd().toInstant();
+            // Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+            LocalDate startDate = startInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endDate = endInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+            // 프로젝트 정보를 DTO로 변환하여 리스트에 추가
+            ProjectDTO projectDTO = ProjectDTO.builder()
+                    .pid(projectEntity.getId())
+                    .name(projectEntity.getName())
+                    .content(projectEntity.getContent())
+                    .start(projectEntity.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter)) // 프로젝트의 시작 및 종료 기간을 Instant 객체로 변환 후 Instant 객체를 시스템 기본 시간대를 사용하여 LocalDate로 변환
+                    .end(projectEntity.getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(formatter))
+                    .category(projectEntity.getCategory())
+                    .cycle(projectEntity.getCycle())
+                    .build();
+            projectDTOs.add(projectDTO);
         }
 //        for (MemberEntity memberEntity : memberEntities) {
 //            if (memberEntity.getState() == 0 || memberEntity.getState() == 2) {  // 초대 상태가 0(생성자)이거나 2(초대 수락)인 프로젝트
@@ -417,7 +417,7 @@ public class ProjectService {
     /**
      * 해당 프로젝트에 이미 참여중인 멤버인지 판별
      *
-     * @param pid 프로젝트 아이디 
+     * @param pid 프로젝트 아이디
      * @param addUid 참여중인지 판별할 유저 아이디
      * @return 해당 프로젝트에 대한 참여 여부 (true : 이미 프로젝트에 참여 중인 아이디, false : 해당 프로젝트에 참여
      * 중이 아닌 아이디)
@@ -431,16 +431,15 @@ public class ProjectService {
         List<UserEntity> searchResults = userRepository.findByIdContainingIgnoreCase(uid);
         List<MemberEntity> memberList = memberRepository.findByPid(pid);
         List<String> uidList = new ArrayList<>();
-        
-        
+
         for (UserEntity user : searchResults) {
             boolean exits = false;
-            for(MemberEntity  member : memberList){
-                if(member.getUid().equals(user.getId())){
+            for (MemberEntity member : memberList) {
+                if (member.getUid().equals(user.getId())) {
                     exits = true;
                 }
             }
-            if(!exits){
+            if (!exits) {
                 uidList.add(user.getId());
             }
         }
@@ -450,10 +449,12 @@ public class ProjectService {
     }
 
     // 프로젝트 내의 검색와 아이디가 비슷한 멤버를 찾는데 이미 list에 있는 id는 제외하고 찾기
-    public List<UserDTO> searchMembers(Long pid, String uid, List<String> memberList) {
-        List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndSimilarUid(pid, uid, memberList);
+    public List<UserDTO> searchMembers(Long pid, List<String> memberList) {
+        if (memberList == null || memberList.isEmpty()) {
+            memberList = Collections.singletonList("-1");  // 무효한 ID 값을 사용
+        }
+        List<Map<String, Object>> searchResults = userRepository.findUsersByPidAndUidList(pid, memberList);
         List<UserDTO> uidList = new ArrayList<>();
-
         for (Map<String, Object> user : searchResults) {
             uidList.add(UserDTO.builder()
                     .id(user.get("id").toString())
@@ -487,14 +488,14 @@ public class ProjectService {
      * 프로젝트 멤버 추가 함수
      *
      * @param addUid 추가할 멤버 아이디
-     * @param pid 프로젝트 아이디 
+     * @param pid 프로젝트 아이디
      * @return 맴보 추가 성공 여부 (true : 멤버 추가 성공, false : 멤버 추가 실패)
      */
     public boolean addMember(String addUid, Long pid) {
-        
+
         // 이미 멤버인 경우 추가하지 않음
         if (isMember(pid, addUid)) {
-            return false; 
+            return false;
         }
 
         MemberEntity addEntity = MemberEntity.builder()
@@ -559,7 +560,6 @@ public class ProjectService {
         return status;
     }
 
-    
     // 카테고리 목록 
     public List<String> getProjectCategory(Long pid) {
         String categories = projectRepository.findCategoryByProjectId(pid).get();
@@ -570,16 +570,15 @@ public class ProjectService {
             return Collections.emptyList();  // 빈 리스트를 반환
         }
     }
-    
-    
+
     // 카테고리 삭제 
     public boolean deleteCategory(List<String> cats, Long pid) {
-        boolean status = false; 
+        boolean status = false;
 
         String categories = projectRepository.findCategoryByProjectId(pid).get();
 
         List<String> categoryList = new ArrayList<>(Arrays.asList(categories.split(",")));
-        categoryList.removeAll(cats); 
+        categoryList.removeAll(cats);
 
         // 수정된 카테고리를 콤마로 구분하여 문자열 생성 
         String updateCats = String.join(",", categoryList);
@@ -591,10 +590,9 @@ public class ProjectService {
         return status;
     }
 
-    
     // 카테고리 추가 
     public boolean addCategory(String addCat, Long pid) {
-        boolean status = false; 
+        boolean status = false;
 
         String categories = projectRepository.findCategoryByProjectId(pid).get();
 
@@ -613,7 +611,6 @@ public class ProjectService {
         return status;
     }
 
-    
     public UserDTO hasMember(Long pid, String uid) {
         Map<String, Object> user = userRepository.findUsersByPidAndUid(pid, uid);
         if (user == null) {
@@ -642,5 +639,4 @@ public class ProjectService {
         return projectRepository.getDaysUntilProjectEnd(pid);
     }
 
-    
 }

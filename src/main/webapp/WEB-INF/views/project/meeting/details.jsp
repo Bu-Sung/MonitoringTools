@@ -179,7 +179,7 @@
                            <div id="addMemberDiv">
                                <div class=" d-flex align-items-center w-100">
                                    <div style="position: relative; width: auto;">
-                                       <input type="text" id="addMember" class="form-control"  autocomplete="off">
+                                       <input type="text" id="addMember" class="form-control"  autocomplete="off" readonly>
                                        <div id="searchMember" class="dropdown-menu">
                                        </div>
                                    </div>

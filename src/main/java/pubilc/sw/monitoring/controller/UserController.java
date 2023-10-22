@@ -123,8 +123,9 @@ public class UserController {
      * @return 변경에 성공여부에 따른 url
      */
     @PostMapping("/chagePw")
-    public String chagePw(@RequestParam("pw2") String pw2){
-        if(userService.changPw(sessionManager.getUserId(), pw2)){
+    public String chagePw(@ModelAttribute UserDTO userDTO){
+        System.out.println(userDTO.getPw());
+        if(userService.changPw(sessionManager.getUserId(), userDTO.getPw())){
             return "changePwSuccess";
         }else{
             return "findPwSuccess";
@@ -148,13 +149,8 @@ public class UserController {
      * @return 
      */
     @PostMapping("/pwcheck")
-    public String pwCheck(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs){
-        if(userService.pwCheck(sessionManager.getUserId(), userDTO.getPw())){
-            return "redirect:/update";
-        }else{
-            attrs.addFlashAttribute("msg", "비밀번호를 다시 확인해주세요!");
-            return "redirect:/checkPassword";
-        }
+    public @ResponseBody boolean pwCheck(@RequestBody String pw, RedirectAttributes attrs){
+        return userService.pwCheck(sessionManager.getUserId(), pw);
     }
     
     /**

@@ -231,7 +231,7 @@
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="width:100%;">
                                             <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
-                                            <div id="searchMember" class="dropdown-menu">
+                                            <div class="dropdown-menu">
                                             </div>
                                         </div>
                                 </td>
@@ -245,8 +245,8 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="saveRequest" class="btn btn-primary fw-500"
-                                style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>등록하기</button>
+                        <button type="button" id="editRequest" class="btn btn-primary fw-500"
+                                style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
                                 style="width: 8rem; height: 3rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
                     </div>
@@ -354,7 +354,7 @@
                     var name = document.createElement('td');
                     name.innerText = item.name;
                     tr.appendChild(name);
-                    
+
 
                     var date = document.createElement('td');
                     var dateDiv = document.createElement('div');
@@ -532,55 +532,37 @@
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-
                 getRequestList(); // 요구사항 설정
                 getAllMemberInfo(); // 멤버 인원 설정
+                document.getElementById("uid").addEventListener("click", function (event) {
+                    settingMemberNameCard(event.target.parentNode)
+                });
+                document.getElementById('editRequest').addEventListener('click', function () {
 
-                document.getElementById('saveRequest').addEventListener('click', function () {
-                    (async () => { // 즉시 실행되는 비동기 함수 생성
-                        if (rname.value === '') {
-                            alert("요구사항 명을 입력해 주세요");
-                            rname.focus();
-                        } else if (uid.value === '') {
-                            alert("담당자를 선택해 주세요");
-                            uid.focus();
-                        } else {
-                            request = {
-                                frid: parseInt(frid.value),
-                                rid: requestList.length + 1,
-                                name: rname.value,
-                                date: date.value,
-                                rank: rank.value,
-                                stage: stage.value,
-                                target: target.value,
-                                uid: uid.value,
-                                note: note.value
-                            }
-
-                            // checkSimilarity가 끝날 때까지 기다림
-                            const isSimilar = await checkSimilarity(request);
-
-                            if (isSimilar) {
-                                if (!saveRequest(request)) {
-                                    alert("요구사항을 저장했습니다.");
-                                } else {
-                                    alert("요구사항 저장에 실패했습니다.");
-                                }
-                            } else {
-                                let allElements = '요구사항 유사도를 확인해 주세요!\n';
-                                for (let i = 0; i < similarList.length; i++) {
-                                    allElements += '유사 요구사항 ' + (i + 1) + ' = ' + similarList[i][0] + ' : ' + similarList[i][1] + '\n';
-                                }
-                                if (confirm(allElements) == true) {
-                                    if (!saveRequest(request)) {
-                                        alert("요구사항을 저장했습니다.");
-                                    } else {
-                                        alert("요구사항 저장에 실패했습니다.");
-                                    }
-                                }
-                            }
+                    if (rname.value === '') {
+                        alert("요구사항 명을 입력해 주세요");
+                        rname.focus();
+                    } else if (uid.value === '') {
+                        alert("담당자를 선택해 주세요");
+                        uid.focus();
+                    } else {
+                        request = {
+                            frid: parseInt(frid.value),
+                            rid: rid.value,
+                            name: rname.value,
+                            date: date.value,
+                            rank: rank.value,
+                            stage: stage.value,
+                            target: target.value,
+                            uid: uid.value,
+                            note: note.value
                         }
-                    })();
+                        if (!saveRequest(request)) {
+                            alert("요구사항을 저장했습니다.");
+                        } else {
+                            alert("요구사항 저장에 실패했습니다.");
+                        }
+                    }
                 });
 
                 document.getElementById("deleteRequest").addEventListener("click", function () {
@@ -731,7 +713,7 @@
                     }
 
                     cell3.appendChild(selectBox);
-                    
+
                     const cell4 = newRow.insertCell(3);
                     const selectBox2 = document.createElement('select');
                     selectBox2.classList.add('form-control', 'text-center', 'p-0');
@@ -790,11 +772,22 @@
                     cell6.appendChild(selectBox4);
 
                     const cell7 = newRow.insertCell(6);
+                    var searchMemberWarrap = document.createElement('div');
                     const input = document.createElement('input');
                     input.type = 'text';
+                    input.readOnly = true;
+                    input.addEventListener("click", function (event) {
+                        settingMemberNameCard(event.target.parentNode)
+                    });
                     input.classList.add('form-control');
                     input.setAttribute('name', 'newColumn8');
-                    cell7.appendChild(input);
+                    searchMemberWarrap.appendChild(input);
+
+                    var searchMemberDropDown = document.createElement('div');
+                    searchMemberDropDown.setAttribute('class', 'dropdown-menu');
+                    searchMemberWarrap.appendChild(searchMemberDropDown);
+
+                    cell7.appendChild(searchMemberWarrap);
 
                     const cell8 = newRow.insertCell(7);
                     const textarea = document.createElement('textarea');
@@ -811,11 +804,9 @@
                     similarButton.style.display = 'none';
                     createExcelButton.style.display = "none";
                     createDownRequestExcelButton.style.display = "none";
-                    console.log(textarea2);
                 });
 
                 saveButton.addEventListener("click", function () {
-                    console.log(requestData);
                     if (saveData(requestData)) {
                         // 저장에 성공하면 저장 버튼을 다시 숨김
                         saveButton.style.display = "none";
@@ -827,7 +818,6 @@
                 });
 
                 function saveData(requestData) {
-                    console.log("저장 버튼이 클릭되었습니다.");
 
                     // 데이터를 검증
                     let hasEmptyCell2 = false;
@@ -836,7 +826,6 @@
                     let listCount = requestList.length;
 
                     const rows = newRequestTable.rows; // 모든 행 가져오기
-                    console.log(rows);
                     for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 1부터 시작
                         const row = rows[i];
 
@@ -889,7 +878,6 @@
                         alert("담당자에 빈 값은 허용되지 않습니다.");
                         return false;
                     } else {
-                        console.log(requestData);
                         // 값이 모두 유효한 경우에만 데이터를 서버로 보냄
                         fetch("save-multiple", {
                             method: "POST",
@@ -945,7 +933,6 @@
                             .then(similarList => {
                                 if (similarList.length === 0) {
                                     modalContent.innerHTML = '유사한 요구사항 없음';
-                                    console.log('유사한 요구사항 없음');
                                 } else {
                                     let result = '';
                                     for (const pair of similarList) {

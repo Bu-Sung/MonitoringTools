@@ -21,16 +21,34 @@ document.addEventListener('DOMContentLoaded', function () {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                 }).then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            alert("회원정보가 삭제되었습니다.");
-                            window.location.href = "/monitoring";
-                        } else {
-                            alert("회원정보 삭제에 실패했습니다.")
-                        }
-                    })
+                        .then(data => {
+                            if (data) {
+                                alert("회원정보가 삭제되었습니다.");
+                                window.location.href = "/monitoring";
+                            } else {
+                                alert("회원정보 삭제에 실패했습니다.")
+                            }
+                        })
             }
+        });
 
+        document.getElementById('pwChangeForm').addEventListener('submit', function (event) {
+            //전화번호 유효성 검사
+            const phone2Value = document.getElementById('phone2').value;
+            const phone3Value = document.getElementById('phone3').value;
+            if (!checkPw) {
+                event.preventDefault();
+                alert("비밀번호를 확인하여주세요.");
+            } else if (!/^\d+$/.test(phone2Value) || phone2Value.length < 4 || !/^\d+$/.test(phone3Value) || phone3Value.length < 4) {
+                event.preventDefault();
+                alert('전화번호는 숫자여야 합니다.');
+            }
+        });
+
+        document.getElementById("updateUserInfo").addEventListener('submit', function (event) {
+            birth.value = yearSelect.value + '-' + monthSelect.value + '-' + daySelect.value;
+            var phone1 = document.getElementById("phone1");
+            phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
         });
     }
     //비밀번호 확인
@@ -53,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("phone1").value = phone.value.split('-')[0];
         phone2.value = phone.value.split('-')[1];
         phone3.value = phone.value.split('-')[2];
-        checkId = true;
     }
 });
 
@@ -185,7 +202,6 @@ function settingDays() {
     }
     daySelect.value = 1;
 }
-
 
 //회원가입 확인
 function checkSignUp() {
