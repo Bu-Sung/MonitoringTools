@@ -85,7 +85,7 @@
                             <div id="commentContainer" class="collapse mt-3">
                                 <!--댓글 입력창 start-->
                                 <div class="d-flex mb-3">
-                                    <input type="text" id="comment" class="form-control me-2 border" style="background-color: #fff;" placeholder="댓글을 입력해주세요">
+                                    <input type="text" id="comment" class="form-control me-2 border" style="background-color: #fff;" placeholder="댓글을 입력해주세요" maxlength="100">
                                     <button class="btn btn-sm btn-outline-primary" id="commentButton" style="width: 4rem;">작성</button>
                                 </div>
                                 <!--댓글 입력창 end-->
