@@ -32,6 +32,16 @@ public class UserController {
     private final UserService userService; // UserService 클래스 사용을 위한 변수
     private final SessionManager sessionManager;
     
+    @GetMapping("/")
+    public String index() {
+        if(sessionManager.getUserId() != null){
+            return "redirect:/project/list";
+            
+        }else{
+            return "login";
+        }
+    }
+    
     @GetMapping("/register")
     public String register(){
         return "register";
