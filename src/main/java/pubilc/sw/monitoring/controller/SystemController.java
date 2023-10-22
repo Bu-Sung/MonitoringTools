@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 public class SystemController {
 
-    @GetMapping("/")
-    public String index(Model model) {
-        return "login";
-       
-    }
+//    @GetMapping("/")
+//    public String index(Model model) {
+//        return "login";
+//       
+//    }
 }
