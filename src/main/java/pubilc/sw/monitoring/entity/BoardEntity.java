@@ -36,7 +36,7 @@ public class BoardEntity {
     private Long bid; // 게시물 아이디
     
     @Column(name="project_id")
-    private int pid; // 프로젝트 아이디
+    private Long pid; // 프로젝트 아이디
     
     @Column(name="board_title")
     private String title; // 제목

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
-import pubilc.sw.monitoring.dto.SessionDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.UserService;
 
@@ -43,7 +43,9 @@ public class UserController {
     }
     
     @GetMapping("/login")
-    public String login(){
+    public String login(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
         return "login";
     }
     
@@ -53,6 +55,10 @@ public class UserController {
         return "details";
     }
     
+    @GetMapping("/changePwSuccess")
+    public String changePwSuccess(){
+        return "changePwSuccess";
+    }
     
     /**
      * 로그인을 진행하는 함수
@@ -65,7 +71,7 @@ public class UserController {
         UserDTO userInfo = userService.login(userDTO);
         if(userInfo != null){
             sessionManager.setUserInfo(userInfo);
-            return "redirect:/project/main";
+            return "redirect:/project/list";
         }else{
             attrs.addFlashAttribute("msg", "로그인에 실패하였습니다.");
             return "redirect:/login";
@@ -90,10 +96,11 @@ public class UserController {
     }
     
     @PostMapping("/findId")
-    public String findIdSuccess(@ModelAttribute UserDTO userDTO, Model model){
+    public String findIdSuccess(@ModelAttribute UserDTO userDTO, Model model, RedirectAttributes attrs){
         String id = userService.findId(userDTO);
         if(id == null){
-            return "findUser";
+            attrs.addFlashAttribute("msg", "정보와 일치하는 아이디가 존재하지 않습니다.");
+            return "redirect:/findUser";
         }else{
             model.addAttribute("userId", id);
         return "findIdSuccess";
@@ -116,9 +123,10 @@ public class UserController {
      * @return 변경에 성공여부에 따른 url
      */
     @PostMapping("/chagePw")
-    public String chagePw(@RequestParam("pw2") String pw2){
-        if(userService.changPw(sessionManager.getUserId(), pw2)){
-            return "login";
+    public String chagePw(@ModelAttribute UserDTO userDTO){
+        System.out.println(userDTO.getPw());
+        if(userService.changPw(sessionManager.getUserId(), userDTO.getPw())){
+            return "changePwSuccess";
         }else{
             return "findPwSuccess";
         }
@@ -140,9 +148,9 @@ public class UserController {
      * @param pw
      * @return 
      */
-    @PostMapping("/pwcheck/{id}/{pw}")
-    public @ResponseBody boolean pwCheck(@PathVariable String id, @PathVariable String pw){
-        return userService.pwCheck(id, pw);
+    @PostMapping("/pwcheck")
+    public @ResponseBody boolean pwCheck(@RequestBody String pw, RedirectAttributes attrs){
+        return userService.pwCheck(sessionManager.getUserId(), pw);
     }
     
     /**
@@ -167,10 +175,9 @@ public class UserController {
      * @param request
      * @return 
      */
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable String id, HttpServletRequest request){
-        userService.deleteUser(id, request.getParameter("pw"));
-        return "redirect:/login";
+    @PostMapping("/deleteUser")
+    public @ResponseBody boolean deleteUser(RedirectAttributes attrs){
+        return userService.deleteUser(sessionManager.getUserId()); 
     }
     
     @GetMapping("/logout")
@@ -179,5 +186,10 @@ public class UserController {
         session.invalidate();
         attrs.addFlashAttribute("msg","로그아웃 하였습니다.");
         return "redirect:/login";
+    }
+    
+    @GetMapping("/checkPassword")
+    public String checkPassword(){
+        return "checkPassword";
     }
 }

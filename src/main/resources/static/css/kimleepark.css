@@ -88,6 +88,12 @@ a.text-gray:hover {
     border-color: var(--bs-gray-light);
 }
 
+.btn-gray:hover {
+    background-color: #969696;
+    border-color: #969696;
+    color: #fff;
+}
+
 .btn-danger {
     background-color: var(--bs-danger);
     border-color: var(--bs-danger);
@@ -190,9 +196,13 @@ a.text-gray:hover {
 
 .form-select {
     border-radius: 5px;
-    background: #EDF6FF;
+    background-color:#EDF6FF;
     height: 2.5rem;
-    border-style: none;
+    border: none;
+}
+
+.form-select option {
+    background: white;
 }
 
 .form-select-gray {
@@ -1057,3 +1067,12 @@ input[type="file"]::-webkit-file-upload-button {
 .w-auto {
     width: auto;
 }
+
+#projectlist {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+#projectlist:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 123, 200, 0.2);
+}
+

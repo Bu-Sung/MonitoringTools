@@ -44,10 +44,10 @@
                                        hidden name="pid">
 
                                 <div class="card card-white-1 p-3 mb-3">
-                                    <h6 class="mb-1 fw-600">프로젝트 명</h6>
+                                    <h6 class="mb-1 fw-600">프로젝트 명<span class="text-danger">*</span></h6>
                                     <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
                                     <input type="text" name="name" class="form-control form-control-primary"
-                                           value="${project.name}">
+                                           value="${project.name}" required>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
@@ -60,41 +60,41 @@
                                 <div class="card card-white-1 p-3 mb-3">
                                     <div class="row">
                                         <div class="col-md-6 col-12">
-                                            <h6 class="mb-3 fw-600"> 프로젝트 시작 기간</h6>
+                                            <h6 class="mb-3 fw-600"> 프로젝트 시작 기간<span class="text-danger">*</span></h6>
                                             <input type="date"
                                                    class="form-control form-control-primary mb-md-0 mb-4"
-                                                   value="${project.start}" name="start">
+                                                   value="${project.start}" name="start" required>
                                         </div>
                                         <div class="col-md-6 col-12">
-                                            <h6 class="mb-3 fw-600"> 프로젝트 종료 기간</h6>
+                                            <h6 class="mb-3 fw-600"> 프로젝트 종료 기간<span class="text-danger">*</span></h6>
                                             <input type="date" class="form-control form-control-primary"
-                                                   value="${project.end}" name="end">
+                                                   value="${project.end}" name="end" required>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
-                                    <h6 class="mb-1 fw-600">스프린트 주기</h6>
+                                    <h6 class="mb-1 fw-600">스프린트 주기<span class="text-danger">*</span></h6>
                                     <small class="text-gray mb-3">주기를 일(날짜) 단위로 작성해주세요</small>
                                     <input type="number" min="1" class="form-control form-control-primary"
-                                           value="${project.cycle}" name="cycle">
+                                           value="${project.cycle}" name="cycle" required>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-3 fw-600">게시글 카테고리</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
-                                            data-bs-toggle="modal" data-bs-target="#categoryModal">카테고리
+                                            data-bs-toggle="modal" data-bs-target="#categoryModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>카테고리
                                         관리</button>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-5">
                                     <h6 class="mb-3 fw-600">팀원</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
-                                            data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
+                                            data-bs-toggle="modal" data-bs-target="#teamModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>팀원 관리</button>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">저장하기</button>
+                                <button type="submit" class="btn btn-primary w-100" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>저장하기</button>
                             </form>
-                            <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2">삭제하기</button></a>
+                            <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2"  ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제하기</button></a>
                         </div>
                     </div>
                 </div>
@@ -114,11 +114,11 @@
                         <!-- 입력 폼 -->
                         <div class="d-flex justify-content-between mb-4">
                             <input type="text" class="form-control form-control-secondary me-2" id="taskInput" placeholder="작업 내용">
-                            <button type="button" class="btn btn-secondary" style="width: 5rem;" id="addTask">추가</button>
+                            <button type="button" class="btn btn-secondary" style="width: 5rem;" id="addTask" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <p class="fw-600 m-0">카테고리 목록</p>
-                            <button id="deleteTasks" class="text-danger" style="border-style: none; background-color: #fff;">삭제</button>
+                            <button id="deleteTasks" class="text-danger" style="border-style: none; background-color: #fff;" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제</button>
                         </div>
                         <div id="taskList">
                             <c:forEach var="cat" items="${project.categoryList}">
@@ -153,11 +153,11 @@
                                        placeholder="팀원의 아이디를 입력하세요" autocomplete="off">
                                 <div id="searchMember" class="dropdown-menu "></div>
                             </div>
-                            <button type="button" class="btn btn-secondary" style="width: 4rem" id="addTeamMember">추가</button>
+                            <button type="button" class="btn btn-secondary" style="width: 4rem" id="addTeamMember" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="fw-400 mt-2" style="width: 8rem;">팀원 목록</p>
-                            <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers">삭제</button>
+                            <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제</button>
                         </div>
                         <div id="teamList">
                         </div>
@@ -168,10 +168,6 @@
 
 
         <script>
-            const dashboardMenu = document.getElementById("dashboardMenu");
-            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
             /*카테고리 관리*/
 //            document.addEventListener('DOMContentLoaded', function () {
 //                const input = document.getElementById('taskInput');
@@ -263,6 +259,7 @@
     
     
             document.addEventListener('DOMContentLoaded', function () {
+                searchUsersList();
                 getMemberList().then(() => {
                     reloadBaseTeam();
                 });
@@ -577,6 +574,24 @@
 
             observer.observe(teamModal, {
                 attributes: true
+            });
+            
+            document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_details');
+
+                //사이드바에서 요구사항 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
+
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 요구사항 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
             });
         </script>
         <script src="/monitoring/js/user/search.js"></script>

@@ -132,7 +132,7 @@
                                     <div id="addMemberDiv">
                                         <div class=" d-flex align-items-center w-100">
                                             <div style="position: relative; width: auto;">
-                                                <input type="text" id="addMember" name="addMember" class="form-control"  autocomplete="off">
+                                                <input type="text" id="addMember" name="addMember" class="form-control"  autocomplete="off" readonly>
                                                 <div id="searchMember" class="dropdown-menu">
                                                 </div>
                                             </div>
@@ -166,13 +166,23 @@
                         
 
         <script>
-            const dashboardMenu = document.getElementById("dashboardMenu");
-            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+            document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_calendar');
 
-            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //사이드바에서 일정 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
 
 
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 일정 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
         </script>
         <!-- 부트스트랩 script -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

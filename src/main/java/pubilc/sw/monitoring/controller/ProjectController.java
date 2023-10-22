@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.MemberDTO;
 import pubilc.sw.monitoring.dto.ProjectDTO;
-import pubilc.sw.monitoring.dto.RequestDTO;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.service.GraphService;
 import pubilc.sw.monitoring.service.ProjectService;
@@ -101,15 +101,15 @@ public class ProjectController {
      * @param model 아이디에 해당하는 프로젝트 아이디 값을 보내기 위한 모델
      * @return 프로젝트 리스트 페이지
      */
-    @GetMapping("/main")
-    public String getAllProject(Model model) {
-        List<ProjectDTO> projects = projectService.getProjectsByUserId(sessionManager.getUserId());
-        model.addAttribute("projects", projects);
+    @GetMapping("/list")
+    public String getAllProject(@RequestParam(value = "page", defaultValue = "1") int nowPage, @RequestParam(value = "name", defaultValue = "") String name, Model model) {
+        Page<ProjectDTO> projects = projectService.getProjectsByUserId(sessionManager.getUserId(), nowPage, name);
+        model.addAttribute("list", projects);
 
         // 초대 받은 목록 리스트
         List<ProjectDTO> invitedProjects = projectService.getInvitedProjects(sessionManager.getUserId());
         model.addAttribute("invitedProjects", invitedProjects);
-        return "project/main";
+        return "project/list";
     }
 
     /**
@@ -137,7 +137,7 @@ public class ProjectController {
             attrs.addFlashAttribute("msg", "프로젝트 초대 수락 실패하였습니다.");
         }
 
-        return "redirect:/project/main";
+        return "redirect:/project/list";
     }
 
     // 프로젝트 초대 거절 ㅓ 
@@ -148,7 +148,7 @@ public class ProjectController {
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 초대 거절 실패하였습니다.");
         }
-        return "redirect:/project/main";
+        return "redirect:/project/list";
     }
 
     /**
@@ -165,7 +165,7 @@ public class ProjectController {
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 등록 실패했습니다.");
         }
-        return "redirect:/project/main";
+        return "redirect:/project/list";
     }
 
     /**
@@ -228,7 +228,7 @@ public class ProjectController {
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 실패했습니다.");
         }
-        return "redirect:/project/main";
+        return "redirect:/project/list";
     }
 
     /**
@@ -307,15 +307,14 @@ public class ProjectController {
     }
 
     /**
-     * 초대된 멤버 중 일정에 추가를 위한 아이디 찾기
+     * 일정에 대하여 이미 초대된 멤버를 제외한 멤버들 아이디 찾기
      *
      * @param uid 입력한 아이디
      * @return
      */
     @PostMapping("/searchMembers")
-    public @ResponseBody
-    List<UserDTO> searchMembers(@RequestBody Map<String, Object> request) {
-        return projectService.searchMembers(sessionManager.getProjectId(), request.get("uid").toString(), (List<String>) request.get("memberList"));
+    public @ResponseBody List<UserDTO> searchMembers(@RequestBody List<String> memberList) {
+        return projectService.searchMembers(sessionManager.getProjectId(), memberList);
     }
 
     /**
@@ -347,6 +346,7 @@ public class ProjectController {
     @GetMapping("/sprint")
     public String sprint(Model model){
         model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
+        model.addAttribute("excelNames", requestService.getExcelNames(sessionManager.getProjectId()));// 엑셀 파일 리스트 
         return "/project/sprintList";
     }
     

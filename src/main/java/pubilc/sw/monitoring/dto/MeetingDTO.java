@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class MeetingDTO {
     private Long id;
-    private int projectId; // 회의록이 작성된 프로젝트 아이디
+    private Long projectId; // 회의록이 작성된 프로젝트 아이디
     private String title; // 회의록 제목
     private String writer; // 회의록 작성자
     private String start; // 회의 시작 시간

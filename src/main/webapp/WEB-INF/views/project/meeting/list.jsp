@@ -23,6 +23,7 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
+        <%@include file="/jspf/msg.jspf"%>
     </head>
 
     <body>
@@ -42,8 +43,8 @@
                                 <span>회의록</span> 목록
                             </h4>
                             <div class="d-flex justify-content-between align-items-center mt-5">
-                                <c:if test="${sessionScope.hasRight != 3}">
-                                    <a href="save"><button class="btn btn-sm btn-primary">등록하기</button></a>
+                                <c:if test="${sessionScope.myInfo.hasRight != 3}">
+                                    <a href="save"><button class="btn btn-primary">등록하기</button></a>
                                 </c:if>
                             </div>
                             <div class="card card-white-1 mt-3" style="height: 50vh;">
@@ -57,12 +58,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach var="meeting" items="${meetingList}">
+                                            <c:forEach var="meeting" items="${list.getContent()}">
                                                 <tr>
-                                                    <td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;">
                                                         <a href="${meeting.id}"><c:out value="${meeting.title}"/></a>
                                                     </td>
-                                                    <td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;">
                                                         <c:out value="${meeting.writer}"/>
                                                     </td>
                                                     <td>
@@ -74,35 +75,38 @@
                                     </table>
                                 </div>
                             </div>
-                            <nav>
-                                <ul class="pagination justify-content-center mt-3">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <%@include file="/jspf/listNav.jspf" %>
                         </div>
                     </div>
                 </div>
             </div>
 
-
+            <!--<script charset="UTF-8" src="/monitoring/js/recycleSetting.js"></script>-->
             <script>
-                const dashboardMenu = document.getElementById("dashboardMenu");
-                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+                document.addEventListener("DOMContentLoaded", function () {
+                    var linkElement = document.querySelector('#side_meeting');
+                    let paramPage = new URLSearchParams(window.location.search).get('page');
+                    //사이드바에서 회의록 진하게 보이도록 수정
+                    if (linkElement) {
+                        linkElement.classList.remove('img-opacity');
+                    }
 
-                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                    var liItems = document.querySelectorAll("#pageList .page-item a");
+                    liItems.forEach(function (item) {
+                        if (item.textContent.trim() === String(paramPage)) {
+                            item.style.backgroundColor = "#369FFF";
+                            item.style.color = "white";
+                        }
+                    });
+
+                    const dashboardMenu = document.getElementById("dashboardMenu");
+                    const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                    // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                    offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                    //offcanvas에서 회의록 진하게 보이도록 수정
+                    offcanvasDashboardMenu.classList.remove('img-opacity');
+                });
             </script>
             <!-- 부트스트랩 script -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

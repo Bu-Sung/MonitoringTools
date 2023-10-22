@@ -43,8 +43,6 @@ public class RequestEntity {
     @Column(name="request_name", nullable = false)
     private String name;  // 요구사항 명 
     
-    @Column(name="request_content")
-    private String content;  // 요구사항 상세 설명 
     
     @Column(name="request_date", nullable = false)
     private int date;  // 요구사항 추정치 

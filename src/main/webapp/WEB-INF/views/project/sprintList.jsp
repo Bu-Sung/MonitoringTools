@@ -49,25 +49,28 @@
                             <c:forEach var="entry" items="${requestMap}" varStatus="status">
                                 <div class="card card-white-1 mb-3">
                                     <div class="card-body" style="overflow: auto; white-space: nowrap;">
-                                        <p class="px-2 fw-600 mb-3 bg-yellow">No.<span>${fn:length(requestMap) - status.index}</span></p>
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <p class="px-2 fw-600 bg-yellow m-0">No.<span>${fn:length(requestMap) - status.index}</span><small class="text-gray">(${entry.key})</small></p>
+                                            <a href="request/download?filename=Request${entry.key}.xlsx"><button type="button" class="btn btn-primary" >파일 다운로드</button></a>
+                                        </div>
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th>진행날짜</th>
+                                                    <th class="text-center">구분</th>
                                                     <th>요구사항 명</th>
-                                                    <th>추정치</th>
-                                                    <th>진행사항</th>
-                                                    <th>담당자</th>
+                                                    <th class="text-center">추정치</th>
+                                                    <th class="text-center">진행사항</th>
+                                                    <th class="text-center">담당자</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <c:forEach var="list" items="${entry.value}">
                                                     <tr>
-                                                        <td>${list.requestDate}</td>
+                                                        <td class="text-center">${list.rid}</td>
                                                         <td>${list.name}</td>
-                                                        <td>${list.date}</td>
-                                                        <td>${list.stage}</td>
-                                                        <td>${list.username}</td>
+                                                        <td class="text-center">${list.date}</td>
+                                                        <td class="text-center">${list.stage}</td>
+                                                        <td class="text-center">${list.username}</td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
@@ -82,11 +85,31 @@
         </div>
 
         <script>
-            const dashboardMenu = document.getElementById("dashboardMenu");
-            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+            document.addEventListener("DOMContentLoaded", function () {
+                var sprintElement = document.getElementById('sprintCollapse');
+                if (sprintElement) {
+                    sprintElement.classList.add('show'); // 스프린트를 기본적으로 펼쳐진 상태
+                }
 
-            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                var sprintListElement = document.getElementById('side_sprintList');
+                if (sprintListElement) {
+                    sprintListElement.classList.remove('img-opacity'); // 스프린트 목록에서 'img-opacity' 클래스 제거
+                }
+
+                var sprintLinkElement = document.getElementById('sprintLink'); // 스프린트 링크 요소 가져오기
+                if (sprintLinkElement) {
+                    sprintLinkElement.classList.remove('img-opacity'); // 스프린트 링크에서 'img-opacity' 클래스 제거
+                }
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                // offcanvas에서 스프린트 목록 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
+
         </script>
         <!-- 부트스트랩 script -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

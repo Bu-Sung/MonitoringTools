@@ -44,9 +44,9 @@
                             </h4>    
                             <div class="d-flex justify-content-between align-items-center mt-5">
                                 <c:if test="${sessionScope.hasRight != 3}">
-                                    <a href="save"><button class="btn btn-sm btn-primary">등록하기</button></a>
+                                    <a href="save"><button class="btn btn-primary">등록하기</button></a>
                                 </c:if>
-                                <select id="category" class="border p-1 fw-500" style="border-radius: 0.3rem;">
+                                <select id="category" class="border p-2 fw-500" style="border-radius: 0.3rem;">
                                     <c:forEach var="category" items="${category}">
                                         <option value="${category}">${category}</option>
                                     </c:forEach>
@@ -64,15 +64,43 @@
                                             </tr>
                                         </thead>
                                         <tbody id="list">
+                                            <c:forEach items="${list.getContent()}" var="list">
+                                                <tr>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 7rem;">${list.category}</td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;"><a href="${list.bid}">${list.title}</a></td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 7rem;">${list.writer}</td>
+                                                    <td>${list.date}</td>
+                                                </tr>
+                                            </c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            <%@include file="/jspf/listNav.jspf" %>
                         </div>
                     </div>
                 </div>
             </div>
             <script src="/monitoring/js/board/boardTable.js"></script>
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_list');
+
+                //사이드바에서 게시판 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
+
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 게시판 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
+            </script>
             <!-- 부트스트랩 script -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

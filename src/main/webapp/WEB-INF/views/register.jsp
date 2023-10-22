@@ -31,19 +31,43 @@
                         <!-- 로고 이미지 -->
                         <img src="${pageContext.request.contextPath}/asset/logo.png" alt="Logo" class="img-fluid me-3" width="60rem" height="auto">
                         <!-- 프로젝트명 -->
-                        <h5 class="fw-900 m-auto">프로젝트명</h5>
+                        <h5 class="fw-900 m-auto">SCRUMBLE</h5>
                     </div>
                 </a>
                 <a href="login" class="text-gray fw-600">로그인</a>
             </div>
         </nav>
+                        <div class="row d-flex justify-content-center">
+        <div class="flex-column accordion-header col-md-10"> <!-- 수직 정렬 -->
+
+            <!-- 회원가입 진행 설명 영역 -->
+            <div class=" col-12 mb-5">
+                <h5 class="text-center fw-600 mt-6 mb-4">회원가입</h5>
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="text-center">
+                        <img src="${pageContext.request.contextPath}/asset/pencil_blue.png" width="40" height="auto">
+                        <p class="text-center mt-2 fw-500">정보입력
+                        <p>
+                    </div>
+                    <svg class="mb-5" xmlns="http://www.w3.org/2000/svg" width="55" height="10" viewBox="0 0 93 4"
+                         fill="none">
+                    <path d="M2 2H91" stroke="#b5b5b5" stroke-width="3" stroke-linecap="round"
+                          stroke-dasharray="6 6" />
+                    </svg>
+                    <div class="text-center">
+                        <img src="${pageContext.request.contextPath}/asset/check_gray.png" width="40" height="auto">
+                        <p class="text-center mt-2 fw-500 text-gray">가입완료</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <form id="registerForm" action="register" method="POST" onsubmit="return checkSignUp()">
-            <div class="mt-6 d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
                 <!-- 정보 입력 영역 -->
                 <div class="card mb-3 col-lg-6 col-md-9 col-12">
                     <div class="card-body mt-3 mx-md-4">
-                        <h5 class="card-title fw-600 mb-5">개인정보입력<span class="text-danger"
-                            style="font-size: 1rem;">(*필수입력)</span>
+                        <h5 class="card-title fw-600 mb-5">개인정보입력✍️<span class="text-danger"
+                                                                       style="font-size: 1rem;">(*필수입력)</span>
                         </h5>
                         <table class="table table-borderless">
                             <tr>
@@ -51,33 +75,33 @@
                                 </th>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <input type="text" id="id" name="id" class="form-control me-3" required>
+                                        <input type="text" id="id" name="id" class="form-control me-3" required minlength="5" maxlength="20">
                                         <button type="button" class="btn btn-gray" id="checkid" style="width: 10rem;">중복확인</button>
                                     </div>
-                                    <small class="form-text text-muted mb-3">아이디는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                    <small class="form-text text-muted mb-3 p-1">아이디는 영문, 숫자를 포함하여 5자 이상 입력해주세요.</small>
                                 </td>
                             </tr>
 
                             <tr>
                                 <th><label for="pw">비밀번호<span class="text-danger">*</span></label></th>
                                 <td>
-                                    <input type="password" id="pw" name="pw" class="form-control" required>
-                                    <small class="form-text text-muted mb-3">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
+                                    <input type="password" id="pw" name="pw" class="form-control" required  minlength="8" maxlength="20">
+                                    <small class="form-text text-muted mb-3 p-1">비밀번호는 영문, 숫자를 포함하여 8자 이상 입력해주세요.</small>
                                 </td>
                             </tr>
 
                             <tr>
                                 <th><label for="pw2">비밀번호<br>확인<span class="text-danger">*</span></label></th>
-                                <td>
-                                    <input type="password" id="pw2" name="pw2" class="form-control mb-4" required>
-                                    <small id="pw-result"  style="display: none;"></small>
+                                <td class="position-relative">
+                                    <input type="password" id="pw2" name="pw2" class="form-control" required  maxlength="20">
+                                    <small id="pw-result" class=" px-1 position-absolute"></small>
                                 </td>
                             </tr>
 
                             <tr>
-                                <th><label for="name">이름<span class="text-danger">*</span></label></th>
+                                <th><label for="name" class="mt-4">이름<span class="text-danger">*</span></label></th>
                                 <td>
-                                    <input type="text" id="name" name="name" class="form-control mb-4" required>
+                                    <input type="text" id="name" name="name" class="form-control mt-4 mb-4" required maxlength="20">
                                 </td>
                             </tr>
 
@@ -117,7 +141,7 @@
                             <!-- email type은 required가 있어야 유효성 검사를 함 -->
                             <tr>
                                 <th><label for="email">이메일<span class="text-danger">*</span></label></th>
-                                <td><input type="email" id="email" name="email" class="form-control mb-5" required></td>
+                                <td><input type="email" id="email" name="email" class="form-control mb-5" required maxlength="30"></td>
                             </tr>
 
                             <tr>
@@ -131,6 +155,7 @@
                 </div>
             </div>
         </form>
+                        </div>
         <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/user/user.js"></script>
         <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/recycleSetting.js"></script>
     </body>

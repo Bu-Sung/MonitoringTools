@@ -27,7 +27,7 @@
               rel="stylesheet">
 
         <!-- CSS 파일 연결 -->
-        <link rel="stylesheet" href="kimleepark.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
     </head>
 
     <body>

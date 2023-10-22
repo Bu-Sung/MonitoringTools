@@ -23,19 +23,19 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
-
+        <%@include file="/jspf/msg.jspf"%>
     </head>
     <body>
         <div class="d-flex justify-content-center align-items-center mt-9">
             <img src="${pageContext.request.contextPath}/asset/logo.png" alt="logo" class="me-3" height="40rem" width="auto">
-            <p class="fw-600 text-primary" style="font-size: 2rem;">LOGIN</p>
+            <p class="fw-600 text-primary m-0" style="font-size: 2rem;">LOGIN</p>
         </div>
 
         <div class="d-flex justify-content-center mt-5">
             <div>
                 <form action="login" method="POST" style="width: 20rem;">
-                    <input type="text" class="form-control mb-3" id="id" name="id"  placeholder="ID">
-                    <input type="password" class="form-control mb-4" id="password" name="pw" placeholder="PASSWORD">
+                    <input type="text" class="form-control mb-3" id="id" name="id"  placeholder="ID" maxlength="30">
+                    <input type="password" class="form-control mb-4" id="password" name="pw" placeholder="PASSWORD" maxlength="30">
                     <button type="submit" class="col-12 btn btn-primary btn btn-block mb-4">LOGIN</button>
                 </form>
             </div>

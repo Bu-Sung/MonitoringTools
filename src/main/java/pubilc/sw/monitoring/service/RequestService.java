@@ -13,19 +13,20 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -87,7 +88,6 @@ public class RequestService {
                     .pid(requestEntity.getPid())
                     .rid(requestEntity.getRid())
                     .name(requestEntity.getName())
-                    .content(requestEntity.getContent())
                     .date(requestEntity.getDate())
                     .rank(requestEntity.getRank())
                     .stage(requestEntity.getStage())
@@ -121,7 +121,6 @@ public class RequestService {
         requestEntity.setFrid(requestDTO.getFrid());
         requestEntity.setPid(requestDTO.getPid());
         requestEntity.setName(requestDTO.getName());
-        requestEntity.setContent(requestDTO.getContent());
         requestEntity.setDate(requestDTO.getDate());
         requestEntity.setRank(requestDTO.getRank());
         requestEntity.setStage(requestDTO.getStage());
@@ -132,6 +131,40 @@ public class RequestService {
         return requestRepository.save(requestEntity) != null;
     }
 
+    public boolean saveRequests(List<RequestDTO> requestDTOList) {
+        if (requestDTOList == null || requestDTOList.isEmpty()) {
+            return false;
+        }
+
+        List<RequestEntity> requestEntities = new ArrayList<>();
+        
+        for (RequestDTO requestDTO : requestDTOList) {
+            RequestEntity requestEntity = new RequestEntity();
+
+            if (requestDTO.getFrid() != null) {  // 수정의 경우 
+                requestEntity.setRid(String.valueOf(requestRepository.findRidByFrid(requestDTO.getFrid())));
+            } else {  // 추가의 경우 
+                requestEntity.setRid(requestDTO.getRid());
+            }
+
+            requestEntity.setFrid(requestDTO.getFrid());
+            requestEntity.setPid(requestDTO.getPid());
+            requestEntity.setName(requestDTO.getName());
+            requestEntity.setDate(requestDTO.getDate());
+            requestEntity.setRank(requestDTO.getRank());
+            requestEntity.setStage(requestDTO.getStage());
+            requestEntity.setTarget(requestDTO.getTarget());
+            requestEntity.setUid(requestDTO.getUid());
+            requestEntity.setNote(requestDTO.getNote());
+
+            requestEntities.add(requestEntity);
+        }
+        List<RequestEntity> savedEntities = requestRepository.saveAll(requestEntities);
+
+        // 저장된 엔티티의 수와 원본 요청 수가 같으면 성공
+        return savedEntities.size() == requestDTOList.size();
+    }
+    
     /**
      * 입력한 이름을 기반으로 프로젝트 멤버 중 해당하는 이름 검색
      *
@@ -212,45 +245,42 @@ public class RequestService {
      * @param requestDTOs
      * @return 엑셀 파일 생성 성공 여부
      */
-    public boolean createRequestExcel(List<RequestDTO> requestDTOs) {
+    public boolean createRequestExcel(List<RequestDTO> requestDTOs, Long pid) {
         boolean status = false;
 
         try {
-            
-            if (requestDTOs.isEmpty()) {  // 요구사항이 없을 경우 
-                return false;
-            }
             
             Workbook workbook = new XSSFWorkbook();  // 엑셀 파일 생성
             Sheet sheet = workbook.createSheet("요구사항 목록");  // 시트 생성
 
             // 헤더 생성
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"요구사항ID", "요구사항명", "상세설명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
+            String[] headers = {"요구사항ID", "요구사항명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
 
             for (int i = 0; i < headers.length; i++) {
                 Cell headerCell = headerRow.createCell(i);
                 headerCell.setCellValue(headers[i]);
             }
 
-            // 데이터 생성
-            int rowNum = 1;
-            for (RequestDTO requestDTO : requestDTOs) {
-                Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(rowNum - 1);
-                row.createCell(1).setCellValue(requestDTO.getName());
-                row.createCell(2).setCellValue(requestDTO.getContent());
-                row.createCell(3).setCellValue(requestDTO.getDate());
-                row.createCell(4).setCellValue(requestDTO.getRank());
-                row.createCell(5).setCellValue(requestDTO.getStage());
-                row.createCell(6).setCellValue(requestDTO.getTarget());
-                row.createCell(7).setCellValue(requestDTO.getUsername());
-                row.createCell(8).setCellValue(requestDTO.getNote());
+            if (!requestDTOs.isEmpty()) {
+                // 데이터 생성
+                int rowNum = 1;
+                for (RequestDTO requestDTO : requestDTOs) {
+                    Row row = sheet.createRow(rowNum++);
+                    row.createCell(0).setCellValue(rowNum - 1);
+                    row.createCell(1).setCellValue(requestDTO.getName());
+                    row.createCell(2).setCellValue(requestDTO.getDate());
+                    row.createCell(3).setCellValue(requestDTO.getRank());
+                    row.createCell(4).setCellValue(requestDTO.getStage());
+                    row.createCell(5).setCellValue(requestDTO.getTarget());
+                    row.createCell(6).setCellValue(requestDTO.getUsername());
+                    row.createCell(7).setCellValue(requestDTO.getNote());
+                }
             }
 
             LocalDateTime now = LocalDateTime.now();
             String fileName = "Request" + now.format(DateTimeFormatter.ofPattern("yyMMdd")) + ".xlsx";
-            File file = new File(ctx.getRealPath(requestFolderPath) + File.separator + requestDTOs.get(0).getPid(), fileName);
+            File file = new File(ctx.getRealPath(requestFolderPath) + File.separator + pid, fileName);
 
             saveFile(workbook, file.getParentFile().getAbsolutePath(), file.getName());  // 파일 저장 
             status = true;
@@ -326,7 +356,7 @@ public class RequestService {
 
         // 헤더 생성
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"요구사항ID", "요구사항명", "상세설명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
+        String[] headers = {"요구사항ID", "요구사항명", "추정치", "우선순위", "개발단계", "반복대상", "담당자", "비고"};
 
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
@@ -337,15 +367,14 @@ public class RequestService {
         int rowNum = 1;
         for (RequestDTO requestDTO : requestDTOs) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(rowNum - 1);
+            row.createCell(0).setCellValue(String.valueOf(rowNum - 1));
             row.createCell(1).setCellValue(requestDTO.getName());
-            row.createCell(2).setCellValue(requestDTO.getContent());
-            row.createCell(3).setCellValue(requestDTO.getDate());
-            row.createCell(4).setCellValue(requestDTO.getRank());
-            row.createCell(5).setCellValue(requestDTO.getStage());
-            row.createCell(6).setCellValue(requestDTO.getTarget());
-            row.createCell(7).setCellValue(requestDTO.getUsername());
-            row.createCell(8).setCellValue(requestDTO.getNote());
+            row.createCell(2).setCellValue(requestDTO.getDate());
+            row.createCell(3).setCellValue(requestDTO.getRank());
+            row.createCell(4).setCellValue(requestDTO.getStage());
+            row.createCell(5).setCellValue(requestDTO.getTarget());
+            row.createCell(6).setCellValue(requestDTO.getUsername());
+            row.createCell(7).setCellValue(requestDTO.getNote());
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -382,7 +411,6 @@ public class RequestService {
                     .pid(requestEntity.getPid())
                     .rid(requestEntity.getRid())
                     .name(requestEntity.getName())
-                    .content(requestEntity.getContent())
                     .date(requestEntity.getDate())
                     .rank(requestEntity.getRank())
                     .stage(requestEntity.getStage())
@@ -404,21 +432,21 @@ public class RequestService {
     public Map<Integer, List<RequestDTO>> getTrueTarget(Long pid) {
         String directoryPath = ctx.getRealPath(requestFolderPath) + File.separator + pid;
         String fileNamePattern = "Request\\d{6}\\.xlsx";  // 파일 이름 패턴 
-
+DataFormatter dataFormatter = new DataFormatter();
         File directory = new File(directoryPath);
-        Map<Integer, List<RequestDTO>> trueTargetMap = new HashMap<>();
+        Map<Integer, List<RequestDTO>> trueTargetMap = new TreeMap<>(Comparator.reverseOrder());
 
         if (directory.exists() && directory.isDirectory()) {
             File[] files = directory.listFiles((dir, name) -> name.matches(fileNamePattern));  // 디렉토리 내에 해당 패턴을 가진 파일 목록
 
             if (files != null) {
                 // 파일을 날짜 순으로 정렬
-                Arrays.sort(files, (file1, file2) -> {
-                    String dateStr1 = file1.getName().replaceAll("[^0-9]", "");
-                    String dateStr2 = file2.getName().replaceAll("[^0-9]", "");
-                    return dateStr1.compareTo(dateStr2);
-                });
-
+//                Arrays.sort(files, (file1, file2) -> {
+//                    String dateStr1 = file1.getName().replaceAll("[^0-9]", "");
+//                    String dateStr2 = file2.getName().replaceAll("[^0-9]", "");
+//                    return dateStr2.compareTo(dateStr1);
+//                });
+                
                 for (File file : files) {
                     try {
                         String fileName = file.getName();
@@ -429,26 +457,25 @@ public class RequestService {
                         Sheet sheet = workbook.getSheetAt(0);
 
                         for (Row row : sheet) {
-                            Cell cell6 = row.getCell(6);
-                            if (cell6 != null && cell6.getCellType() == CellType.STRING && cell6.getStringCellValue().equals("true")) {
-
+                            Cell cell5 = row.getCell(5);
+                            if (cell5 != null && cell5.getCellType() == CellType.STRING && cell5.getStringCellValue().equals("true")) {
+                                
                                 RequestDTO requestDTO = new RequestDTO();
                                 requestDTO.setPid(pid);
-                                requestDTO.setRid((String) row.getCell(0).getStringCellValue());
+                                requestDTO.setRid(dataFormatter.formatCellValue(row.getCell(0)));
                                 requestDTO.setName((String) row.getCell(1).getStringCellValue());
-                                requestDTO.setContent((String) row.getCell(2).getStringCellValue());
-                                requestDTO.setDate((int) row.getCell(3).getNumericCellValue());
-                                requestDTO.setRank((String) row.getCell(4).getStringCellValue());
-                                requestDTO.setStage((String) row.getCell(5).getStringCellValue());
-                                requestDTO.setTarget((String) row.getCell(6).getStringCellValue());
-                                requestDTO.setUsername((String) row.getCell(7).getStringCellValue());
-                                requestDTO.setNote((String) row.getCell(8).getStringCellValue());
+                                requestDTO.setDate((int) row.getCell(2).getNumericCellValue());
+                                requestDTO.setRank((String) row.getCell(3).getStringCellValue());
+                                requestDTO.setStage((String) row.getCell(4).getStringCellValue());
+                                requestDTO.setTarget((String) row.getCell(5).getStringCellValue());
+                                requestDTO.setUsername((String) row.getCell(6).getStringCellValue());
+                                requestDTO.setNote("");
+                                
                                 requestDTO.setRequestDate(requestDateInt);  // 요구사항 파일 날짜 
 
                                 trueTargetMap.computeIfAbsent(requestDateInt, k -> new ArrayList<>()).add(requestDTO);
                             }
                         }
-
                         fis.close();
 
                     } catch (IOException e) {
@@ -461,35 +488,47 @@ public class RequestService {
         } else {
             log.error("디렉토리가 존재하지 않습니다.");
         }
-
         return trueTargetMap;
     }
 
     public void changeSprint(Long frid, String stage) {
         Optional<RequestEntity> entity = requestRepository.findById(frid);
         RequestEntity oldEntity = entity.get();
-        String oldStage = oldEntity.getStage(); // 기존 스프린트
-        String oldTarget = oldEntity.getTarget(); // 기존 반복주기
-        if (stage.equals("clear")) {
-            oldEntity.setStage("완료");
-        } else if (stage.equals("backlog")) {
-            oldEntity.setStage("대기");
-            oldEntity.setTarget("false");
-        } else if (stage.equals("test")) {
-            oldEntity.setStage("테스트");
-        } else if (stage.equals("todo")) {
-            oldEntity.setTarget("fales");
-        } else if (stage.equals("progress")) {
-            if (oldEntity.getStage().equals("완료") || oldEntity.getStage().equals("테스트")) {
-                oldEntity.setTarget("true");
-                oldEntity.setStage("구현");
-            } else if (oldEntity.getStage().equals("대기")) {
-                oldEntity.setTarget("true");
-                oldEntity.setStage("분석");
-            } else {
-                oldEntity.setTarget("true");
-            }
-
+        String oldStage = oldEntity.getStage(); // 기존 스프린트 단계
+        switch (stage) {
+            case "clear":
+                // 새로 배정된 위치가 '완료'일 때
+                oldEntity.setStage("완료");
+                oldEntity.setTarget("false");
+                break;
+            case "backlog":
+                // 새로 배정된 위치가 '백로그'일 떼
+                oldEntity.setStage("대기");
+                oldEntity.setTarget("false");
+                break;
+            case "test":
+                // 새로 배정된 위치가 '테스트'일 때
+                oldEntity.setStage("테스트");
+                oldEntity.setTarget("false");
+                break;
+            case "todo":
+                // 새로 배정된 위치가 '할 일'일 때
+                if("테스트".equals(oldStage) || "완료".equals(oldStage) || "대기".equals(oldStage)){
+                    oldEntity.setStage("분석");
+                }   
+                oldEntity.setTarget("false");
+                break;
+            case "progress":
+                // 새로 배정된 위치가 '진행 중'일 때
+                if (oldEntity.getStage().equals("대기") || oldEntity.getStage().equals("완료")) {
+                    oldEntity.setTarget("true");
+                    oldEntity.setStage("분석");
+                } else {
+                    oldEntity.setTarget("true");
+                }   
+                break;
+            default:
+                break;
         }
         requestRepository.save(oldEntity);
     }
@@ -520,7 +559,7 @@ public class RequestService {
 
                 // 오늘 날짜가 주기 날짜 또는 주기 하루 전 날짜와 같으면 요구사항 엑셀 파일 생성 
                 if (dateFormat.format(cycleDate).equals(dateFormat.format(todayDate)) || dateFormat.format(dayBeforeCycleDate).equals(dateFormat.format(todayDate))) {
-                    createRequestExcel(getRequests(project.getId()));  // 요구사항 엑셀 생성 메서드
+                    createRequestExcel(getRequests(project.getId()), project.getId());  // 요구사항 엑셀 생성 메서드
                 }
 
                 // 주기만큼 날짜를 더함 

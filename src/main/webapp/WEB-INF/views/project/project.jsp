@@ -232,7 +232,8 @@
 
             // 멤버 그래프 
             function renderMemberData(memberId) {
-                const labels = [];
+                const memberLabels = [];
+                const allLabels = [];
 
                 const dataset1 = {
                     label: '총 요구사항 수',
@@ -286,8 +287,8 @@
                 for (let i = 0; i < memberData.length; i++) {
                     if (memberData[i][1] === memberId) {
                         const labelValue1 = memberData[i][0];
-                        if (!labels.includes(labelValue1)) { // 중복되지 않는 라벨 값만 추가
-                            labels.push(labelValue1);
+                        if (!memberLabels.includes(labelValue1)) { // 중복되지 않는 라벨 값만 추가
+                            memberLabels.push(labelValue1);
                         }
                         dataset1.data.push(memberData[i][2]);
                         dataset2.data.push(memberData[i][3]);
@@ -300,8 +301,8 @@
                 for (let i = 0; i < allData.length; i++) {
                     if (allData[i][1] === 'all') {
                         const labelValue2 = allData[i][0];
-                        if (!labels.includes(labelValue2)) { // 중복되지 않는 라벨 값만 추가
-                            labels.push(labelValue2);
+                        if (!allLabels.includes(labelValue2)) { // 중복되지 않는 라벨 값만 추가
+                            allLabels.push(labelValue2);
                         }
                         dataset1.data.push(allData[i][2]);
                         dataset2.data.push(allData[i][3]);
@@ -321,7 +322,7 @@
                 requestChart = new Chart(ctx, {
                     type: 'line', // 꺾은선 그래프
                     data: {
-                        labels: labels,
+                        labels: requestMember === 'all' ? allLabels : memberLabels,
                         datasets: [dataset1, dataset2, dataset3, dataset4, dataset5, dataset6],
                     },
                     options: {
@@ -341,19 +342,6 @@
             var burnData = ${burnData};
             let burndownChart;
             let burndownMember = 'all';
-
-            var dates = [];
-            var projectStartDate = ${projectDate[0]}; // 프로젝트 시작 날짜
-            var projectEndDate = ${projectDate[1]}; // 프로젝트 종료 날짜
-
-            // 프로젝트 시작과 종료 날짜를 날짜 배열에 추가
-            if (!dates.includes(projectStartDate)) {
-                dates.push(projectStartDate);
-            }
-
-            if (!dates.includes(projectEndDate)) {
-                dates.push(projectEndDate);
-            }
 
             // 멤버 드롭다운 생성 함수
             function createBDropdown() {
@@ -390,6 +378,8 @@
 
             // 그래프 생성 함수
             function createGraph(memberId) {
+                var dates = [];
+                
                 // 해당 멤버 아이디에 대한 데이터 필터링
                 var filteredData = burnData.filter(data => data[1] === memberId);
 
@@ -417,6 +407,12 @@
                     memberDataMap[memberId].push(value);
                 }
 
+                var projectEndDate = ${projectDate[1]}; // 프로젝트 종료 날짜
+
+                if (!dates.includes(projectEndDate)) {
+                    dates.push(projectEndDate);
+                }
+                
                 // 날짜 정렬
                 dates.sort();
 
@@ -486,13 +482,23 @@
             // 뷰포트의 세로 길이
             var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
-            const dashboardMenu = document.getElementById("dashboardMenu");
-            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+            document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_project');
 
-            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //사이드바에서 대시보드 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
 
 
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 대시보드 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
         </script>
         <!-- 부트스트랩 script -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

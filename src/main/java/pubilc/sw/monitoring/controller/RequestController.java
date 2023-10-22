@@ -5,6 +5,7 @@
 package pubilc.sw.monitoring.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,26 +38,23 @@ public class RequestController {
 
     private final RequestService requestService;
     private final SessionManager sessionManager;
-    
+
     @GetMapping("/request")
     public String request(Model model) {
-        
+
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
         model.addAttribute("requestDTOs", requestDTOs);  // 요구사항 목록 
 
-        List<String> excelNames = requestService.getExcelNames(sessionManager.getProjectId());  // 엑셀 파일 리스트 
-        model.addAttribute("excelNames", excelNames); 
-        
         return "project/request/request";
     }
-    
+
     
     // 해당 프로젝트의 모든 요구사항 
-    @GetMapping("/getRequests")   
+    @GetMapping("/getRequests")
     public @ResponseBody List<RequestDTO> getRequests() {
         return requestService.getRequests(sessionManager.getProjectId());
     }
-    
+
     
     // 요구사항 저장 및 수정 
     @PostMapping("/save")
@@ -67,21 +65,48 @@ public class RequestController {
         requestDTO.setPid(sessionManager.getProjectId());
         return requestService.saveRequest(requestDTO);
     }
-    
-    
+
+    @PostMapping("/save-multiple")
+    public @ResponseBody
+    boolean saveMultipleRequests(@RequestBody List<RequestDTO> requestDTOList) {
+        if (requestDTOList == null || requestDTOList.isEmpty()) {
+            return false;
+        }
+        System.out.println(requestDTOList);
+        List<Boolean> results = new ArrayList<>();
+
+        for (RequestDTO requestDTO : requestDTOList) {
+            if (requestDTO != null) {
+                Long fridLong = requestDTO.getFrid();
+                if (fridLong != null && fridLong.intValue() == 0) {
+                    requestDTO.setFrid(null);
+                }
+            }
+            requestDTO.setPid(sessionManager.getProjectId());
+            boolean result = requestService.saveRequest(requestDTO);
+            results.add(result);
+        }
+
+        // 여러 요청 결과 중 하나라도 실패하면 false 반환
+        if (results.contains(false)) {
+            return false;
+        }
+        return true;
+    }
+
     // 프로젝트 멤버 중 입력한 값이 들어간 이름 검색
     @GetMapping("/searchUserNames")
     public @ResponseBody List<String> searchUserNames(@RequestParam String username) {
         return requestService.searchUserNames(username,sessionManager.getProjectId());
     }
-    
+
     
     // 요구사항 삭제 
     @GetMapping("/delete")
     public @ResponseBody boolean deleteRequest(@RequestParam("frid") Long frid, RedirectAttributes attrs) {
         return requestService.deleteRequestByFrid(frid);
     }
-    
+
     /*
     // 요구사항 여러개 삭제 
     @PostMapping("/deletes")
@@ -100,7 +125,7 @@ public class RequestController {
         return "redirect:/project/request/request";
     }*/
     
-    /*
+ /*
     // 해당 프로젝트의 모든 요구사항 삭제 
     @PostMapping("/deleteAll")
     public @ResponseBody String deleteRequestsByPid(RedirectAttributes attrs) {
@@ -113,14 +138,14 @@ public class RequestController {
         
         return "redirect:/project/request/request";
     }
-*/
+     */
 
     // 요구사항 엑셀 파일 생성 (엑셀 생성 후 폴더에 저장함) 
     @GetMapping("/createExcel")
     public String createExcel(HttpServletResponse response, RedirectAttributes attrs) throws IOException {
         List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());  // 요구사항 목록 
 
-        if (requestService.createRequestExcel(requestDTOs)) {
+        if (requestService.createRequestExcel(requestDTOs,sessionManager.getProjectId() )) {
             attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 성공하였습니다.");
         } else {
             attrs.addFlashAttribute("msg", "요구사항 엑셀 파일 생성 실패하였습니다.");

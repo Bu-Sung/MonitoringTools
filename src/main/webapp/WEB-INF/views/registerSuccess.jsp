@@ -30,7 +30,7 @@
                         <!-- 로고 이미지 -->
                         <img src="${pageContext.request.contextPath}/asset/logo.png" alt="Logo" class="img-fluid me-3" width="60rem" height="auto">
                         <!-- 프로젝트명 -->
-                        <h5 class="fw-900 m-auto">프로젝트명</h5>
+                        <h5 class="fw-900 m-auto">SCRUMBLE</h5>
                     </div>
                 </a>
                 <a href="login" class="text-gray fw-600">로그인</a>
@@ -64,8 +64,8 @@
 
         <div class="card mb-3 col-lg-5 col-md-8 col-sm-9">
             <div class="card-body mt-3 text-center">
-                <h4 class="card-title fw-600 text-primary">회원가입이 완료되었습니다!</h4>
-                <p class="fw-300" style="font-size:small;">로그인하고 서비스를 이용해보세요<span>🎉</span></p>
+                <h4 class="card-title fw-600 text-primary">회원가입이 완료되었습니다!🎉</h4>
+                <p class="fw-300" style="font-size:small;">로그인하고 서비스를 이용해보세요</p>
                 <a href="login" class="btn btn-outline-primary mt-4 mb-3">로그인 페이지로 이동</a>
             </div>
         </div>
