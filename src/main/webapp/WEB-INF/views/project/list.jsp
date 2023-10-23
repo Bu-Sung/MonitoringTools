@@ -59,7 +59,7 @@
                     <div class="mb-4 d-flex justify-content-between align-items-center">
                         <h5 class="fw-600 mb-0">프로젝트 목록</h5>
                         <form id="searchProject" class="d-flex" action="list">
-                            <input id="search" class="form-control me-2" type="search">
+                            <input id="search" class="form-control me-2" type="search" maxlength="20">
                             <button class="btn btn-primary" style="width: 5rem;">검색</button>
                         </form>
                     </div>
@@ -74,7 +74,7 @@
                                             <small class="text-body">${project.content}</small>
                                         </div>
                                         <!-- 프로젝트 기간 -->
-                                        <small class="text-gray">
+                                        <small class="text-gray ms-3"  style="white-space: nowrap;">
                                             ${project.start} ~ ${project.end}
                                         </small>
                                     </div>

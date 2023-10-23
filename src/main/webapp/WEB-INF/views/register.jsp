@@ -101,7 +101,7 @@
                             <tr>
                                 <th><label for="name" class="mt-4">이름<span class="text-danger">*</span></label></th>
                                 <td>
-                                    <input type="text" id="name" name="name" class="form-control mt-4 mb-4" required maxlength="20">
+                                    <input type="text" id="name" name="name" class="form-control mt-4 mb-4" required maxlength="10">
                                 </td>
                             </tr>
 

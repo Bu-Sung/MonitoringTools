@@ -162,7 +162,7 @@
                                 </th>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <input type="text" id="rname" name="rname" class="form-control"  autocomplete="off" required>
+                                        <textarea id="rname" name="rname" class="form-control" style="min-height: 80px;" autocomplete="off" required maxlength="100"></textarea>
                                     </div>
                                 </td>
                             </tr>
@@ -239,16 +239,16 @@
                             <tr>
                                 <th style="vertical-align: middle;"><label for="note">비고</label></th>
                                 <td>
-                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off">
+                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off" maxlength="100">
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="saveRequest" class="btn btn-primary fw-500"
-                                style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>등록하기</button>
+                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
-                                style="width: 8rem; height: 3rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
+                                style="width: 7rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
                     </div>
                 </div>
             </div>
@@ -354,7 +354,7 @@
                     var name = document.createElement('td');
                     name.innerText = item.name;
                     tr.appendChild(name);
-                    
+                     
 
                     var date = document.createElement('td');
                     var dateDiv = document.createElement('div');
@@ -709,6 +709,7 @@
                     const textarea2 = document.createElement('textarea');
                     textarea2.classList.add('form-control', 'auto-height');
                     textarea2.setAttribute('name', 'newColumn2');
+                    textarea2.setAttribute('maxlength', '100');
                     textarea2.addEventListener('input', function () {
                         autoAdjustHeight(this);
                     });
@@ -731,7 +732,7 @@
                     }
 
                     cell3.appendChild(selectBox);
-                    
+
                     const cell4 = newRow.insertCell(3);
                     const selectBox2 = document.createElement('select');
                     selectBox2.classList.add('form-control', 'text-center', 'p-0');
@@ -981,6 +982,13 @@
                 });
             });
 
+            var rname = document.getElementById('rname');
+
+            // 텍스트 내용이 변경될 때마다 높이를 조절합니다.
+            rname.addEventListener('input', function () {
+                this.style.height = 'auto'; // 높이를 초기화합니다.
+                this.style.height = (this.scrollHeight) + 'px'; // 스크롤 높이에 맞게 높이를 설정합니다.
+            });
 
             document.addEventListener("DOMContentLoaded", function () {
                 var linkElement = document.querySelector('#side_request');

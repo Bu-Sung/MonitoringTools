@@ -45,29 +45,29 @@
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-1 fw-600">프로젝트 명<span class="text-danger">*</span></h6>
-                                    <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
+                                    <small class="text-gray mb-3">20자 이하로 작성해주세요</small>
                                     <input type="text" name="name" class="form-control form-control-primary"
-                                           value="${project.name}" required>
+                                           value="${project.name}" required maxlength="20">
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-1 fw-600">프로젝트 설명</h6>
-                                    <small class="text-gray mb-3">n자 이내로 작성해주세요</small>
+                                    <small class="text-gray mb-3">30자 이하로 작성해주세요</small>
                                     <textarea class="form-control form-control-primary"
-                                              style="height: 7rem;" name="content">${project.content}</textarea>
+                                              style="height: 5rem;" name="content" maxlength="30">${project.content}</textarea>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <div class="row">
                                         <div class="col-md-6 col-12">
                                             <h6 class="mb-3 fw-600"> 프로젝트 시작 기간<span class="text-danger">*</span></h6>
-                                            <input type="date"
+                                            <input type="date" id="start_date"
                                                    class="form-control form-control-primary mb-md-0 mb-4"
                                                    value="${project.start}" name="start" required>
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <h6 class="mb-3 fw-600"> 프로젝트 종료 기간<span class="text-danger">*</span></h6>
-                                            <input type="date" class="form-control form-control-primary"
+                                            <input type="date" id="end_date" class="form-control form-control-primary"
                                                    value="${project.end}" name="end" required>
                                         </div>
                                     </div>
@@ -87,14 +87,20 @@
                                         관리</button>
                                 </div>
 
-                                <div class="card card-white-1 p-3 mb-5">
+                                <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-3 fw-600">팀원</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
                                             data-bs-toggle="modal" data-bs-target="#teamModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>팀원 관리</button>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>저장하기</button>
+
+                                <div class="card card-white-1 p-3 mb-5">
+                                    <h6 class="mb-1 fw-600">프로젝트 삭제하기</h6>
+                                    <small class="text-gray mb-3">프로젝트를 삭제하면 되돌리 수 없으니 신중하게 생각해주세요</small>
+                                    <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2"  ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제하기</button></a>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 position-sticky fs-5 fw-600" style="bottom:20px; height: 3rem;" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>저장하기</button>
                             </form>
-                            <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2"  ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제하기</button></a>
+
                         </div>
                     </div>
                 </div>
@@ -113,7 +119,7 @@
                     <div class="modal-body" style="white-space: normal;">
                         <!-- 입력 폼 -->
                         <div class="d-flex justify-content-between mb-4">
-                            <input type="text" class="form-control form-control-secondary me-2" id="taskInput" placeholder="작업 내용">
+                            <input type="text" class="form-control form-control-secondary me-2" id="taskInput" placeholder="카테고리명을 입력하세요" maxlength="15">
                             <button type="button" class="btn btn-secondary" style="width: 5rem;" id="addTask" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
@@ -129,10 +135,10 @@
                             </c:forEach>
                         </div>
                     </div>
-<!--                    <div class=" modal-footer">
-                                                <button type="button" class="btn btn-danger" id="deleteTasks">삭제</button>
-                        <button type="button" class="btn btn-primary" id="saveTasks" >저장</button>
-                    </div>-->
+                    <!--                    <div class=" modal-footer">
+                                                                    <button type="button" class="btn btn-danger" id="deleteTasks">삭제</button>
+                                            <button type="button" class="btn btn-primary" id="saveTasks" >저장</button>
+                                        </div>-->
                 </div>
             </div>
         </div>
@@ -149,14 +155,14 @@
                         <!-- 입력 폼 -->
                         <div class="d-flex justify-content-between mb-4">    
                             <div style="position: relative; flex-grow: 1;">
-                                <input type="text" class="form-control form-control-secondary me-2 w-100" id="teamMemberInput"
-                                       placeholder="팀원의 아이디를 입력하세요" autocomplete="off">
+                                <input type="text" class="form-control form-control-secondary me-2" id="teamMemberInput"
+                                       placeholder="팀원의 아이디를 입력하세요" autocomplete="off" maxlength="20">
                                 <div id="searchMember" class="dropdown-menu "></div>
                             </div>
-                            <button type="button" class="btn btn-secondary" style="width: 4rem" id="addTeamMember" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
+                            <button type="button" class="btn btn-secondary ms-2" style="width: 4rem" id="addTeamMember" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <p class="fw-400 mt-2" style="width: 8rem;">팀원 목록</p>
+                        <div class="d-flex justify-content-between mb-2">
+                            <p class="fw-600 m-0" style="width: 8rem;">팀원 목록</p>
                             <button type="button" class="text-danger my-auto" style="border-style: none; background-color: #fff; height: fit-content" id="deleteTeamMembers" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제</button>
                         </div>
                         <div id="teamList">
@@ -255,17 +261,17 @@
 //                });
 //
 //            });
-       
-    
-    
+
+
+
             document.addEventListener('DOMContentLoaded', function () {
                 searchUsersList();
                 getMemberList().then(() => {
                     reloadBaseTeam();
                 });
             });
-            
-            
+
+
             // 카테고리 관리 
             let basecat = [];
 
@@ -290,7 +296,7 @@
 
             function reloadBaseCategory() {
                 const taskList = document.getElementById('taskList');
-                
+
                 taskList.innerHTML = '';
                 for (let item of basecat) {
                     // 체크박스 생성
@@ -301,7 +307,7 @@
                     const tasklabel = document.createElement('label');
                     tasklabel.className = 'form-check-label mx-2';
                     tasklabel.textContent = item;
-                    
+
                     // 공지사항인 체크박스 비활성화 
                     if (item === '공지사항') {
                         taskcheckbox.disabled = true;
@@ -324,7 +330,7 @@
                     alert("카테고리를 입력해주세요.");
                     return;
                 }
-                
+
                 fetch('/monitoring/project/addCategory', {
                     method: 'POST',
                     headers: {
@@ -332,17 +338,17 @@
                     },
                     body: cate
                 })
-                .then(response => response.json())
-                .then(isAvailable => {
-                    if (isAvailable) {
-                        getCategoryList().then(() => {
-                            reloadBaseCategory();
-                        });
-                    } else {
-                        alert("이미 존재하는 카테고리입니다.");
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+                        .then(response => response.json())
+                        .then(isAvailable => {
+                            if (isAvailable) {
+                                getCategoryList().then(() => {
+                                    reloadBaseCategory();
+                                });
+                            } else {
+                                alert("이미 존재하는 카테고리입니다.");
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
 
             });
 
@@ -358,12 +364,12 @@
                     tasks.push(task);
 
                 });
-                
+
                 if (tasks.length === 0) {
                     alert("선택된 카테고리가 없습니다.");
                     return;
                 }
-    
+
                 fetch(`/monitoring/project/deleteCategory`, {
                     method: 'POST',
                     headers: {
@@ -371,16 +377,16 @@
                     },
                     body: JSON.stringify(tasks)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    getCategoryList().then(() => {
-                        reloadBaseCategory();
-                    });
-                })
+                        .then(response => response.json())
+                        .then(data => {
+                            getCategoryList().then(() => {
+                                reloadBaseCategory();
+                            });
+                        })
                         .catch(error => console.error('Error:', error));
             });
-            
-            
+
+
             let baseteam = [];
 
             function getMemberList() {
@@ -539,12 +545,12 @@
                     uids.push(uid);
 
                 });
-                
+
                 if (uids.length === 0) {
                     alert("선택된 팀원이 없습니다.");
                     return;
                 }
-    
+
                 fetch(`/monitoring/project/deleteMember`, {
                     method: 'POST',
                     headers: {
@@ -552,12 +558,12 @@
                     },
                     body: JSON.stringify(uids)
                 })
-                .then(response => response.json())
-                .then(data => {
-                    getMemberList().then(() => {
-                        reloadBaseTeam();
-                    });
-                })
+                        .then(response => response.json())
+                        .then(data => {
+                            getMemberList().then(() => {
+                                reloadBaseTeam();
+                            });
+                        })
                         .catch(error => console.error('Error:', error));
             });
 
@@ -575,7 +581,31 @@
             observer.observe(teamModal, {
                 attributes: true
             });
-            
+
+            //날짜 유효성 검사
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+
+            startDateInput.addEventListener('change', () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (startDate > endDate) {
+                    alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                    startDateInput.value = ''; // 입력 내용 초기화
+                }
+            });
+
+            endDateInput.addEventListener('change', () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (endDate < startDate) {
+                    alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                    endDateInput.value = ''; // 입력 내용 초기화
+                }
+            });
+
             document.addEventListener("DOMContentLoaded", function () {
                 var linkElement = document.querySelector('#side_details');
 

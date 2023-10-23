@@ -118,7 +118,7 @@
                                 <th><label for="colorSelect">배경</label></th>
                                 <td>
                                     <div class="w-100">
-                                        <select id="colorSelect" class="w-100" style="background-color: #43aef2; appearance: none;">
+                                        <select id="colorSelect" class="w-100 form-select" style="background-color: #43aef2; appearance: none;">
                                             <option value="#43aef2" class="m-1" style="background-color: #43aef2;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
                                             <option value="#84e45c" class="m-1" style="background-color: #84e45c;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
                                             <option value="#f24d43" class="m-1" style="background-color: #f24d43;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
@@ -151,13 +151,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="saveSchedule" class="btn btn-primary fw-500"
-                            style="width: 8rem; height: 3rem;">등록하기</button>
+                            style="width: 7rem;">등록하기</button>
                         <button type="button" id="updateSchedule" class="btn btn-primary fw-500"
-                            style="width: 8rem; height: 3rem;">수정하기</button>
+                            style="width: 7rem;">수정하기</button>
                         <button type="button" id="editSchedule" class="btn btn-primary fw-500"
-                                style="width: 8rem; height: 3rem;">수정하기</button>
+                                style="width: 7rem;">수정하기</button>
                         <button type="button" id="deleteSchedule" class="btn btn-danger fw-500"
-                        style="width: 8rem; height: 3rem;">삭제하기</button>
+                        style="width: 7rem;">삭제하기</button>
                     </div>
                 </div>
             </div>
@@ -166,6 +166,30 @@
                         
 
         <script>
+            //날짜 유효성 검사
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+
+            startDateInput.addEventListener('change', () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (startDate > endDate) {
+                    alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                    startDateInput.value = ''; // 입력 내용 초기화
+                }
+            });
+
+            endDateInput.addEventListener('change', () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (endDate < startDate) {
+                    alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                    endDateInput.value = ''; // 입력 내용 초기화
+                }
+            });
+            
             document.addEventListener("DOMContentLoaded", function () {
                 var linkElement = document.querySelector('#side_calendar');
 

@@ -65,7 +65,7 @@
                                     <tr>
                                         <th><label for="name">이름<span class="text-danger">*</span></label></th>
                                         <td>
-                                            <input value="${user.name}" type="text" id="name" name="name" class="form-control mb-4" required maxlength="30">
+                                            <input value="${user.name}" type="text" id="name" name="name" class="form-control mb-4" required maxlength="10">
                                         </td>
                                     </tr>
 
