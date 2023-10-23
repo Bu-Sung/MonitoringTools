@@ -52,7 +52,7 @@
                                         <div>
                                             <span class="fw-bold">카테고리 : </span>
                                             <select id="category" name="category"
-                                                    class="border p-1 fw-500"
+                                                    class="border p-2 fw-500"
                                                     style="border-radius: 0.3rem; appearance: none;">
                                                 <c:forEach var="category" items="${category}">
                                                     <option value="${category}" ${board.category==category? 'select' : '' }>${category}</option>
@@ -63,7 +63,7 @@
                                     <input class="form-control mb-4 document-title"
                                            style="font-size: 2rem; height: 4rem;" type="text"
                                            id="title" placeholder="제목을 입력하세요"
-                                           name="title" value="${board.title}">
+                                           name="title" value="${board.title}" required maxlength="40">
                                     <div id="file-container">
                                         <ul id="ulfile">
                                             <c:forEach items="${board.files}" var="file">
@@ -80,7 +80,7 @@
                                         ${board.content}
                                     </div>
                                 </div>
-                                <button class="btn btn-primary sticky-bottom" style="bottom:2rem;"
+                                <button class="btn btn-primary sticky-bottom mt-3" style="bottom:2rem;"
                                         type="submit">저장하기</button>
                             </div>
                         </form>
@@ -90,11 +90,23 @@
         </div>
     </div>
     <script>
-        const dashboardMenu = document.getElementById("dashboardMenu");
-        const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+        document.addEventListener("DOMContentLoaded", function () {
+                var linkElement = document.querySelector('#side_list');
 
-        // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-        offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //사이드바에서 게시판 진하게 보이도록 수정
+                if (linkElement) {
+                    linkElement.classList.remove('img-opacity');
+                }
+
+
+                const dashboardMenu = document.getElementById("dashboardMenu");
+                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                //offcanvas에서 게시판 진하게 보이도록 수정
+                offcanvasDashboardMenu.classList.remove('img-opacity');
+            });
     </script>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
     <script charset="UTF-8" src="/monitoring/js/document/document.js"></script>

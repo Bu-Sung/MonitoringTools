@@ -46,16 +46,16 @@
                                 <th style="width:25%"><label for="projectname">프로젝트명<span class="text-danger">*</span></label>
                                 </th>
                                 <td>
-                                    <input type="text" id="projectName" name="name" class="form-control" required>
-                                    <small class="form-text text-muted mb-3">n자 이하로 작성해주세요.</small>
+                                    <input type="text" id="projectName" name="name" class="form-control" required maxlength="20">
+                                    <small class="form-text text-muted mb-3">20자 이하로 작성해주세요.</small>
                                 </td>
                             </tr>
                             <!-- 프로젝트설명 -->
                             <tr>
                                 <th><label for="explanation">프로젝트<br>설명</label></th>
                                 <td>
-                                    <input type="text" id="explanation" name="content" class="form-control">
-                                    <small class="form-text text-muted mb-3">n자 이하로 작성해주세요.</small>
+                                    <input type="text" id="explanation" name="content" class="form-control" maxlength="30">
+                                    <small class="form-text text-muted mb-3">30자 이하로 작성해주세요.</small>
                                 </td>
                             </tr>
                             <!-- 프로젝트기간 -->
@@ -89,6 +89,46 @@
             </div>
         </div>
         <script>
+            //날짜 유효성 검사
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+
+            startDateInput.addEventListener('change', () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (startDate > endDate) {
+                    alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                    startDateInput.value = ''; // 입력 내용 초기화
+                }
+            });
+
+            endDateInput.addEventListener('change', () => {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+
+                if (endDate < startDate) {
+                    alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                    endDateInput.value = ''; // 입력 내용 초기화
+                }
+            });
+            
+            //스프린트 주기 유효성 검사
+            const cycleInput = document.getElementById('cycle');
+
+            cycleInput.addEventListener('change', () => {
+                validateCycle();
+            });
+
+            function validateCycle() {
+                const cycleValue = parseInt(cycleInput.value, 10);
+
+                if (isNaN(cycleValue) || cycleValue < 1) {
+                    alert('스프린트 주기는 1일 이상으로 설정해주세요.');
+                    cycleInput.value = ''; // 입력 내용 초기화
+                }
+            }
+
             window.addEventListener('load', function () {
                 var sideMainLink = document.getElementById('side_main');
 
@@ -104,15 +144,15 @@
                     var classes2 = sideMainLink.className.replace('text-gray', 'text-dark');
                     sideSaveLink.className = classes2;
                 }
-            
-            var offcanvasMenuContent = document.getElementById('offcanvasMenuContent');
-            var menuContent = document.getElementById('menuContent');
-        
-        if (offcanvasMenuContent && menuContent) {
-            // menuContent의 내용을 offcanvasMenuContent의 내용으로 설정
-            menuContent.innerHTML = offcanvasMenuContent.innerHTML;
-        }
-    });
+
+                var offcanvasMenuContent = document.getElementById('offcanvasMenuContent');
+                var menuContent = document.getElementById('menuContent');
+
+                if (offcanvasMenuContent && menuContent) {
+                    // menuContent의 내용을 offcanvasMenuContent의 내용으로 설정
+                    menuContent.innerHTML = offcanvasMenuContent.innerHTML;
+                }
+            });
         </script>
 
 

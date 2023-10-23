@@ -28,6 +28,7 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="/monitoring/css/kimleepark.css">
+        <%@include file="/jspf/msg.jspf"%>
     </head>
     <body>
         <div class="d-flex col-11 mx-auto mt-5">
@@ -53,11 +54,11 @@
                                             <div class="d-flex mt-4 justify-content-end">
                                                 <a id="similarityTest">
                                                     <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
-                                                    <a href="createExcel" class=" mx-2">
+                                                    
                                                         <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                                            <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button>
+                                                            <a href="createExcel" class=" mx-2"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
+
                                                         </c:if>
-                                                    </a>
                                                     <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
                                                     <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
                                             </div>
@@ -162,7 +163,7 @@
                                 </th>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <input type="text" id="rname" name="rname" class="form-control"  autocomplete="off" required>
+                                        <textarea id="rname" name="rname" class="form-control" style="min-height: 80px;" autocomplete="off" required maxlength="100"></textarea>
                                     </div>
                                 </td>
                             </tr>
@@ -239,16 +240,21 @@
                             <tr>
                                 <th style="vertical-align: middle;"><label for="note">비고</label></th>
                                 <td>
-                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off">
+                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off" maxlength="100">
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
+<<<<<<< HEAD
+                        <button type="button" id="saveRequest" class="btn btn-primary fw-500"
+                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
+=======
                         <button type="button" id="editRequest" class="btn btn-primary fw-500"
                                 style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
+>>>>>>> 6de2aecfee00e098a2a8fe443871eef5d7307722
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
-                                style="width: 8rem; height: 3rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
+                                style="width: 7rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
                     </div>
                 </div>
             </div>
@@ -354,7 +360,11 @@
                     var name = document.createElement('td');
                     name.innerText = item.name;
                     tr.appendChild(name);
+<<<<<<< HEAD
+                     
+=======
 
+>>>>>>> 6de2aecfee00e098a2a8fe443871eef5d7307722
 
                     var date = document.createElement('td');
                     var dateDiv = document.createElement('div');
@@ -691,6 +701,7 @@
                     const textarea2 = document.createElement('textarea');
                     textarea2.classList.add('form-control', 'auto-height');
                     textarea2.setAttribute('name', 'newColumn2');
+                    textarea2.setAttribute('maxlength', '100');
                     textarea2.addEventListener('input', function () {
                         autoAdjustHeight(this);
                     });
@@ -968,6 +979,13 @@
                 });
             });
 
+            var rname = document.getElementById('rname');
+
+            // 텍스트 내용이 변경될 때마다 높이를 조절합니다.
+            rname.addEventListener('input', function () {
+                this.style.height = 'auto'; // 높이를 초기화합니다.
+                this.style.height = (this.scrollHeight) + 'px'; // 스크롤 높이에 맞게 높이를 설정합니다.
+            });
 
             document.addEventListener("DOMContentLoaded", function () {
                 var linkElement = document.querySelector('#side_request');

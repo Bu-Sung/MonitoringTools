@@ -88,6 +88,12 @@ a.text-gray:hover {
     border-color: var(--bs-gray-light);
 }
 
+.btn-gray:hover {
+    background-color: #969696;
+    border-color: #969696;
+    color: #fff;
+}
+
 .btn-danger {
     background-color: var(--bs-danger);
     border-color: var(--bs-danger);

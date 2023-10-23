@@ -44,16 +44,16 @@
                             </h4>    
                             <div class="d-flex justify-content-between align-items-center mt-5">
                                 <c:if test="${sessionScope.hasRight != 3}">
-                                    <a href="save"><button class="btn btn-sm btn-primary">등록하기</button></a>
+                                    <a href="save"><button class="btn btn-primary">등록하기</button></a>
                                 </c:if>
-                                <select id="category" class="border p-1 fw-500" style="border-radius: 0.3rem;">
+                                <select id="category" class="border p-2 fw-500" style="border-radius: 0.3rem;">
                                     <c:forEach var="category" items="${category}">
                                         <option value="${category}">${category}</option>
                                     </c:forEach>
                                 </select>
                             </div>
                             <div class="card card-white-1 mt-3" style="height: 50vh;">
-                                <div class="card-body">
+                                <div class="card-body" style="overflow: auto; white-space: nowrap;">
                                     <table class="table">
                                         <thead>
                                             <tr class="text-primary">
@@ -66,10 +66,10 @@
                                         <tbody id="list">
                                             <c:forEach items="${list.getContent()}" var="list">
                                                 <tr>
-                                                    <th>${list.category}</th>
-                                                    <th><a href="${list.bid}">${list.title}</a></th>
-                                                    <th>${list.writer}</th>
-                                                    <th>${list.date}</th>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 7rem;">${list.category}</td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 10rem;"><a href="${list.bid}">${list.title}</a></td>
+                                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 7rem;">${list.writer}</td>
+                                                    <td>${list.date}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
