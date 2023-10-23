@@ -23,11 +23,7 @@
 
         <!-- CSS 파일 연결 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/kimleepark.css">
-        <script>
-            <c:if test="${!empty msg}">
-            alert("${msg}");
-            </c:if>
-        </script>
+        <%@include file="/jspf/msg.jspf"%>
     </head>
 
     <body>

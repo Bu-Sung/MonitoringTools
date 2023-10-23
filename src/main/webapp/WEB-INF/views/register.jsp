@@ -12,6 +12,7 @@
         <!-- 부트스트랩 CSS 링크-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- Google Fonts - Inter -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,7 +77,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <input type="text" id="id" name="id" class="form-control me-3" required minlength="5" maxlength="20">
-                                        <button type="button" class="btn btn-gray" id="checkid" style="width: 10rem;">중복확인</button>
+                                        <button type="button" class="btn btn-gray" id="checkIdBtn" style="width: 10rem;">중복확인</button>
                                     </div>
                                     <small class="form-text text-muted mb-3 p-1">아이디는 영문, 숫자를 포함하여 5자 이상 입력해주세요.</small>
                                 </td>
@@ -157,6 +158,5 @@
         </form>
                         </div>
         <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/user/user.js"></script>
-        <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/recycleSetting.js"></script>
     </body>
 </html>

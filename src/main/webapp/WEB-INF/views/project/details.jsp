@@ -39,22 +39,23 @@
                     <div class="card card-white-0 mx-auto">
 
                         <div class="col-md-9 col-11 mx-auto my-5">
+                            <input class="form-control form-control-primary" value="${sessionScope.myInfo.hasRight}"
+                                   hidden id="hasRight">
                             <form action="/monitoring/project/updateProject" method="post">
                                 <input class="form-control form-control-primary" value="${project.pid}"
                                        hidden name="pid">
-
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-1 fw-600">프로젝트 명<span class="text-danger">*</span></h6>
                                     <small class="text-gray mb-3">20자 이하로 작성해주세요</small>
                                     <input type="text" name="name" class="form-control form-control-primary"
-                                           value="${project.name}" required maxlength="20">
+                                           value="${project.name}" required maxlength="20" ${sessionScope.myInfo.hasRight == 1 ? '' : 'readonly'}>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-1 fw-600">프로젝트 설명</h6>
                                     <small class="text-gray mb-3">30자 이하로 작성해주세요</small>
                                     <textarea class="form-control form-control-primary"
-                                              style="height: 5rem;" name="content" maxlength="30">${project.content}</textarea>
+                                              style="height: 5rem;" name="content" maxlength="30" ${sessionScope.myInfo.hasRight == 1 ? '' : 'readonly'}>${project.content}</textarea>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
@@ -63,12 +64,12 @@
                                             <h6 class="mb-3 fw-600"> 프로젝트 시작 기간<span class="text-danger">*</span></h6>
                                             <input type="date" id="start_date"
                                                    class="form-control form-control-primary mb-md-0 mb-4"
-                                                   value="${project.start}" name="start" required>
+                                                   value="${project.start}" name="start" required ${sessionScope.myInfo.hasRight == 1 ? '' : 'readonly'}>
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <h6 class="mb-3 fw-600"> 프로젝트 종료 기간<span class="text-danger">*</span></h6>
                                             <input type="date" id="end_date" class="form-control form-control-primary"
-                                                   value="${project.end}" name="end" required>
+                                                   value="${project.end}" name="end" required ${sessionScope.myInfo.hasRight == 1 ? '' : 'readonly'}>
                                         </div>
                                     </div>
                                 </div>
@@ -77,26 +78,26 @@
                                     <h6 class="mb-1 fw-600">스프린트 주기<span class="text-danger">*</span></h6>
                                     <small class="text-gray mb-3">주기를 일(날짜) 단위로 작성해주세요</small>
                                     <input type="number" min="1" class="form-control form-control-primary"
-                                           value="${project.cycle}" name="cycle" required>
+                                           value="${project.cycle}" name="cycle" required ${sessionScope.myInfo.hasRight == 1 ? '' : 'readonly'}>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-3 fw-600">게시글 카테고리</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
-                                            data-bs-toggle="modal" data-bs-target="#categoryModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>카테고리
+                                            data-bs-toggle="modal" data-bs-target="#categoryModal" >카테고리
                                         관리</button>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-3">
                                     <h6 class="mb-3 fw-600">팀원</h6>
                                     <button type="button" class="btn btn-gray mb-2" style="border-width: 2px;"
-                                            data-bs-toggle="modal" data-bs-target="#teamModal" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>팀원 관리</button>
+                                            data-bs-toggle="modal" data-bs-target="#teamModal">팀원 관리</button>
                                 </div>
 
                                 <div class="card card-white-1 p-3 mb-5">
                                     <h6 class="mb-1 fw-600">프로젝트 삭제하기</h6>
                                     <small class="text-gray mb-3">프로젝트를 삭제하면 되돌리 수 없으니 신중하게 생각해주세요</small>
-                                    <a href="delete/${project.pid}"><button type="button" class="btn btn-danger w-100 mt-2"  ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제하기</button></a>
+                                    <button type="button" id="deleteProject" class="btn btn-danger w-100 mt-2"  ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>삭제하기</button>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100 position-sticky fs-5 fw-600" style="bottom:20px; height: 3rem;" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>저장하기</button>
                             </form>
@@ -119,7 +120,7 @@
                     <div class="modal-body" style="white-space: normal;">
                         <!-- 입력 폼 -->
                         <div class="d-flex justify-content-between mb-4">
-                            <input type="text" class="form-control form-control-secondary me-2" id="taskInput" placeholder="카테고리명을 입력하세요" maxlength="15">
+                            <input type="text" class="form-control form-control-secondary me-2" id="taskInput" placeholder="카테고리명을 입력하세요" maxlength="15" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>
                             <button type="button" class="btn btn-secondary" style="width: 5rem;" id="addTask" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
@@ -156,7 +157,7 @@
                         <div class="d-flex justify-content-between mb-4">    
                             <div style="position: relative; flex-grow: 1;">
                                 <input type="text" class="form-control form-control-secondary me-2" id="teamMemberInput"
-                                       placeholder="팀원의 아이디를 입력하세요" autocomplete="off" maxlength="20">
+                                       placeholder="팀원의 아이디를 입력하세요" autocomplete="off" maxlength="20" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>
                                 <div id="searchMember" class="dropdown-menu "></div>
                             </div>
                             <button type="button" class="btn btn-secondary ms-2" style="width: 4rem" id="addTeamMember" ${sessionScope.myInfo.hasRight == 1 ? '' : 'disabled'}>추가</button>
@@ -269,6 +270,14 @@
                 getMemberList().then(() => {
                     reloadBaseTeam();
                 });
+
+                var deleteButton = document.getElementById('deleteProject');
+
+                deleteButton.addEventListener('click', function () {
+                    if (!deleteButton.disabled) {
+                        window.location.href = "delete/${project.pid}";
+                    }
+                });
             });
 
 
@@ -325,65 +334,68 @@
             }
 
             addTaskButton.addEventListener('click', function () {
-                const cate = taskInput.value.trim();
-                if (cate === '') {
-                    alert("카테고리를 입력해주세요.");
-                    return;
+                if (!addTaskButton.disabled) {
+                    const cate = taskInput.value.trim();
+                    if (cate === '') {
+                        alert("카테고리를 입력해주세요.");
+                        return;
+                    }
+
+                    fetch('/monitoring/project/addCategory', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: cate
+                    })
+                            .then(response => response.json())
+                            .then(isAvailable => {
+                                if (isAvailable) {
+                                    getCategoryList().then(() => {
+                                        reloadBaseCategory();
+                                    });
+                                } else {
+                                    alert("이미 존재하는 카테고리입니다.");
+                                }
+                            })
+                            .catch(error => console.error('Error:', error));
                 }
-
-                fetch('/monitoring/project/addCategory', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: cate
-                })
-                        .then(response => response.json())
-                        .then(isAvailable => {
-                            if (isAvailable) {
-                                getCategoryList().then(() => {
-                                    reloadBaseCategory();
-                                });
-                            } else {
-                                alert("이미 존재하는 카테고리입니다.");
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-
             });
 
             deleteTaskButton.addEventListener('click', function () {
-                const taskcheckboxes = taskList.querySelectorAll('input[type="checkbox"]:checked');
-                let tasks = [];
-                taskcheckboxes.forEach(function (taskcheckbox) {
-                    // 가장 가까운 '.form-check' 요소를 찾습니다.
-                    const taskDiv = taskcheckbox.closest('.form-check');
-                    // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
-                    const tasklabel = taskDiv.querySelector('.form-check-label');
-                    task = tasklabel.textContent;
-                    tasks.push(task);
+                if (!deleteTaskButton.disabled) {
+                    const taskcheckboxes = taskList.querySelectorAll('input[type="checkbox"]:checked');
+                    let tasks = [];
+                    taskcheckboxes.forEach(function (taskcheckbox) {
+                        // 가장 가까운 '.form-check' 요소를 찾습니다.
+                        const taskDiv = taskcheckbox.closest('.form-check');
+                        // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
+                        const tasklabel = taskDiv.querySelector('.form-check-label');
+                        task = tasklabel.textContent;
+                        tasks.push(task);
 
-                });
+                    });
 
-                if (tasks.length === 0) {
-                    alert("선택된 카테고리가 없습니다.");
-                    return;
+                    if (tasks.length === 0) {
+                        alert("선택된 카테고리가 없습니다.");
+                        return;
+                    }
+
+                    fetch(`/monitoring/project/deleteCategory`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(tasks)
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                getCategoryList().then(() => {
+                                    reloadBaseCategory();
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
                 }
-
-                fetch(`/monitoring/project/deleteCategory`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(tasks)
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            getCategoryList().then(() => {
-                                reloadBaseCategory();
-                            });
-                        })
-                        .catch(error => console.error('Error:', error));
             });
 
 
@@ -447,20 +459,24 @@
                     option1.selected = item.right == '1';
                     option2.selected = item.right == '2';
                     option3.selected = item.right == '3';
-                    select.addEventListener("change", function () {
-                        fetch('/monitoring/project/updateRight', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({uid: item.uid, right: this.value, state: item.state})
-                        })
-                                .then(response => response.json())
-                                .then(data => getMemberList().then(() => {
-                                        reloadBaseTeam()
-                                    }))
-                                .catch(error => console.error('Error:', error));
-                    });
+                    if (document.getElementById("hasRight").value !== 1) {
+                        select.disabled = true;
+                    } else {
+                        select.addEventListener("change", function () {
+                            fetch('/monitoring/project/updateRight', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({uid: item.uid, right: this.value, state: item.state})
+                            })
+                                    .then(response => response.json())
+                                    .then(data => getMemberList().then(() => {
+                                            reloadBaseTeam()
+                                        }))
+                                    .catch(error => console.error('Error:', error));
+                        });
+                    }
                     // 작업 상태에 따른 상태 텍스트 생성
                     // 여기에 작업 상태를 설정 (0, 1 또는 2)
                     // 작업 상태에 따른 상태 텍스트 생성
@@ -473,6 +489,7 @@
                         checkbox.disabled = true;
                         select.disabled = true;
                     }
+
 
                     // 모든 요소를 함께 랩핑
                     const memberDiv = document.createElement('div');
@@ -487,84 +504,81 @@
             }
 
             addButton.addEventListener('click', function () {
-                const memberName = input.value.trim();
-                if (memberName === '') {
-                    alert("아이디를 입력해주세요.");
-                    return;
-                }
-                fetch(`/monitoring/idcheck/` + memberName, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({id: memberName})
-                })
-                        .then(response => response.json())
-                        .then(isAvailable => {
-                            if (isAvailable) {
-                                fetch('/monitoring/project/addMember', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({uid: memberName})
-                                })
-                                        .then(response => response.json())
-                                        .then(isAvailable => {
-                                            if (isAvailable) {
-                                                getMemberList().then(() => {
-                                                    reloadBaseTeam();
-                                                });
-                                            } else {
-                                                alert("이미 참여 중인 팀원입니다.");
-                                            }
-                                        })
-                                        .catch(error => console.error('Error:', error));
+                if (!addButton.disabled) {
+                    const memberName = input.value.trim();
+                    if (memberName === '') {
+                        alert("아이디를 입력해주세요.");
+                        return;
+                    }
+                    fetch(`/monitoring/idcheck/` + memberName)
+                            .then(response => response.json())
+                            .then(isAvailable => {
+                                if (isAvailable) {
+                                    fetch('/monitoring/project/addMember', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({uid: memberName})
+                                    })
+                                            .then(response => response.json())
+                                            .then(isAvailable => {
+                                                if (isAvailable) {
+                                                    getMemberList().then(() => {
+                                                        reloadBaseTeam();
+                                                    });
+                                                } else {
+                                                    alert("이미 참여 중인 팀원입니다.");
+                                                }
+                                            })
+                                            .catch(error => console.error('Error:', error));
 
 //                                }
-                            } else {
-                                alert("아이디가 존재하지 않습니다.");
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-
+                                } else {
+                                    alert("아이디가 존재하지 않습니다.");
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                }
 
             });
 
             deleteButton.addEventListener('click', function () {
-                const checkboxes = teamList.querySelectorAll('input[type="checkbox"]:checked');
-                let uids = [];
-                checkboxes.forEach(function (checkbox) {
-                    // 가장 가까운 '.form-check' 요소를 찾습니다.
-                    const memberDiv = checkbox.closest('.form-check');
-                    // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
-                    const label = memberDiv.querySelector('.form-check-label');
-                    uid = label.textContent;
-                    uids.push(uid);
+                if (!deleteButton.disabled) {
+                    const checkboxes = teamList.querySelectorAll('input[type="checkbox"]:checked');
+                    let uids = [];
+                    checkboxes.forEach(function (checkbox) {
+                        // 가장 가까운 '.form-check' 요소를 찾습니다.
+                        const memberDiv = checkbox.closest('.form-check');
+                        // 해당 요소 내부의 라벨을 찾아 uid 값을 가져옵니다.
+                        const label = memberDiv.querySelector('.form-check-label');
+                        uid = label.textContent;
+                        uids.push(uid);
 
-                });
+                    });
 
-                if (uids.length === 0) {
-                    alert("선택된 팀원이 없습니다.");
-                    return;
+                    if (uids.length === 0) {
+                        alert("선택된 팀원이 없습니다.");
+                        return;
+                    }
+
+                    fetch(`/monitoring/project/deleteMember`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(uids)
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                getMemberList().then(() => {
+                                    reloadBaseTeam();
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
                 }
-
-                fetch(`/monitoring/project/deleteMember`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(uids)
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            getMemberList().then(() => {
-                                reloadBaseTeam();
-                            });
-                        })
-                        .catch(error => console.error('Error:', error));
             });
 
             var observer = new MutationObserver(function (mutations) {

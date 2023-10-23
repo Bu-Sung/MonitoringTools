@@ -3,7 +3,6 @@
 
 let checkId = false;
 let checkPw = false;
-
 const birth = document.getElementById("birth");
 const phone = document.getElementById("phone");
 const phone2 = document.getElementById("phone2");
@@ -12,6 +11,16 @@ const yearSelect = document.getElementById("year");
 const monthSelect = document.getElementById("month");
 const daySelect = document.getElementById("day");
 document.addEventListener('DOMContentLoaded', function () {
+    //비밀번호 확인
+    document.getElementById("pw").addEventListener("blur", pwCheck);
+    document.getElementById("pw2").addEventListener("blur", pwCheck);
+    //전화번호 숫자키 이외 입력 금지
+    phone2.addEventListener("input", restrictNonNumeric);
+    phone3.addEventListener("input", restrictNonNumeric);
+    //최대 4자리까지 입력 가능
+    phone2.addEventListener("input", restrictMaxLength);
+    phone3.addEventListener("input", restrictMaxLength);
+    settingDate();
     if (window.location.href.includes("update")) {
         document.getElementById("deleteUser").addEventListener("click", function () {
             if (confirm("정말로 계정을 삭제하시겠습니까?")) {
@@ -31,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
             }
         });
-
         document.getElementById('pwChangeForm').addEventListener('submit', function (event) {
             //전화번호 유효성 검사
             const phone2Value = document.getElementById('phone2').value;
@@ -44,68 +52,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('전화번호는 숫자여야 합니다.');
             }
         });
-
         document.getElementById("updateUserInfo").addEventListener('submit', function (event) {
             birth.value = yearSelect.value + '-' + monthSelect.value + '-' + daySelect.value;
             var phone1 = document.getElementById("phone1");
             phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
         });
-    }
-    //비밀번호 확인
-    document.getElementById("pw").addEventListener("blur", pwCheck);
-    document.getElementById("pw2").addEventListener("blur", pwCheck);
-    //전화번호 숫자키 이외 입력 금지
-    phone2.addEventListener("input", restrictNonNumeric);
-    phone3.addEventListener("input", restrictNonNumeric);
-    //최대 4자리까지 입력 가능
-    phone2.addEventListener("input", restrictMaxLength);
-    phone3.addEventListener("input", restrictMaxLength);
-    settingDate();
-    if (document.getElementById("id").value === '') { // 회원 가입일 때
-        //아이디 중복 확인 함수
-        document.getElementById("checkid").addEventListener("click", idCheck);
-    } else { // 회원 정보 수정일때
         yearSelect.value = birth.value.split('-')[0];
         monthSelect.value = birth.value.split('-')[1];
         daySelect.value = birth.value.split('-')[2];
         document.getElementById("phone1").value = phone.value.split('-')[0];
         phone2.value = phone.value.split('-')[1];
         phone3.value = phone.value.split('-')[2];
+    } else {
+        document.getElementById("checkIdBtn").addEventListener("click", function () {
+            const id = document.getElementById('id').value;
+            if (id === '') {
+                alert("아이디를 입력해주세요.");
+            } else if (id.length < 5) {
+                alert("아이디는 5자~20자 사이로 입력해주세요.");
+            } else {
+                fetch("/monitoring/idcheck/" + id)
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data === 'true') {
+                                alert("사용 불가능한 아이디입니다.");
+                                checkId = false;
+                            } else {
+                                alert("사용 가능한 아이디입니다.");
+                                checkId = true;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("아이디 중복 확인에 실패했습니다.");
+                            checkId = false;
+                        });
+            }
+        });
     }
 });
-
-function idCheck() {
-    const id = document.getElementById('id').value;
-
-    if (id === '') {
-        alert("아이디를 입력해주세요.");
-        return;
-    }
-
-    fetch(`idcheck/` + id, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({id: id})
-    })
-            .then(response => response.json())
-            .then(isAvailable => {
-                if (isAvailable) {
-                    alert("사용 불가능한 아이디입니다.");
-                    checkId = false;
-                } else {
-                    alert("사용 가능한 아이디입니다.");
-                    checkId = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("아이디 중복 확인에 실패했습니다.");
-                checkId = false;
-            });
-
-}
 
 function pwCheck() {
     const pw = document.getElementById("pw").value;
@@ -158,7 +143,6 @@ function settingDate() {
     let yearNow = new Date().getFullYear();
     let monthNow = new Date().getMonth() + 1;
     let dayNow = new Date().getDate();
-
     // 현재 년도부터 1930년까지의 옵션 생성
     const currentYear = new Date().getFullYear();
     for (let year = yearNow; year >= 1930; year--) {
@@ -168,7 +152,6 @@ function settingDate() {
         yearSelect.appendChild(option);
     }
     yearSelect.value = yearNow;
-
     // 1월부터 12월까지의 옵션 생성
     for (let month = 1; month <= 12; month++) {
         const option = document.createElement("option");
