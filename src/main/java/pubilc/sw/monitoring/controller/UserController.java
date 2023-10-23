@@ -147,8 +147,8 @@ public class UserController {
      * @param id 아이디 중복 검사를 위해 사용자가 입력한 정보
      * @return 아이디의 존재 여부 아이디가 존재하면 true, 없으면 false
      */
-    @PostMapping("/idcheck/{id}")
-    public @ResponseBody boolean idCheck(@PathVariable String id){
+    @GetMapping("/idcheck")
+    public @ResponseBody boolean idCheck(@RequestParam String id){
         return userService.idExists(id);
     }
     

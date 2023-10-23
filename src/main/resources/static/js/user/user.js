@@ -3,7 +3,6 @@
 
 let checkId = false;
 let checkPw = false;
-
 const birth = document.getElementById("birth");
 const phone = document.getElementById("phone");
 const phone2 = document.getElementById("phone2");
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         })
             }
         });
-
         document.getElementById('pwChangeForm').addEventListener('submit', function (event) {
             //전화번호 유효성 검사
             const phone2Value = document.getElementById('phone2').value;
@@ -44,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('전화번호는 숫자여야 합니다.');
             }
         });
-
         document.getElementById("updateUserInfo").addEventListener('submit', function (event) {
             birth.value = yearSelect.value + '-' + monthSelect.value + '-' + daySelect.value;
             var phone1 = document.getElementById("phone1");
@@ -73,25 +70,24 @@ document.addEventListener('DOMContentLoaded', function () {
         phone3.value = phone.value.split('-')[2];
     }
 });
-
 function idCheck() {
     const id = document.getElementById('id').value;
-
     if (id === '') {
         alert("아이디를 입력해주세요.");
         return;
+    } else if (id.length < 5) {
+        alert("아이디는 5자~20자 사이로 입력해주세요.");
+        return;
     }
-
-    fetch(`idcheck/` + id, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({id: id})
+    fetch('/monitoring/idcheck?id=' + encodeURIComponent(id))
+            .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP status ' + response.status);
+        }
+        return response.json();
     })
-            .then(response => response.json())
-            .then(isAvailable => {
-                if (isAvailable) {
+            .then(data => {
+                if (data) {
                     alert("사용 불가능한 아이디입니다.");
                     checkId = false;
                 } else {
@@ -104,7 +100,6 @@ function idCheck() {
                 alert("아이디 중복 확인에 실패했습니다.");
                 checkId = false;
             });
-
 }
 
 function pwCheck() {
@@ -158,7 +153,6 @@ function settingDate() {
     let yearNow = new Date().getFullYear();
     let monthNow = new Date().getMonth() + 1;
     let dayNow = new Date().getDate();
-
     // 현재 년도부터 1930년까지의 옵션 생성
     const currentYear = new Date().getFullYear();
     for (let year = yearNow; year >= 1930; year--) {
@@ -168,7 +162,6 @@ function settingDate() {
         yearSelect.appendChild(option);
     }
     yearSelect.value = yearNow;
-
     // 1월부터 12월까지의 옵션 생성
     for (let month = 1; month <= 12; month++) {
         const option = document.createElement("option");

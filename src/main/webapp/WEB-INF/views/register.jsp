@@ -132,6 +132,5 @@
             </div>
         </form>
         <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/user/user.js"></script>
-        <script type="text/javascript" charset="utf-8" src="${pageContext.request.contextPath}/js/recycleSetting.js"></script>
     </body>
 </html>
