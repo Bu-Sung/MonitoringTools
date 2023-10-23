@@ -1,86 +1,173 @@
 let memberList = [];
 document.addEventListener('DOMContentLoaded', function () {
+    if (window.location.href.includes("schedule") || window.location.href.includes("save") || window.location.href.includes("update")) {
+        document.getElementById("addMember").addEventListener("click", function () {
+            searchProjectMember();
+        });
 
-    document.getElementById("addMember").addEventListener("click", function () {
-        searchProjectMember();
-    });
+        var changeTypeBtn = document.getElementById("changeTypeBtn");
+        changeTypeBtn.addEventListener("click", function () {
+            if (startDate.type === "date") {
+                var baseStart = startDate.value;
+                var baseEnd = endDate.value;
+                startDate.type = "datetime-local";
+                endDate.type = "datetime-local";
+                startDate.value = changeDateToDateTime(baseStart);
+                endDate.value = changeDateToDateTime(baseEnd);
+            } else if (startDate.type === "datetime-local") {
+                var baseStart = startDate.value;
+                var baseEnd = endDate.value;
+                startDate.type = "date";
+                endDate.type = "date";
+                startDate.value = changeDateTimeToDate(baseStart);
+                endDate.value = changeDateTimeToDate(baseEnd);
+            }
+        });
 
-    var changeTypeBtn = document.getElementById("changeTypeBtn");
-    changeTypeBtn.addEventListener("click", function () {
-        if (startDate.type === "date") {
-            var baseStart = startDate.value;
-            var baseEnd = endDate.value;
-            startDate.type = "datetime-local";
-            endDate.type = "datetime-local";
-            startDate.value = changeDateToDateTime(baseStart);
-            endDate.value = changeDateToDateTime(baseEnd);
-        } else if (startDate.type === "datetime-local") {
-            var baseStart = startDate.value;
-            var baseEnd = endDate.value;
-            startDate.type = "date";
-            endDate.type = "date";
-            startDate.value = changeDateTimeToDate(baseStart);
-            endDate.value = changeDateTimeToDate(baseEnd);
-        }
-    });
+        var colorSelect = document.getElementById("colorSelect");
+        colorSelect.addEventListener('change', function () {
+            colorSelect.style.backgroundColor = colorSelect.value;
+        });
 
-    var colorSelect = document.getElementById("colorSelect");
-    colorSelect.addEventListener('change', function () {
-        colorSelect.style.backgroundColor = colorSelect.value;
-    });
-
-    //추가버튼
-    var addMemberBtn = document.getElementById("addMemberBtn");
-    addMemberBtn.addEventListener('click', function () {
-        // 입력 필드가 비어있지 않은 경우에만 추가
-        if (addMember.value !== '') {
-            fetch('/monitoring/project/hasMember?uid=' + addMember.value, {
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.id != null) {
-                            if (memberList[0] === '') {
-                                memberList = [];
+        //추가버튼
+        var addMemberBtn = document.getElementById("addMemberBtn");
+        addMemberBtn.addEventListener('click', function () {
+            // 입력 필드가 비어있지 않은 경우에만 추가
+            if (addMember.value !== '') {
+                fetch('/monitoring/project/hasMember?uid=' + addMember.value, {
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.id != null) {
+                                if (memberList[0] === '') {
+                                    memberList = [];
+                                }
+                                memberList.push(data);
+                                addMember.value = ''; // 입력 필드를 비움
+                                memberListDiv.innerHTML = '';
+                                editMemberList();
+                            } else {
+                                alert("검색 결과가 없습니다");
+                                addMember.value = '';
                             }
-                            memberList.push(data);
-                            addMember.value = ''; // 입력 필드를 비움
-                            memberListDiv.innerHTML = '';
-                            editMemberList();
-                        } else {
-                            alert("검색 결과가 없습니다");
-                            addMember.value = '';
-                        }
-                    });
-        }
-    });
-
-
-    var saveScheduleButton = document.getElementById("saveSchedule");
-    saveScheduleButton.addEventListener("click", function () {
-        if (confirm("저장하시겠습니까??") == true) {
-            var item = scheduleItem();
-            fetch("schedule/addSchedule", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item)
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            location.reload();
-                        } else {
-                            alert("저장에 실패하였습니다.");
-                        }
+                        });
+            }
+        });
+    }
+    if (window.location.href.includes("schedule")) {
+        var saveScheduleButton = document.getElementById("saveSchedule");
+        saveScheduleButton.addEventListener("click", function () {
+            if (validateFields(document.getElementById('title'))) {
+                if (confirm("저장하시겠습니까??") == true) {
+                    var item = scheduleItem();
+                    fetch("schedule/addSchedule", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(item)
                     })
-                    .catch((error) => console.error('Error:', error));
-        } else {
-            return false;
-        }
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    location.reload();
+                                } else {
+                                    alert("저장에 실패하였습니다.");
+                                }
+                            })
+                            .catch((error) => console.error('Error:', error));
+                } else {
+                    return false;
+                }
+            }
+        });
 
-    });
+        var updateScheduleButton = document.getElementById("updateSchedule");
+        updateScheduleButton.addEventListener("click", function () {
+            if (validateFields(document.getElementById('title'))) {
+                if (confirm("수정하시겠습니까??") == true) {
+                    var memberListId = [];
+                    memberList.forEach(item => {
+                        memberListId.push(item.id);
+                    });
+                    var allTime = 1;
+                    var endDateValue = endDate.value;
+                    if (startDate.type === "date" && endDate.type === "date") {
+                        allTime = 0;
+                        var date = new Date(endDateValue);
+                        date.setDate(date.getDate() + 1);
+                        var year = date.getFullYear();
+                        var month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하기 때문에 1을 더해줍니다.
+                        var day = ("0" + date.getDate()).slice(-2);
+                        endDateValue = year + '-' + month + '-' + day;
+                    }
+                    var item = {
+                        sid: sid.value,
+                        allTime: allTime,
+                        title: title.value,
+                        content: content.value,
+                        color: colorSelect.value,
+                        start: startDate.value,
+                        end: endDateValue,
+                        memberList: memberListId
+                    };
+                    fetch("schedule/updateSchedule", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(item)
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    location.reload();
+                                } else {
+                                    alert("수정에 실패하였습니다.");
+                                }
+                            })
+                            .catch((error) => console.error('Error:', error));
+                } else {
+                    return false;
+                }
+            }
+        });
 
+        var editScheduleButton = document.getElementById("editSchedule");
+        editScheduleButton.addEventListener("click", function () {
+            updateScheduleSetting();
+        });
+
+
+        var deleteScheduleButton = document.getElementById("deleteSchedule");
+        deleteScheduleButton.addEventListener("click", function () {
+            if (confirm("정말 삭제하시겠습니까??") == true) {    //확인
+                var item = {
+                    sid: sid.value
+                }
+                fetch("schedule/deleteSchedule", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item)
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data) {
+                                location.reload();
+                            } else {
+                                alert("삭제에 실패하였습니다.");
+                            }
+                        })
+                        .catch((error) => console.error('Error:', error));
+            } else {
+                return false;
+            }
+
+        });
+
+    }
     function scheduleItem() {
         var memberListId = [];
         memberList.forEach(item => {
@@ -110,88 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return item;
     }
 
-    var updateScheduleButton = document.getElementById("updateSchedule");
-    updateScheduleButton.addEventListener("click", function () {
-        if (confirm("수정하시겠습니까??") == true) {
-            var memberListId = [];
-            memberList.forEach(item => {
-                memberListId.push(item.id);
-            });
-            var allTime = 1;
-            var endDateValue = endDate.value;
-            if (startDate.type === "date" && endDate.type === "date") {
-                allTime = 0;
-                var date = new Date(endDateValue);
-                date.setDate(date.getDate() + 1);
-                var year = date.getFullYear();
-                var month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하기 때문에 1을 더해줍니다.
-                var day = ("0" + date.getDate()).slice(-2);
-                endDateValue = year + '-' + month + '-' + day;
-            }
-            var item = {
-                sid: sid.value,
-                allTime: allTime,
-                title: title.value,
-                content: content.value,
-                color: colorSelect.value,
-                start: startDate.value,
-                end: endDateValue,
-                memberList: memberListId
-            };
-            fetch("schedule/updateSchedule", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item)
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            location.reload();
-                        } else {
-                            alert("수정에 실패하였습니다.");
-                        }
-                    })
-                    .catch((error) => console.error('Error:', error));
-        } else {
-            return false;
-        }
-    });
 
-    var editScheduleButton = document.getElementById("editSchedule");
-    editScheduleButton.addEventListener("click", function () {
-        updateScheduleSetting();
-    });
-
-
-    var deleteScheduleButton = document.getElementById("deleteSchedule");
-    deleteScheduleButton.addEventListener("click", function () {
-        if (confirm("정말 삭제하시겠습니까??") == true) {    //확인
-            var item = {
-                sid: sid.value
-            }
-            fetch("schedule/deleteSchedule", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item)
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data) {
-                            location.reload();
-                        } else {
-                            alert("삭제에 실패하였습니다.");
-                        }
-                    })
-                    .catch((error) => console.error('Error:', error));
-        } else {
-            return false;
-        }
-
-    });
 });
 
 
@@ -216,7 +222,7 @@ async function scheduleModalSetting(item) { // 일정 초기값 세팅
             var newDiv = createProfileCard(element.name, element.id);
             memberListDiv.appendChild(newDiv);
         });
-    }else{
+    } else {
         memberList = [];
     }
     addMember.value = '';
@@ -362,4 +368,17 @@ async function getScheduleMemberList(sid) {
         console.error('Error:', error);
     }
     return ScheduleMemberList;
+}
+
+/* 일정 저장에 대한 유효성 검사 */
+function validateFields(title) {
+    let vali = true;
+
+    if (title.value.trim() === '') {
+        alert("제목을 입력해주세요.");
+        title.focus();
+        vali = false;
+    }
+
+    return vali;
 }

@@ -4,80 +4,86 @@ var scheduleList = [];
 var myModal = document.getElementById('openModal');
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById("addSchedule").addEventListener("click", function () {
-        replaceSchdule();
-        var bsModal = bootstrap.Modal.getInstance(myModal);
-        bsModal.hide();
-    });
-
-    document.getElementById("editSchedule").addEventListener("click", function () {
-        var name = point.getAttribute('name');
-        var scheduleItem = scheduleList.find(function (item) {
-            return item.msid === Number(name);
-        });
-        if (scheduleItem) {
-            var allTime = 1;
-            var endDateValue = endDate.value;
-            if (startDate.type === "date" && endDate.type === "date") {
-                allTime = 0;
-                var date = new Date(endDateValue);
-                date.setDate(date.getDate() + 1);
-                var year = date.getFullYear();
-                var month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하기 때문에 1을 더해줍니다.
-                var day = ("0" + date.getDate()).slice(-2);
-                endDateValue = year + '-' + month + '-' + day;
+    if (window.location.href.includes("meeting")) {
+        document.getElementById("addSchedule").addEventListener("click", function () {
+            if (validateFields(document.getElementById("scheduleTitle"))) {
+                replaceSchdule();
+                var bsModal = bootstrap.Modal.getInstance(myModal);
+                bsModal.hide();
             }
-            scheduleItem.msid = name;
-            scheduleItem.allTime = allTime;
-            scheduleItem.title = document.getElementById("scheduleTitle").value;
-            scheduleItem.content = document.getElementById("content").value;
-            scheduleItem.color = document.getElementById("colorSelect").value;
-            scheduleItem.datetype = document.getElementById("startDate").type;
-            scheduleItem.start = document.getElementById("startDate").value;
-            scheduleItem.end = endDateValue;
-            scheduleItem.memberList = memberList;
-        }
-        point.innerText = '';
-        var small = document.createElement('small');
-        small.className = 'scheduleText';
-        if (document.getElementById("endDate").value === document.getElementById("startDate").value) {
-            small.textContent = document.getElementById("startDate").value;
-        } else {
-            small.textContent = document.getElementById("startDate").value + ' ~ ' + document.getElementById("endDate").value;
-        }
-        point.appendChild(small);
-        memberList = [];
-        var bsModal = bootstrap.Modal.getInstance(myModal);
-        bsModal.hide();
-    });
-
-    var form = document.getElementById('documentForm');
-    form.addEventListener('submit', function () {
-        event.preventDefault(); // 기본 제출 동작 방지
-
-        scheduleList.forEach(function (item) {
-            let memberIdList = [];
-            item.memberList.forEach(function (member) {
-                memberIdList.push(member.id);
-            });
-            item.memberList = memberIdList;
         });
 
-        // JSON 형식으로 변환
-        var scheduleListJson = JSON.stringify(scheduleList);
+        document.getElementById("editSchedule").addEventListener("click", function () {
+            if (validateFields(document.getElementById("scheduleTitle"))) {
+                var name = point.getAttribute('name');
+                var scheduleItem = scheduleList.find(function (item) {
+                    return item.msid === Number(name);
+                });
+                if (scheduleItem) {
+                    var allTime = 1;
+                    var endDateValue = endDate.value;
+                    if (startDate.type === "date" && endDate.type === "date") {
+                        allTime = 0;
+                        var date = new Date(endDateValue);
+                        date.setDate(date.getDate() + 1);
+                        var year = date.getFullYear();
+                        var month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하기 때문에 1을 더해줍니다.
+                        var day = ("0" + date.getDate()).slice(-2);
+                        endDateValue = year + '-' + month + '-' + day;
+                    }
+                    scheduleItem.msid = name;
+                    scheduleItem.allTime = allTime;
+                    scheduleItem.title = document.getElementById("scheduleTitle").value;
+                    scheduleItem.content = document.getElementById("content").value;
+                    scheduleItem.color = document.getElementById("colorSelect").value;
+                    scheduleItem.datetype = document.getElementById("startDate").type;
+                    scheduleItem.start = document.getElementById("startDate").value;
+                    scheduleItem.end = endDateValue;
+                    scheduleItem.memberList = memberList;
+                }
+                point.innerText = '';
+                var small = document.createElement('small');
+                small.className = 'scheduleText';
+                if (document.getElementById("endDate").value === document.getElementById("startDate").value) {
+                    small.textContent = document.getElementById("startDate").value;
+                } else {
+                    small.textContent = document.getElementById("startDate").value + ' ~ ' + document.getElementById("endDate").value;
+                }
+                point.appendChild(small);
+                memberList = [];
+                var bsModal = bootstrap.Modal.getInstance(myModal);
+                bsModal.hide();
+            }
+        });
 
-        // hidden input 요소를 생성하여 scheduleList 값을 추가
-        var scheduleInput = document.createElement('input');
-        scheduleInput.type = 'hidden';
-        scheduleInput.name = 'scheduleList';
-        scheduleInput.value = scheduleListJson;
+        var form = document.getElementById('documentForm');
+        form.addEventListener('submit', function () {
+            event.preventDefault(); // 기본 제출 동작 방지
 
-        form.appendChild(scheduleInput);
+            scheduleList.forEach(function (item) {
+                let memberIdList = [];
+                item.memberList.forEach(function (member) {
+                    memberIdList.push(member.id);
+                });
+                item.memberList = memberIdList;
+            });
 
-        // 추가적인 작업 수행
+            // JSON 형식으로 변환
+            var scheduleListJson = JSON.stringify(scheduleList);
 
-        form.submit();  // 폼 제출
-    });
+            // hidden input 요소를 생성하여 scheduleList 값을 추가
+            var scheduleInput = document.createElement('input');
+            scheduleInput.type = 'hidden';
+            scheduleInput.name = 'scheduleList';
+            scheduleInput.value = scheduleListJson;
+
+            form.appendChild(scheduleInput);
+
+            // 추가적인 작업 수행
+
+            form.submit();  // 폼 제출
+        });
+    }
 });
 
 /* 원하는 MarkDown을 확인하기 위한 함수 */

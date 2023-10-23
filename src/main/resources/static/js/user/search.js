@@ -103,7 +103,7 @@ function settingMemberNameCard(event) {
     });
     document.addEventListener('click', function (event) {
         if (event.target !== inputDiv && event.target !== searchDiv) {
-            searchMemberDropdown.classList.remove('show');
+            searchDiv.classList.remove('show');
         }
     });
 }

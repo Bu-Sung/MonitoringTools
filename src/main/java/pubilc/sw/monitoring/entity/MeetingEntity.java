@@ -52,7 +52,7 @@ public class MeetingEntity {
     @Column(name="meeting_place")
     private String place;
 
-    @Column(name="meeting_content")
+    @Column(name="meeting_content", columnDefinition="LONGTEXT")
     private String content;
 
     @Column(name="meeting_filecheck")

@@ -54,13 +54,13 @@
                                             <div class="d-flex mt-4 justify-content-end">
                                                 <a id="similarityTest">
                                                     <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
-                                                    
-                                                        <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                                            <a href="createExcel" class=" mx-2"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
 
-                                                        </c:if>
-                                                    <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
-                                                    <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
+                                                    <c:if test="${sessionScope.myInfo.hasRight != 3}">
+                                                        <a href="createExcel" class=" mx-2"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
+
+                                                </c:if>
+                                                <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
+                                                <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
                                             </div>
                                             <hr>
                                         </div>
@@ -246,13 +246,8 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-<<<<<<< HEAD
-                        <button type="button" id="saveRequest" class="btn btn-primary fw-500"
-                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
-=======
                         <button type="button" id="editRequest" class="btn btn-primary fw-500"
                                 style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
->>>>>>> 6de2aecfee00e098a2a8fe443871eef5d7307722
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
                                 style="width: 7rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
                     </div>
@@ -286,7 +281,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             var requestList = []; // 요구사항 리스트
-            var similarList = []; // 유사한 데이터 쌍 리스트 
+            var similarList = []; // 유사한 데이터 쌍 리스트
+            var listCount = 0;
             const baseRequest = {
                 frid: 0,
                 rid: '',
@@ -347,6 +343,9 @@
             function settingRequestList() {
                 var idx = 1;
                 for (var item of requestList) {
+                    if (listCount > item.rid) {
+                        listCount = item.rid;
+                    }
                     var tr = document.createElement('tr');
                     tr.id = item.frid;
 
@@ -360,11 +359,6 @@
                     var name = document.createElement('td');
                     name.innerText = item.name;
                     tr.appendChild(name);
-<<<<<<< HEAD
-                     
-=======
-
->>>>>>> 6de2aecfee00e098a2a8fe443871eef5d7307722
 
                     var date = document.createElement('td');
                     var dateDiv = document.createElement('div');
@@ -380,7 +374,7 @@
                     var rankDiv = document.createElement('div');
                     rankDiv.innerText = item.rank;
                     rankDiv.className = "d-flex justify-content-center align-items-center";
-                    rank.appendChild(rankDiv)
+                    rank.appendChild(rankDiv);
                     tr.appendChild(rank);
 
                     if (item.date === -1) {
@@ -672,7 +666,10 @@
 
             // 뷰포트의 세로 길이
             var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-
+            // 데이터를 저장할 배열 선언
+            let requestData = [];
+            
+            let rowCount = 0;
             document.addEventListener("DOMContentLoaded", function () {
                 const addRequestButton = document.getElementById("addRequestNew");
                 const newRequestTable = document.getElementById("requestListTable");
@@ -680,8 +677,7 @@
                 const createExcelButton = document.getElementById("createExcelButton");
                 const createDownRequestExcelButton = document.getElementById("createDownRequestExcelButton");
 
-                // 데이터를 저장할 배열 선언
-                const requestData = [];
+                
 
                 addRequestButton.addEventListener("click", function () {
                     const newRow = newRequestTable.insertRow(newRequestTable.rows.length);
@@ -694,6 +690,15 @@
                     deleteButton.addEventListener('click', function () {
                         // 해당 행을 삭제
                         newRow.remove();
+                        rowCount--;
+                        if (rowCount < 1) {
+                            // + 버튼을 클릭하면 저장 버튼을 보이게 설정
+                            saveButton.style.display = "none";
+                            // 나머지 버튼 숨김
+                            similarButton.style.display = 'inline';
+                            createExcelButton.style.display = "inline";
+                            createDownRequestExcelButton.style.display = "inline";
+                        }
                     });
                     cell1.appendChild(deleteButton);
 
@@ -815,10 +820,12 @@
                     similarButton.style.display = 'none';
                     createExcelButton.style.display = "none";
                     createDownRequestExcelButton.style.display = "none";
+                    
+                    rowCount++;
                 });
 
                 saveButton.addEventListener("click", function () {
-                    if (saveData(requestData)) {
+                    if (saveData()) {
                         // 저장에 성공하면 저장 버튼을 다시 숨김
                         saveButton.style.display = "none";
                         // 나머지 버튼 보이게 설정
@@ -828,16 +835,14 @@
                     }
                 });
 
-                function saveData(requestData) {
+                function saveData() {
 
                     // 데이터를 검증
                     let hasEmptyCell2 = false;
                     let hasEmptyCell8 = false;
 
-                    let listCount = requestList.length;
-
                     const rows = newRequestTable.rows; // 모든 행 가져오기
-                    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 1부터 시작
+                    for (let i = 0; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 1부터 시작
                         const row = rows[i];
 
                         const textarea2 = row.cells[1].querySelector('textarea');
@@ -851,12 +856,10 @@
                         if (textarea2 && input) {
                             if (textarea2.value.trim() === "") { //요구사항 공백인지 체크
                                 hasEmptyCell2 = true;
-                                requestData = [];
                             }
 
                             if (input.value.trim() === "") { //담당자 공백인지 체크
                                 hasEmptyCell8 = true;
-                                requestData = [];
                             }
 
                             // 각 행의 데이터를 requestData 배열에 추가
@@ -871,23 +874,24 @@
                                 note: textarea.value
                             });
                         }
+
                     }
 
                     // 새로 추가하려다가 행을 다 지우고 저장 버튼을 클릭하면
-                    if (requestData.length == 0) {
+                    if (requestData.length === 0) {
                         location.reload(); // 페이지 리로드
                         return false;
                     }
 
                     if (hasEmptyCell2 && hasEmptyCell8) {
                         alert("요구사항과 담당자는 빈 값일 수 없습니다.");
-                        return false;
+                        requestData.length = 0;
                     } else if (hasEmptyCell2) {
                         alert("요구사항에 빈 값은 허용되지 않습니다.");
-                        return false;
+                        requestData.length = 0;
                     } else if (hasEmptyCell8) {
                         alert("담당자에 빈 값은 허용되지 않습니다.");
-                        return false;
+                        requestData.length = 0;
                     } else {
                         // 값이 모두 유효한 경우에만 데이터를 서버로 보냄
                         fetch("save-multiple", {
@@ -901,15 +905,15 @@
                                 .then(result => {
                                     if (result) {
                                         location.reload();
-                                        return true;
-                                    } else {
-                                        return false;
                                     }
                                 })
                                 .catch((error) => console.error('Error:', error));
                     }
                 }
+
             });
+
+
 
             function autoAdjustHeight(textarea) {
                 textarea.style.height = "auto"; // 먼저 높이를 'auto'로 설정하여 기존 높이를 재설정합니다.

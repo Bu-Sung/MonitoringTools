@@ -43,15 +43,16 @@
                         <h4 class="fw-600 text-dark mb-4">게시글 상세</h4>
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
+                                <input type="text" id="hasRight" hidden value="${sessionScope.myInfo.hasRight}">
+                                <input type="text" id="userName" hidden value="${sessionScope.myInfo.uname}">
                                 <div class="d-flex justify-content-between">
                                     <div class="meeing-title" style="font-size: 2rem; overflow-wrap: break-word; word-break: break-all;">${board.title}</div>
-                                        <c:if
-                                            test="${sessionScope.myInfo.hasRight == 1 || (sessionScope.myInfo.hasRight == 2 && sessionScope.myInfo.name == meeting.writer)}">
+                                    <c:if test="${sessionScope.myInfo.hasRight eq 1 || (sessionScope.myInfo.hasRight eq 2 && sessionScope.myInfo.uname eq meeting.writer)}">
                                         <div class="d-flex">
                                             <a href="update/${board.bid}" style="height:2rem;"><button type="button"
-                                                                                  class="btn btn-primary me-2" style="width:4rem;">수정</button></a>
+                                                                                                       class="btn btn-primary me-2" style="width:4rem;">수정</button></a>
                                             <a href="delete/${board.bid}" style="height:2rem;"><button type="button"
-                                                                                  class="btn btn-danger" style="width:4rem;">삭제</button></a>
+                                                                                                       class="btn btn-danger" style="width:4rem;">삭제</button></a>
                                         </div>
                                     </c:if>
                                 </div>
@@ -103,22 +104,28 @@
     <script charset="UTF-8" src="${pageContext.request.contextPath}/js/comment/comment.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-                var linkElement = document.querySelector('#side_list');
+            let editableElements = document.querySelectorAll('[contenteditable="true"]');
 
-                //사이드바에서 게시판 진하게 보이도록 수정
-                if (linkElement) {
-                    linkElement.classList.remove('img-opacity');
-                }
-
-
-                const dashboardMenu = document.getElementById("dashboardMenu");
-                const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-
-                // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-                //offcanvas에서 게시판 진하게 보이도록 수정
-                offcanvasDashboardMenu.classList.remove('img-opacity');
+            editableElements.forEach(function (element) {
+                element.setAttribute('contenteditable', 'false');
             });
+
+            var linkElement = document.querySelector('#side_list');
+
+            //사이드바에서 게시판 진하게 보이도록 수정
+            if (linkElement) {
+                linkElement.classList.remove('img-opacity');
+            }
+
+
+            const dashboardMenu = document.getElementById("dashboardMenu");
+            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+            //offcanvas에서 게시판 진하게 보이도록 수정
+            offcanvasDashboardMenu.classList.remove('img-opacity');
+        });
     </script>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
     <!-- 부트스트랩 script -->
