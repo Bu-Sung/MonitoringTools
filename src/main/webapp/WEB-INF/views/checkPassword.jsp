@@ -77,7 +77,8 @@
                 
                 document.getElementById("checkPwBtn").addEventListener("click", function () {
                     let pw = document.getElementById("checkPwInput").value;
-                    fetch('pwcheck', {
+                    if(pw !== ''){
+                        fetch('pwcheck', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -95,6 +96,9 @@
                             .catch((error) => {
                                 console.error('Error:', error);
                             });
+                    }else{
+                        document.getElementById("failcheck").innerHTML = "비밀번호를 입력해주세요";
+                    }
                 });
             });
         </script>

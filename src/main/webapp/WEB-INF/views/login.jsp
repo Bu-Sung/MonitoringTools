@@ -34,8 +34,8 @@
         <div class="d-flex justify-content-center mt-5">
             <div>
                 <form action="login" method="POST" style="width: 20rem;">
-                    <input type="text" class="form-control mb-3" id="id" name="id"  placeholder="ID" maxlength="30">
-                    <input type="password" class="form-control mb-4" id="password" name="pw" placeholder="PASSWORD" maxlength="30">
+                    <input type="text" class="form-control mb-3" id="id" name="id"  placeholder="ID" maxlength="30" required>
+                    <input type="password" class="form-control mb-4" id="password" name="pw" placeholder="PASSWORD" maxlength="30" required>
                     <button type="submit" class="col-12 btn btn-primary btn btn-block mb-4">LOGIN</button>
                 </form>
             </div>

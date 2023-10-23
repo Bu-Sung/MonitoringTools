@@ -50,11 +50,11 @@
                         <div class="w-100 me-4" style="max-width: 30rem;">
                             <div class="d-flex align-items-center mb-3">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">이름</b>
-                                <input type="text" name="name" class="form-control">
+                                <input type="text" name="name" class="form-control" required>
                             </div>
                             <div class="d-flex align-items-center">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">전화번호</b>
-                                <input type="text" class="form-control" name="phone" placeholder="'-'을 제외한 숫자만 입력하세요.">
+                                <input type="text" class="form-control" name="phone" placeholder="'-'을 제외한 숫자만 입력하세요." required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="white-space: nowrap; width: 7rem;">아이디<br>찾기</button>
@@ -67,19 +67,19 @@
                 <div class="card-body mt-3 mx-md-4">
                     <h5 class="fw-600">비밀번호 찾기🔍</h5>
                     <small class="text-gray">회원 정보에 등록된 <span class="text-dark">아이디</span>, <span class="text-dark">이름</span>, <span class="text-dark">전화번호</span>를 입력하세요.</small>
-                    <form id="findIdForm" action="findPw" method="POST" onsubmit="return findUser()" class="my-5 d-flex justify-content-center">
+                    <form id="findPwForm" action="findPw" method="POST" onsubmit="return findUser()" class="my-5 d-flex justify-content-center">
                         <div class="w-100 me-4" style="max-width: 30rem;">
                             <div class="d-flex align-items-center mb-3">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">아이디</b>
-                                <input type="text" name="id" class="form-control">
+                                <input type="text" name="id" class="form-control" required>
                             </div>
                             <div class="d-flex align-items-center mb-3">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">이름</b>
-                                <input type="text" name="name" class="form-control">
+                                <input type="text" name="name" class="form-control" required>
                             </div>
                             <div class="d-flex align-items-center">
                                 <b class="me-3" style="white-space: nowrap; width: 5rem;">전화번호</b>
-                                <input type="text" name="phone" class="form-control" placeholder="'-'을 제외한 숫자만 입력하세요.">
+                                <input type="text" name="phone" class="form-control" placeholder="'-'을 제외한 숫자만 입력하세요." required>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="white-space: nowrap; width: 7rem;">비밀번호<br>찾기</button>
@@ -88,4 +88,20 @@
             </div>
         </div>
     </body>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('findIdForm').addEventListener('submit', function (e) {
+                var phoneInput = this.querySelector('input[name="phone"]');
+                var phoneValue = phoneInput.value;
+                phoneInput.value = phoneValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+            });
+            document.getElementById('findPwForm').addEventListener('submit', function (e) {
+                var phoneInput = this.querySelector('input[name="phone"]');
+                var phoneValue = phoneInput.value;
+                phoneInput.value = phoneValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+            });
+        });
+
+    </script>
 </html>

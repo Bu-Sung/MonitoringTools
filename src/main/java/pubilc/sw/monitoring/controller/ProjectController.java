@@ -59,7 +59,6 @@ public class ProjectController {
 
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         sessionManager.setProjectInfo(projectDTO,projectService.hasRight(sessionManager.getUserId(), pid));
-        
         model.addAttribute("project", projectDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();

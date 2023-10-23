@@ -11,6 +11,16 @@ const yearSelect = document.getElementById("year");
 const monthSelect = document.getElementById("month");
 const daySelect = document.getElementById("day");
 document.addEventListener('DOMContentLoaded', function () {
+    //비밀번호 확인
+    document.getElementById("pw").addEventListener("blur", pwCheck);
+    document.getElementById("pw2").addEventListener("blur", pwCheck);
+    //전화번호 숫자키 이외 입력 금지
+    phone2.addEventListener("input", restrictNonNumeric);
+    phone3.addEventListener("input", restrictNonNumeric);
+    //최대 4자리까지 입력 가능
+    phone2.addEventListener("input", restrictMaxLength);
+    phone3.addEventListener("input", restrictMaxLength);
+    settingDate();
     if (window.location.href.includes("update")) {
         document.getElementById("deleteUser").addEventListener("click", function () {
             if (confirm("정말로 계정을 삭제하시겠습니까?")) {
@@ -47,60 +57,40 @@ document.addEventListener('DOMContentLoaded', function () {
             var phone1 = document.getElementById("phone1");
             phone.value = phone1.value + '-' + phone2.value + '-' + phone3.value;
         });
-    }
-    //비밀번호 확인
-    document.getElementById("pw").addEventListener("blur", pwCheck);
-    document.getElementById("pw2").addEventListener("blur", pwCheck);
-    //전화번호 숫자키 이외 입력 금지
-    phone2.addEventListener("input", restrictNonNumeric);
-    phone3.addEventListener("input", restrictNonNumeric);
-    //최대 4자리까지 입력 가능
-    phone2.addEventListener("input", restrictMaxLength);
-    phone3.addEventListener("input", restrictMaxLength);
-    settingDate();
-    if (document.getElementById("id").value === '') { // 회원 가입일 때
-        //아이디 중복 확인 함수
-        document.getElementById("checkid").addEventListener("click", idCheck);
-    } else { // 회원 정보 수정일때
         yearSelect.value = birth.value.split('-')[0];
         monthSelect.value = birth.value.split('-')[1];
         daySelect.value = birth.value.split('-')[2];
         document.getElementById("phone1").value = phone.value.split('-')[0];
         phone2.value = phone.value.split('-')[1];
         phone3.value = phone.value.split('-')[2];
+    } else {
+        document.getElementById("checkIdBtn").addEventListener("click", function () {
+            const id = document.getElementById('id').value;
+            if (id === '') {
+                alert("아이디를 입력해주세요.");
+            } else if (id.length < 5) {
+                alert("아이디는 5자~20자 사이로 입력해주세요.");
+            } else {
+                fetch("/monitoring/idcheck/" + id)
+                        .then(response => response.text())
+                        .then(data => {
+                            if (data === 'true') {
+                                alert("사용 불가능한 아이디입니다.");
+                                checkId = false;
+                            } else {
+                                alert("사용 가능한 아이디입니다.");
+                                checkId = true;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("아이디 중복 확인에 실패했습니다.");
+                            checkId = false;
+                        });
+            }
+        });
     }
 });
-function idCheck() {
-    const id = document.getElementById('id').value;
-    if (id === '') {
-        alert("아이디를 입력해주세요.");
-        return;
-    } else if (id.length < 5) {
-        alert("아이디는 5자~20자 사이로 입력해주세요.");
-        return;
-    }
-    fetch('/monitoring/idcheck?id=' + encodeURIComponent(id))
-            .then(response => {
-        if (!response.ok) {
-            throw new Error('HTTP status ' + response.status);
-        }
-        return response.json();
-    })
-            .then(data => {
-                if (data) {
-                    alert("사용 불가능한 아이디입니다.");
-                    checkId = false;
-                } else {
-                    alert("사용 가능한 아이디입니다.");
-                    checkId = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("아이디 중복 확인에 실패했습니다.");
-                checkId = false;
-            });
-}
 
 function pwCheck() {
     const pw = document.getElementById("pw").value;
