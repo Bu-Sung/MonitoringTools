@@ -8,26 +8,22 @@ function searchProjectMember() {
     var addMemberInput = document.getElementById("addMember");
     var searchMemberDropdown = document.getElementById("searchMember");
 
-    addMemberInput.addEventListener('keyup', function () {
-        var searchText = addMemberInput.value;
-        var memberListId = [];
-        memberList.forEach(item => {
-            memberListId.push(item.id);
-        });
-        var request = {
-            uid: searchText,
-            memberList: memberListId
-        };
-        fetch('/monitoring/project/searchMembers', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(request)
-        })
-                .then(response => response.json())
-                .then(data => {
-                    searchMemberDropdown.innerHTML = '';
+    var memberListId = [];
+    memberList.forEach(item => {
+        memberListId.push(item.id);
+    });
+
+    fetch('/monitoring/project/searchMembers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(memberListId)
+    })
+            .then(response => response.json())
+            .then(data => {
+                searchMemberDropdown.innerHTML = '';
+                if (data.length > 0) {
                     data.forEach(item => {
                         var newDiv = createProfileCard(item.name, item.id);
                         newDiv.classList.add("dropdown-item");
@@ -40,42 +36,73 @@ function searchProjectMember() {
                     if (!searchMemberDropdown.classList.contains('show')) {
                         searchMemberDropdown.classList.add('show');
                     }
-                });
-    });
+                    document.addEventListener('click', function (event) {
+                        if (event.target !== addMemberInput && event.target !== searchMemberDropdown) {
+                            searchMemberDropdown.classList.remove('show');
+                        }
+                    });
+                } else {
+                   var newDiv = document.createElement("div");
+                    newDiv.classList.add("d-flex", "p-1");
+                    newDiv.addEventListener('click', function () {
+                            searchMemberDropdown.classList.remove('show');
+                        });
 
-    document.addEventListener('click', function (event) {
-        if (event.target !== addMemberInput && event.target !== searchMemberDropdown) {
-            searchMemberDropdown.classList.remove('show');
-        }
-    });
+                    var textDiv = document.createElement("div");
+                    textDiv.classList.add('ps-1', 'd-flex', 'flex-column', 'justify-content-center');
+
+                    var labelElement = document.createElement('label');
+                    labelElement.classList.add('text-gray');
+                    labelElement.innerText = "항목 없음";
+                    
+                    textDiv.appendChild(labelElement);
+                    newDiv.appendChild(textDiv);
+                    
+                    searchMemberDropdown.appendChild(newDiv);
+                    
+                    if (!searchMemberDropdown.classList.contains('show')) {
+                        searchMemberDropdown.classList.add('show');
+                    }
+                    document.addEventListener('click', function (event) {
+                        if (event.target !== addMemberInput && event.target !== searchMemberDropdown) {
+                            searchMemberDropdown.classList.remove('show');
+                        }
+                    });
+                }   
+            });
 }
 
+let allMemberList = [];
 /* 프로젝트 내 모든 팀원 정보를 가져오는 함수 */
 function getAllMemberInfo() {
-    var addMemberInput = document.getElementById("uid");
-    var searchMemberDropdown = document.getElementById("searchMember");
-
-    addMemberInput.addEventListener('click', function () {
-        fetch('/monitoring/project/getAllMemberInfo', {})
-                .then(response => response.json())
-                .then(data => {
-                    searchMemberDropdown.innerHTML = '';
-                    data.forEach(item => {
-                        var newDiv = createProfileCard(item.name, item.id);
-                        newDiv.classList.add("dropdown-item");
-                        newDiv.addEventListener('click', function () {
-                            addMemberInput.value = item.id;
-                            searchMemberDropdown.classList.remove('show');
-                        });
-                        searchMemberDropdown.appendChild(newDiv);
-                    });
-                    if (!searchMemberDropdown.classList.contains('show')) {
-                        searchMemberDropdown.classList.add('show');
-                    }
+    fetch('/monitoring/project/getAllMemberInfo', {})
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    allMemberList.push(item);
                 });
+            });
+}
+
+function settingMemberNameCard(event) {
+    let inputDiv = event.querySelector('input');
+    let searchDiv = event.querySelector('div');
+
+    searchDiv.innerHTML = '';
+    allMemberList.forEach(item => {
+        var newDiv = createProfileCard(item.name, item.id);
+        newDiv.classList.add("dropdown-item");
+        newDiv.addEventListener('click', function () {
+            inputDiv.value = item.id;
+            searchDiv.classList.remove('show');
+        });
+        searchDiv.appendChild(newDiv);
+        if (!searchDiv.classList.contains('show')) {
+            searchDiv.classList.add('show');
+        }
     });
     document.addEventListener('click', function (event) {
-        if (event.target !== addMemberInput && event.target !== searchMemberDropdown) {
+        if (event.target !== inputDiv && event.target !== searchDiv) {
             searchMemberDropdown.classList.remove('show');
         }
     });
@@ -87,7 +114,7 @@ function searchUsersList() {
     var searchMemberDropdown = document.getElementById("searchMember");
 
     addMemberInput.addEventListener('keyup', function () {
-        fetch('/monitoring/project/searchUsers?uid='+addMemberInput.value, {})
+        fetch('/monitoring/project/searchUsers?uid=' + addMemberInput.value, {})
                 .then(response => response.json())
                 .then(data => {
                     searchMemberDropdown.innerHTML = '';
@@ -111,16 +138,13 @@ function searchUsersList() {
             searchMemberDropdown.classList.remove('show');
         }
     });
- 
+
 }
 
 /* 사용자 검색을 위한 js파일*/
 
 /* 검색 창에 나오는 div 형식 */
 function createProfileCard(name, id) {
-    if(id !== ''){
-        
-    }
     // Create main div
     var newDiv = document.createElement("div");
     newDiv.classList.add("d-flex", "p-1");

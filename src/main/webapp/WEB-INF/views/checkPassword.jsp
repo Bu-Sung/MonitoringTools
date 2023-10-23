@@ -39,16 +39,18 @@
                 <div class="col-lg-9 col-md-9 col-11 mb-5 mt-2">
                     <h5 class="fw-700 mb-4">회원정보 관리📌️</h5> <hr class="my-1"><hr class="m-0">
                     <div class="row justify-content-center">
-                        <form method="POST" action="pwcheck" class=" col-lg-6 col-md-8 col-9">
+                        <div class=" col-lg-6 col-md-8 col-9">
                             <div class="align-items-center text-center">
                                 <h5 class="fw-600 mt-8">비밀번호 확인</h5>
                                 <small class="text-muted" style="white-space: nowrap;">회원님의 정보를 안전하게 보관하기 위해<br>비밀번호를 한 번 더 확인하고 있어요!</small>
                                 <div class="d-flex mt-5 align-items-center">
-                                    <input class="form-control me-3" type="password" id="checkpw" name="pw" required maxlength="30"/>
-                                    <button type="submit" class="btn btn-primary fw-500" style="white-space: nowrap;">확인</button>
+                                    <input class="form-control me-3" type="password" id="checkPwInput" name="pw" required maxlength="30"/>
+                                    <button id="checkPwBtn" type="button" class="btn btn-primary fw-500" style="white-space: nowrap;">확인</button>
                                 </div>
                             </div>
-                        </form>
+                            <small class="text-danger" id="failcheck"></small>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -72,6 +74,28 @@
                     // menuContent의 내용을 offcanvasMenuContent의 내용으로 설정
                     menuContent.innerHTML = offcanvasMenuContent.innerHTML;
                 }
+                
+                document.getElementById("checkPwBtn").addEventListener("click", function () {
+                    let pw = document.getElementById("checkPwInput").value;
+                    fetch('pwcheck', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: pw
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data){
+                                    window.location.href="update";
+                                }else{
+                                    document.getElementById("failcheck").innerHTML = "비밀번호가 틀렸습니다! 다시 입력해주세요";
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                            });
+                });
             });
         </script>
         <!-- 부트스트랩 script -->

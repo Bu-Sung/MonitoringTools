@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     title: '',
                     content: '',
                     color: '#43aef2',
-                    sid: '',
+                    sid: 0,
                     memberList: [],
                     startDateType: "date",
                     endDateType: "date",

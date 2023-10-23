@@ -1,7 +1,7 @@
-var memberList = [];
+let memberList = [];
 document.addEventListener('DOMContentLoaded', function () {
 
-    document.getElementById("addMember").addEventListener("keyup", function () {
+    document.getElementById("addMember").addEventListener("click", function () {
         searchProjectMember();
     });
 
@@ -80,36 +80,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     });
-    
-    function scheduleItem(){
+
+    function scheduleItem() {
         var memberListId = [];
-            memberList.forEach(item => {
-                memberListId.push(item.id);
-            });
-            var allTime = 1;
-            var endDateValue = endDate.value;
-            if (startDate.type === "date" && endDate.type === "date") {
-                allTime = 0;
-                var date = new Date(endDateValue);
-                date.setDate(date.getDate() + 1);
-                var year = date.getFullYear();
-                var month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하기 때문에 1을 더해줍니다.
-                var day = ("0" + date.getDate()).slice(-2);
-                endDateValue = year + '-' + month + '-' + day;
-            }
-            var item = {
-                sid: sid.value,
-                allTime: allTime,
-                title: title.value,
-                content: content.value,
-                color: colorSelect.value,
-                start: startDate.value,
-                end: endDateValue,
-                memberList: memberListId
-            };
-            return item;
+        memberList.forEach(item => {
+            memberListId.push(item.id);
+        });
+        var allTime = 1;
+        var endDateValue = endDate.value;
+        if (startDate.type === "date" && endDate.type === "date") {
+            allTime = 0;
+            var date = new Date(endDateValue);
+            date.setDate(date.getDate() + 1);
+            var year = date.getFullYear();
+            var month = ("0" + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하기 때문에 1을 더해줍니다.
+            var day = ("0" + date.getDate()).slice(-2);
+            endDateValue = year + '-' + month + '-' + day;
+        }
+        var item = {
+            sid: sid.value,
+            allTime: allTime,
+            title: title.value,
+            content: content.value,
+            color: colorSelect.value,
+            start: startDate.value,
+            end: endDateValue,
+            memberList: memberListId
+        };
+        return item;
     }
-    
+
     var updateScheduleButton = document.getElementById("updateSchedule");
     updateScheduleButton.addEventListener("click", function () {
         if (confirm("수정하시겠습니까??") == true) {
@@ -209,12 +209,16 @@ async function scheduleModalSetting(item) { // 일정 초기값 세팅
     endDate.value = item.endDateValue;
     content.value = item.content;
     colorSelect.style.backgroundColor = item.color;
-    memberList = await getScheduleMemberList(item.sid);
-    memberListDiv.innerHTML = '';
-    memberList.forEach(element => {
-        var newDiv = createProfileCard(element.name, element.id);
-        memberListDiv.appendChild(newDiv);
-    });
+    if (item.sid !== null) {
+        memberList = await getScheduleMemberList(item.sid);
+        memberListDiv.innerHTML = '';
+        memberList.forEach(element => {
+            var newDiv = createProfileCard(element.name, element.id);
+            memberListDiv.appendChild(newDiv);
+        });
+    }else{
+        memberList = [];
+    }
     addMember.value = '';
 }
 
@@ -348,8 +352,11 @@ async function getScheduleMemberList(sid) {
     try {
         const response = await fetch("/monitoring/project/schedule/getScheduleMembers?sid=" + parseInt(sid));
         const data = await response.json();
-        for (var item of data) {
-            ScheduleMemberList.push(item);
+        console.log(data);
+        if (data) {
+            for (var item of data) {
+                ScheduleMemberList.push(item);
+            }
         }
     } catch (error) {
         console.error('Error:', error);

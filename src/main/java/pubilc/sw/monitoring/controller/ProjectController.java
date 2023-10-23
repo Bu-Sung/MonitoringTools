@@ -307,15 +307,14 @@ public class ProjectController {
     }
 
     /**
-     * 초대된 멤버 중 일정에 추가를 위한 아이디 찾기
+     * 일정에 대하여 이미 초대된 멤버를 제외한 멤버들 아이디 찾기
      *
      * @param uid 입력한 아이디
      * @return
      */
     @PostMapping("/searchMembers")
-    public @ResponseBody
-    List<UserDTO> searchMembers(@RequestBody Map<String, Object> request) {
-        return projectService.searchMembers(sessionManager.getProjectId(), request.get("uid").toString(), (List<String>) request.get("memberList"));
+    public @ResponseBody List<UserDTO> searchMembers(@RequestBody List<String> memberList) {
+        return projectService.searchMembers(sessionManager.getProjectId(), memberList);
     }
 
     /**
@@ -346,6 +345,7 @@ public class ProjectController {
     
     @GetMapping("/sprint")
     public String sprint(Model model){
+        System.out.println(requestService.getTrueTarget(sessionManager.getProjectId()));
         model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
         model.addAttribute("excelNames", requestService.getExcelNames(sessionManager.getProjectId()));// 엑셀 파일 리스트 
         return "/project/sprintList";
