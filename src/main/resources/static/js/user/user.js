@@ -65,11 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
         phone3.value = phone.value.split('-')[2];
     } else {
         document.getElementById("checkIdBtn").addEventListener("click", function () {
+            const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
             const id = document.getElementById('id').value;
             if (id === '') {
                 alert("아이디를 입력해주세요.");
             } else if (id.length < 5) {
                 alert("아이디는 5자~20자 사이로 입력해주세요.");
+            }else if(!idRegex.test(id)){
+                alert("아이디는 영문과 숫자로만 입력해주세요");
             } else {
                 fetch("/monitoring/idcheck/" + id)
                         .then(response => response.json())
@@ -79,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 checkId = false;
                             } else {
                                 alert("사용 가능한 아이디입니다.");
+                                document.getElementById("id").readOnly = true;
                                 checkId = true;
                             }
                         })
@@ -96,7 +100,14 @@ function pwCheck() {
     const pw = document.getElementById("pw").value;
     const repeatPw = document.getElementById("pw2").value;
     const checkResult = document.getElementById("pw-result");
-    if (pw === repeatPw) {
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
+    
+    if(!passwordRegex.test(pw)){
+        checkPw = false;
+        checkResult.style.color = "red";
+        checkResult.innerHTML = "비밀번호는 영문과 숫자로만 입력해주세요";
+        checkResult.style.display = "block";
+    } else if (pw === repeatPw) {
         checkPw = true;
         checkResult.style.color = "green";
         checkResult.innerHTML = "비밀번호가 일치합니다.";
