@@ -434,13 +434,15 @@ public class ProjectService {
 
         for (UserEntity user : searchResults) {
             boolean exits = false;
-            for (MemberEntity member : memberList) {
-                if (member.getUid().equals(user.getId())) {
-                    exits = true;
+            if(user.getState() == 0){
+                for (MemberEntity member : memberList) {
+                    if (member.getUid().equals(user.getId())) {
+                        exits = true;
+                    }
                 }
-            }
-            if (!exits) {
-                uidList.add(user.getId());
+                if (!exits) {
+                    uidList.add(user.getId());
+                }
             }
         }
 
