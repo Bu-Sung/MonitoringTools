@@ -52,15 +52,12 @@
                                     <div class='d-none d-lg-block'>
                                         <div>
                                             <div class="d-flex mt-4 justify-content-end">
-                                                <a id="similarityTest">
-                                                    <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
-
-                                                    <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                                        <a href="createExcel" class=" mx-2"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
-
-                                                </c:if>
-                                                <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
-                                                <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
+                                                <button class="btn btn-secondary mx-1" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
+                                                <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary mx-1">요구사항 파일 다운</button></a>
+                                                 <%--<c:if test="${sessionScope.myInfo.hasRight != 3}">--%>
+                                                    <a href="createExcel" class=" mx-1"> <button id="createExcelButton" class="btn btn-primary" ${sessionScope.myInfo.hasRight == 3 ? 'style="display: none;"' : ''}>요구사항 파일 생성</button> </a> 
+                                                <%--</c:if>--%>
+                                                <button id="saveButton" class="btn btn-primary" style="display: none;">요구사항 저장</button>
                                             </div>
                                             <hr>
                                         </div>
@@ -116,11 +113,9 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                            <div class="row mx-1 my-4">
-                                                <button id="addRequestNew" class="btn btn-sm btn-outline-primary btn-block "><h5>+</h5></button>
-                                            </div>
-                                        </c:if>
+                                        <div class="row mx-1 my-4" ${sessionScope.myInfo.hasRight == 3 ? 'style="display: none;"' : ''}>
+                                            <button id="addRequestNew" class="btn btn-sm btn-outline-primary btn-block "><h5>+</h5></button>
+                                        </div>
                                     </div>
 
                                     <!--모바일 크기 이하에만 적용-->
@@ -163,7 +158,7 @@
                                 </th>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <textarea id="rname" name="rname" class="form-control" style="min-height: 80px;" autocomplete="off" required maxlength="100"></textarea>
+                                        <textarea id="rname" name="rname" class="form-control" style="min-height: 80px;" autocomplete="off" required maxlength="100" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}></textarea>
                                     </div>
                                 </td>
                             </tr>
@@ -171,7 +166,7 @@
                                 <th style="vertical-align: middle;"><label for="date">추정치<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="date" name="date" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="date" name="date" class="form-select" style="border-radius: 0.3rem; appearance: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>
                                             <option value="-1">-1</option>
                                             <option value="1" selected>1</option>
                                             <option value="2">2</option>
@@ -192,7 +187,7 @@
                                 <th style="vertical-align: middle;"><label for="rank">우선 순위<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="rank" name="rank" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="rank" name="rank" class="form-select" style="border-radius: 0.3rem; appearance: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>
                                             <option value="상">상</option>
                                             <option value="중">중</option>
                                             <option value="하">하</option>
@@ -204,7 +199,7 @@
                                 <th style="vertical-align: middle;"><label for="stage">개발단계<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="stage" name="stage" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="stage" name="stage" class="form-select" style="border-radius: 0.3rem; appearance: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>
                                             <option value="대기" >대기</option>
                                             <option value="분석">분석</option>
                                             <option value="설계">설계</option>
@@ -219,7 +214,7 @@
                                 <th style="vertical-align: middle;"><label for="target">반복 대상<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="target" name="target" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="target" name="target" class="form-select" style="border-radius: 0.3rem; appearance: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>
                                             <option value="true">true</option>
                                             <option value="false" selected>false</option>
                                         </select>
@@ -231,7 +226,7 @@
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="width:100%;">
-                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
+                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>
                                             <div class="dropdown-menu">
                                             </div>
                                         </div>
@@ -240,16 +235,16 @@
                             <tr>
                                 <th style="vertical-align: middle;"><label for="note">비고</label></th>
                                 <td>
-                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off" maxlength="100">
+                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off" maxlength="100" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="editRequest" class="btn btn-primary fw-500"
-                                style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
+                                style="width: 7rem; ${sessionScope.myInfo.hasRight == 3 ? 'display: none;' : ''}" >수정하기</button>
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
-                                style="width: 7rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
+                                style="width: 7rem; ${sessionScope.myInfo.hasRight == 3 ? 'display: none;' : ''}" hidden>삭제하기</button>
                     </div>
                 </div>
             </div>
@@ -535,73 +530,7 @@
                 }
             }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                getRequestList(); // 요구사항 설정
-                getAllMemberInfo(); // 멤버 인원 설정
-                document.getElementById("uid").addEventListener("click", function (event) {
-                    settingMemberNameCard(event.target.parentNode)
-                });
-                document.getElementById('editRequest').addEventListener('click', function () {
-
-                    if (rname.value === '') {
-                        alert("요구사항 명을 입력해 주세요");
-                        rname.focus();
-                    } else if (uid.value === '') {
-                        alert("담당자를 선택해 주세요");
-                        uid.focus();
-                    } else {
-                        request = {
-                            frid: parseInt(frid.value),
-                            rid: rid.value,
-                            name: rname.value,
-                            date: date.value,
-                            rank: rank.value,
-                            stage: stage.value,
-                            target: target.value,
-                            uid: uid.value,
-                            note: note.value
-                        }
-                        if (!saveRequest(request)) {
-                            alert("요구사항을 저장했습니다.");
-                        } else {
-                            alert("요구사항 저장에 실패했습니다.");
-                        }
-                    }
-                });
-
-                document.getElementById("deleteRequest").addEventListener("click", function () {
-                    if (confirm("정말 삭제하시겠습니까??") == true) {
-                        fetch('/monitoring/project/request/delete?frid=' + frid.value, {})
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data) {
-                                        alert("요구사항이 삭제되었습니다.");
-                                    } else {
-                                        alert("요구사항삭제에 실패하였습니다.");
-                                    }
-                                });
-                        location.reload();
-                    }
-                });
-
-                document.getElementById("date").addEventListener("change", function () {
-                    var stage = document.getElementById("stage");
-                    var target = document.getElementById("target");
-                    if (document.getElementById("date").value === "-1") {
-                        stage.selectedIndex = 0;
-                        target.selectedIndex = 1;
-                        stage.disabled = true;
-                        target.disabled = true;
-                    } else {
-                        stage.disabled = false;
-                        target.disabled = false;
-                    }
-                });
-            });
-
             const resultsElement = document.getElementById('results');
-
-
 
             // 요구사항 유사도 검사 함수 
             async function checkSimilarity(requestList) {
@@ -668,16 +597,77 @@
             var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
             // 데이터를 저장할 배열 선언
             let requestData = [];
-            
+
             let rowCount = 0;
             document.addEventListener("DOMContentLoaded", function () {
+                getRequestList(); // 요구사항 설정
+                getAllMemberInfo(); // 멤버 인원 설정
+                document.getElementById("uid").addEventListener("click", function (event) {
+                    settingMemberNameCard(event.target.parentNode)
+                });
+                document.getElementById('editRequest').addEventListener('click', function () {
+                    if (rname.value === '') {
+                        alert("요구사항 명을 입력해 주세요");
+                        rname.focus();
+                    } else if (uid.value === '') {
+                        alert("담당자를 선택해 주세요");
+                        uid.focus();
+                    } else {
+                        request = {
+                            frid: parseInt(frid.value),
+                            rid: rid.value,
+                            name: rname.value,
+                            date: date.value,
+                            rank: rank.value,
+                            stage: stage.value,
+                            target: target.value,
+                            uid: uid.value,
+                            note: note.value
+                        }
+                        if (!saveRequest(request)) {
+                            alert("요구사항을 저장했습니다.");
+                        } else {
+                            alert("요구사항 저장에 실패했습니다.");
+                        }
+                    }
+                });
+
+                document.getElementById("deleteRequest").addEventListener("click", function () {
+                    if (confirm("정말 삭제하시겠습니까??") == true) {
+                        fetch('/monitoring/project/request/delete?frid=' + frid.value, {})
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data) {
+                                        alert("요구사항이 삭제되었습니다.");
+                                    } else {
+                                        alert("요구사항삭제에 실패하였습니다.");
+                                    }
+                                });
+                        location.reload();
+                    }
+                });
+
+                document.getElementById("date").addEventListener("change", function () {
+                    var stage = document.getElementById("stage");
+                    var target = document.getElementById("target");
+                    if (document.getElementById("date").value === "-1") {
+                        stage.selectedIndex = 0;
+                        target.selectedIndex = 1;
+                        stage.disabled = true;
+                        target.disabled = true;
+                    } else {
+                        stage.disabled = false;
+                        target.disabled = false;
+                    }
+                });
+                
+                
+                /* 새로운 요구사항 */
                 const addRequestButton = document.getElementById("addRequestNew");
                 const newRequestTable = document.getElementById("requestListTable");
                 const saveButton = document.getElementById("saveButton");
                 const createExcelButton = document.getElementById("createExcelButton");
                 const createDownRequestExcelButton = document.getElementById("createDownRequestExcelButton");
-
-                
 
                 addRequestButton.addEventListener("click", function () {
                     const newRow = newRequestTable.insertRow(newRequestTable.rows.length);
@@ -793,7 +783,7 @@
                     input.type = 'text';
                     input.readOnly = true;
                     input.addEventListener("click", function (event) {
-                        settingMemberNameCard(event.target.parentNode)
+                        settingMemberNameCard(event.target.parentNode);
                     });
                     input.classList.add('form-control');
                     input.setAttribute('name', 'newColumn8');
@@ -820,7 +810,7 @@
                     similarButton.style.display = 'none';
                     createExcelButton.style.display = "none";
                     createDownRequestExcelButton.style.display = "none";
-                    
+
                     rowCount++;
                 });
 
@@ -910,27 +900,8 @@
                                 .catch((error) => console.error('Error:', error));
                     }
                 }
-
-            });
-
-
-
-            function autoAdjustHeight(textarea) {
-                textarea.style.height = "auto"; // 먼저 높이를 'auto'로 설정하여 기존 높이를 재설정합니다.
-                textarea.style.height = (textarea.scrollHeight) - 1 + "px"; // 스크롤 높이에 따라 높이를 설정합니다.
-            }
-
-
-            // 화면 크기 조절 이벤트를 감지하여 textarea 높이 조절
-            window.addEventListener('resize', function () {
-                const textareas = document.querySelectorAll('textarea');
-                textareas.forEach(function (textarea) {
-                    autoAdjustHeight(textarea);
-                });
-            });
-
-            // 요구사항 유사도 검사 버튼 호출 
-            document.addEventListener("DOMContentLoaded", function () {
+                
+                // 요구사항 유사도 검사 버튼 호출 
                 const similarityTest = document.getElementById("similarityTest");
                 const modalContent = document.getElementById("modalContent");
                 const loadingSpinner = document.getElementById("loadingSpinner"); // 추가된 Spinner 엘리먼트
@@ -980,6 +951,22 @@
                                 // Spinner 감추기 (에러 발생 시도)
                                 loadingSpinner.style.display = "none";
                             });
+                });
+            });
+
+
+
+            function autoAdjustHeight(textarea) {
+                textarea.style.height = "auto"; // 먼저 높이를 'auto'로 설정하여 기존 높이를 재설정합니다.
+                textarea.style.height = (textarea.scrollHeight) - 1 + "px"; // 스크롤 높이에 따라 높이를 설정합니다.
+            }
+
+
+            // 화면 크기 조절 이벤트를 감지하여 textarea 높이 조절
+            window.addEventListener('resize', function () {
+                const textareas = document.querySelectorAll('textarea');
+                textareas.forEach(function (textarea) {
+                    autoAdjustHeight(textarea);
                 });
             });
 

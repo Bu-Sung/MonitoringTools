@@ -459,9 +459,7 @@
                     option1.selected = item.right == '1';
                     option2.selected = item.right == '2';
                     option3.selected = item.right == '3';
-                    if (document.getElementById("hasRight").value !== 1) {
-                        select.disabled = true;
-                    } else {
+                    if (document.getElementById("hasRight").value === '1') {
                         select.addEventListener("change", function () {
                             fetch('/monitoring/project/updateRight', {
                                 method: 'POST',
@@ -476,6 +474,9 @@
                                         }))
                                     .catch(error => console.error('Error:', error));
                         });
+                       
+                    } else {
+                         select.disabled = true;
                     }
                     // 작업 상태에 따른 상태 텍스트 생성
                     // 여기에 작업 상태를 설정 (0, 1 또는 2)
