@@ -16,8 +16,8 @@
   3.3 [프로젝트 자료 관리](#3-프로젝트-자료-관리) <br>
   3.4 [일정 관리](#4-일정-관리) <br>
   3.5 [동적 웹 어플리케이션 시스템](#5-동적-웹-어플리케이션-시스템) <br><br>
-4. [사용 방법](#-사용-방법)
-5. [Licenses](#-Licenses)<br>
+4. [사용 방법](#-사용-방법)<br><br>
+5. [Licenses](#-Licenses)
 
 <br><br><br>
 ## 🖥 프로젝트 소개
@@ -184,6 +184,10 @@
 ### Attribution 4.0 International(CC BY 4.0)
 - 출처 : https://www.streamlinehq.com/
 - 저작자 : https://github.com/webalys-hq/streamline-vectors
+### AI API·DATA ParaphraseQA 
+- 해당 API는 Non-commercial 라이선스로 상업적 사용 시 ETRI의 기술이전이 필요합니다.
+- API 정보는 아래 링크를 참고해주세요
+  https://aiopen.etri.re.kr/guide/ParaphraseQA
     
 <br><br><br>
 <img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=80&section=footer" />
