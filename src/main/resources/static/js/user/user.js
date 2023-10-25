@@ -72,9 +72,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert("아이디는 5자~20자 사이로 입력해주세요.");
             } else {
                 fetch("/monitoring/idcheck/" + id)
-                        .then(response => response.text())
+                        .then(response => response.json())
                         .then(data => {
-                            if (data === 'true') {
+                            if (data !== 2) {
                                 alert("사용 불가능한 아이디입니다.");
                                 checkId = false;
                             } else {

@@ -154,10 +154,7 @@ public class UserController {
      */
     @GetMapping("/idcheck/{id}")
     public @ResponseBody
-    boolean checkId(@PathVariable String id) {
-        if(id.length()<5){
-            return true;
-        }
+    int checkId(@PathVariable String id) {
         return userService.idExists(id);
     }
 

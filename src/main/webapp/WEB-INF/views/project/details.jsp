@@ -511,10 +511,10 @@
                         alert("아이디를 입력해주세요.");
                         return;
                     }
-                    fetch(`/monitoring/idcheck/` + memberName)
+                    fetch("/monitoring/idcheck/" + memberName)
                             .then(response => response.json())
-                            .then(isAvailable => {
-                                if (isAvailable) {
+                            .then(data => {
+                                if (data === 0) {
                                     fetch('/monitoring/project/addMember', {
                                         method: 'POST',
                                         headers: {
@@ -534,7 +534,6 @@
                                             })
                                             .catch(error => console.error('Error:', error));
 
-//                                }
                                 } else {
                                     alert("아이디가 존재하지 않습니다.");
                                 }

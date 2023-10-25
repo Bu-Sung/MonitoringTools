@@ -49,7 +49,7 @@ public class UserService {
      * @return 회원가입 성공 여부 - 성공하면 true, 실패하면 false
      */
     public boolean register(UserDTO userDTO){
-        if(idExists(userDTO.getId())){
+        if(idExists(userDTO.getId()) != 2){
             return false;
         }else{
             return userRepository.save(UserEntity.builder()
@@ -66,11 +66,16 @@ public class UserService {
     
     /**
      * 
-     * @param id 아이디 중복 검사를 위해 사용자가 입력한 정보
-     * @return 아이디의 존재 여부 - 아이디가 존재하면 true, 없으면 false
+     * @param id 아이디 존재 여부 확인을 위해 사용자가 입력한 정보
+     * @return 아이디의 존재 여부 - 아이디가 존재하면 삭제 상태를 반환, 없으면 2를 반환
      */
-    public boolean idExists(String id){
-        return userRepository.existsById(id);
+    public int idExists(String id){
+        UserEntity userEntity = userRepository.findUserById(id);
+        if(userEntity == null){
+            return 2;
+        }else{
+            return userEntity.getState();
+        }
     }
     
     public boolean pwCheck(String id, String pw){
