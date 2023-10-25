@@ -17,6 +17,7 @@
   3.4 [일정 관리](#4-일정-관리) <br>
   3.5 [동적 웹 어플리케이션 시스템](#5-동적-웹-어플리케이션-시스템) <br><br>
 4. [사용 방법](#-사용-방법)
+5. [Licenses](#-Licenses)<br>
 
 <br><br><br>
 ## 🖥 프로젝트 소개
@@ -176,4 +177,15 @@
 ### 7. java -jar target/monitoring.war 명령어를 사용해 실행
 ### 8. localhost:8080/monitoring/ 경로로 접속
 <br><br><br>
+
+## Licenses
+### Apache-2.0 Licenses
+### MIT Licenses
+### Attribution 4.0 International(CC BY 4.0)
+- 출처 : https://www.streamlinehq.com/
+- 저작자 : https://github.com/webalys-hq/streamline-vectors
+    
+<br><br><br>
 <img src="https://capsule-render.vercel.app/api?type=waving&color=369fff&height=80&section=footer" />
+
+
