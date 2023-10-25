@@ -185,6 +185,7 @@
 - 출처 : https://www.streamlinehq.com/
 - 저작자 : https://github.com/webalys-hq/streamline-vectors
 ### AI API·DATA ParaphraseQA 
+- 본 결과물은 공공 인공지능 오픈 API·DATA 서비스 포털에서 공개한 문장 패러프레이즈 인식 API 기술을 사용하였습니다. https://aiopen.etri.re.kr/
 - 해당 API는 Non-commercial 라이선스로 상업적 사용 시 ETRI의 기술이전이 필요합니다.
 - API 정보는 아래 링크를 참고해주세요
   https://aiopen.etri.re.kr/guide/ParaphraseQA
