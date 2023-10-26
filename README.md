@@ -181,7 +181,6 @@
 ## Licenses
 ### Apache-2.0 Licenses
 ### MIT Licenses
-### Elastic License 2.0
 ### Attribution 4.0 International(CC BY 4.0)
 - 출처 : https://www.streamlinehq.com/
 - 저작자 : https://github.com/webalys-hq/streamline-vectors
