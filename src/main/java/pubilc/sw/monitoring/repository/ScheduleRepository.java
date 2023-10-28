@@ -23,8 +23,8 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     List<ScheduleEntity> findByPid(Long pid);
 
-    @Query(value = "SELECT * FROM schedule WHERE project_id = :projectId AND (NOW() BETWEEN schedule_start AND schedule_end) AND FIND_IN_SET(:uid, schedule_member) > 0", nativeQuery = true)
-    List<ScheduleEntity> findSchedules(@Param("projectId") Long projectId, @Param("uid") String uid);
+    @Query(value = "SELECT * FROM schedule WHERE project_id = :projectId AND (NOW() BETWEEN schedule_start AND schedule_end) OR (DATE(schedule_start) = CURDATE() OR DATE(schedule_end) = CURDATE())", nativeQuery = true)
+    List<ScheduleEntity> findSchedules(@Param("projectId") Long projectId);
 
     List<ScheduleEntity> findByMid(Long mid);
     
