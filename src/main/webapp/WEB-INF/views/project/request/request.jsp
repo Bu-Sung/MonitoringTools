@@ -563,7 +563,6 @@
 
                 /* 요구사항 수정하기 버튼 클릭 시 */
                 document.getElementById('editRequest').addEventListener('click', function () {
-
                     if (rname.value === '') {
                         alert("요구사항 명을 입력해 주세요");
                         rname.focus();
@@ -584,9 +583,13 @@
                         }
                         if (!saveRequest(request)) {
                             alert("요구사항을 저장했습니다.");
+                            location.reload();
                         } else {
                             alert("요구사항 저장에 실패했습니다.");
+                            location.reload();
                         }
+                        
+                        
                     }
                 });
 
