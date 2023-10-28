@@ -53,14 +53,12 @@
                                         <div>
                                             <div class="d-flex mt-4 justify-content-end">
                                                 <a id="similarityTest">
-                                                    <button class="btn btn-secondary" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
-                                                    
-                                                        <c:if test="${sessionScope.myInfo.hasRight != 3}">
-                                                            <a href="createExcel" class=" mx-2"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
-
-                                                        </c:if>
-                                                    <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary">요구사항 파일 다운</button></a>
-                                                    <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
+                                                    <button class="btn btn-secondary mx-1" id="similarButton" data-bs-toggle="modal" data-bs-target="#similarModal">요구사항 유사도 검사</button>
+                                                    <c:if test="${sessionScope.myInfo.hasRight != 3}">
+                                                        <a href="createExcel" class=" mx-1"> <button id="createExcelButton" class="btn btn-primary">요구사항 파일 생성</button> </a>                                                 </a>
+                                                    </c:if>
+                                                <a href="createDownRequestExcel"><button id="createDownRequestExcelButton" class="btn btn-primary mx-1">요구사항 파일 다운</button></a>
+                                                <button id="saveButton" class="btn btn-primary" style="display: none;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>요구사항 저장</button>
                                             </div>
                                             <hr>
                                         </div>
@@ -246,15 +244,10 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-<<<<<<< HEAD
-                        <button type="button" id="saveRequest" class="btn btn-primary fw-500"
-                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
-=======
                         <button type="button" id="editRequest" class="btn btn-primary fw-500"
-                                style="width: 8rem; height: 3rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
->>>>>>> 6de2aecfee00e098a2a8fe443871eef5d7307722
+                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
                         <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
-                                style="width: 7rem;" hidden ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
+                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
                     </div>
                 </div>
             </div>
@@ -287,20 +280,32 @@
         <script>
             var requestList = []; // 요구사항 리스트
             var similarList = []; // 유사한 데이터 쌍 리스트 
-            const baseRequest = {
-                frid: 0,
-                rid: '',
-                name: '',
-                date: 1,
-                rank: '하',
-                stage: "대기",
-                target: "false",
-                uid: '',
-                note: ''
-            };
-
+//            const baseRequest = {
+//                frid: 0,
+//                rid: '',
+//                name: '',
+//                date: 1,
+//                rank: '하',
+//                stage: "대기",
+//                target: "false",
+//                uid: '',
+//                note: ''
+//            };
+            /* 요구사항 클릭시 해당 정보를 확인할 수 있도록 세팅 */
             function requestModal(request) {
                 var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
+                let target = document.getElementById("target");
+                if (request.stage === '대기') {
+                    target.disabled = true;
+                }
+                document.getElementById("stage").addEventListener("change", function () {
+                    if (this.value === '대기') {
+                        target.disabled = true;
+                        target.value = 'false';
+                    } else {
+                        target.disabled = false;
+                    }
+                });
                 frid.value = request.frid;
                 rid.value = request.rid;
                 rname.value = request.name;
@@ -312,11 +317,14 @@
                 note.value = request.note;
                 myModal.show();
             }
+
+            /* 프로젝트의 요구사항 리스트를 가져오는 함수 */
             function getRequestList() {
                 fetch("getRequests", {
                 })
                         .then(response => response.json())
                         .then(data => {
+                            requestList = [];
                             data.forEach(item => {
                                 requestList.push(item);
                             });
@@ -324,6 +332,8 @@
                         })
                         .catch((error) => console.error('Error:', error));
             }
+
+            /* 요구사항을 저장 */
             function saveRequest(request) {
                 fetch("save", {
                     method: "POST",
@@ -335,16 +345,16 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data) {
-                                location.reload();
-                                return true;
-                            } else {
-                                return false;
+                                getRequestList();
                             }
                         })
                         .catch((error) => console.error('Error:', error));
             }
 
+            /* 요구사항 리스트를 화면 테이블에 세팅*/
             function settingRequestList() {
+                let table = document.getElementById("requestListTable");
+                table.innerHTML = "";
                 var idx = 1;
                 for (var item of requestList) {
                     var tr = document.createElement('tr');
@@ -418,6 +428,10 @@
                         selectStage.addEventListener('change', function (e) {
                             e.stopPropagation();
                             var tmp = requestList.find(item => item.frid === parseInt(this.parentNode.parentNode.parentNode.id));
+                            let target = tmp.target;
+                            if (this.value === "대기") {
+                                target = 'false';
+                            }
                             var request = {
                                 frid: tmp.frid,
                                 rid: tmp.rid,
@@ -425,7 +439,7 @@
                                 date: tmp.date,
                                 rank: tmp.rank,
                                 stage: this.value,
-                                target: tmp.target,
+                                target: target,
                                 uid: tmp.uid,
                                 note: tmp.note
                             };
@@ -454,6 +468,7 @@
                         selectTarget.className = "border p-1";
                         selectTarget.style.borderRadius = "0.3rem";
                         selectTarget.style.appearance = "none";
+                        selectTarget.disabled = true;
 
                         var targetArray = ["true", "false"];
 
@@ -469,25 +484,27 @@
                             }
                             selectTarget.appendChild(option);
                         });
-
-                        selectTarget.addEventListener('change', function (e) {
-                            e.stopPropagation();
-                            var tmp = requestList.find(item => item.frid === parseInt(this.parentNode.parentNode.parentNode.id));
-                            var request = {
-                                frid: tmp.frid,
-                                rid: tmp.rid,
-                                name: tmp.name,
-                                date: tmp.date,
-                                rank: tmp.rank,
-                                stage: tmp.stage,
-                                target: this.value,
-                                uid: tmp.uid,
-                                note: tmp.note
-                            };
-                            if (saveRequest(request)) {
-                                alert("변경에 실패했습니다.");
-                            }
-                        });
+                        if (item.stage !== '대기') {
+                            selectTarget.disabled = false;
+                            selectTarget.addEventListener('change', function (e) {
+                                e.stopPropagation();
+                                var tmp = requestList.find(item => item.frid === parseInt(this.parentNode.parentNode.parentNode.id));
+                                var request = {
+                                    frid: tmp.frid,
+                                    rid: tmp.rid,
+                                    name: tmp.name,
+                                    date: tmp.date,
+                                    rank: tmp.rank,
+                                    stage: tmp.stage,
+                                    target: this.value,
+                                    uid: tmp.uid,
+                                    note: tmp.note
+                                };
+                                if (saveRequest(request)) {
+                                    alert("변경에 실패했습니다.");
+                                }
+                            });
+                        }
 
                         selectTarget.addEventListener('focus', function (e) {
                             this.parentNode.parentNode.parentNode.classList.add('dontClick');
@@ -527,11 +544,10 @@
                                 uid: tmp.uid,
                                 note: tmp.note
                             };
-                            document.getElementById("deleteRequest").hidden = false;
                             requestModal(request);
                         }
                     });
-                    document.getElementById("requestListTable").appendChild(tr);
+                    table.appendChild(tr);
                     idx++;
                 }
             }
@@ -539,9 +555,13 @@
             document.addEventListener('DOMContentLoaded', function () {
                 getRequestList(); // 요구사항 설정
                 getAllMemberInfo(); // 멤버 인원 설정
+
+                /* 프로젝트 멤버 인원을 네임카드로 배치 */
                 document.getElementById("uid").addEventListener("click", function (event) {
-                    settingMemberNameCard(event.target.parentNode)
+                    settingMemberNameCard(event.target.parentNode);
                 });
+
+                /* 요구사항 수정하기 버튼 클릭 시 */
                 document.getElementById('editRequest').addEventListener('click', function () {
 
                     if (rname.value === '') {
@@ -570,6 +590,7 @@
                     }
                 });
 
+                /* 삭제하기 버튼 클릭시 */
                 document.getElementById("deleteRequest").addEventListener("click", function () {
                     if (confirm("정말 삭제하시겠습니까??") == true) {
                         fetch('/monitoring/project/request/delete?frid=' + frid.value, {})
@@ -585,6 +606,7 @@
                     }
                 });
 
+                /* 추정치 변화 시 */
                 document.getElementById("date").addEventListener("change", function () {
                     var stage = document.getElementById("stage");
                     var target = document.getElementById("target");
@@ -626,8 +648,8 @@
 
             // 서버의 API를 호출하여 유사성을 확인하는 함수
             /*본 결과물은 공공 인공지능 오픈 API·DATA 서비스 포털에서 공개한 문장 패러프레이즈 인식 API 기술을 사용하였습니다. https://aiopen.etri.re.kr/
-            해당 API는 Non-commercial 라이선스로 상업적 사용 시 ETRI의 기술이전이 필요합니다.
-            API 정보는 아래 링크를 참고해주세요 https://aiopen.etri.re.kr/guide/ParaphraseQA*/
+             해당 API는 Non-commercial 라이선스로 상업적 사용 시 ETRI의 기술이전이 필요합니다.
+             API 정보는 아래 링크를 참고해주세요 https://aiopen.etri.re.kr/guide/ParaphraseQA*/
             async function similarityAPI(name1, name2) {
                 const openApiURL = 'http://aiopen.etri.re.kr:8000/ParaphraseQA';
                 const accessKey = '<spring:eval expression="@environment.getProperty('similarity.api.key')" />'; // API Key
@@ -680,7 +702,7 @@
 
                 // 데이터를 저장할 배열 선언
                 const requestData = [];
-
+                let listCount = 0;
                 addRequestButton.addEventListener("click", function () {
                     const newRow = newRequestTable.insertRow(newRequestTable.rows.length);
 
@@ -692,6 +714,15 @@
                     deleteButton.addEventListener('click', function () {
                         // 해당 행을 삭제
                         newRow.remove();
+                        listCount--;
+                        if (listCount == 0) {
+                            // + 버튼을 클릭하면 저장 버튼을 보이게 설정
+                            saveButton.style.display = "none";
+                            // 나머지 버튼 숨김
+                            similarButton.style.display = "inline";
+                            createExcelButton.style.display = "inline";
+                            createDownRequestExcelButton.style.display = "inline";
+                        }
                     });
                     cell1.appendChild(deleteButton);
 
@@ -778,8 +809,19 @@
                     const optionTrue = document.createElement('option');
                     optionTrue.text = 'true';
                     selectBox4.add(optionTrue);
+                    
+                    selectBox4.disabled = true;
                     cell6.appendChild(selectBox4);
-
+                    
+                    selectBox3.addEventListener("change", function () {
+                        if (this.value === '대기') {
+                            selectBox4.disabled = true;
+                            selectBox4.value = 'false';
+                        } else {
+                            selectBox4.disabled = false;
+                        }
+                    });
+                    
                     const cell7 = newRow.insertCell(6);
                     var searchMemberWarrap = document.createElement('div');
                     const input = document.createElement('input');
@@ -813,6 +855,7 @@
                     similarButton.style.display = 'none';
                     createExcelButton.style.display = "none";
                     createDownRequestExcelButton.style.display = "none";
+                    listCount++;
                 });
 
                 saveButton.addEventListener("click", function () {
@@ -835,7 +878,7 @@
                     let listCount = requestList.length;
 
                     const rows = newRequestTable.rows; // 모든 행 가져오기
-                    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 1부터 시작
+                    for (let i = 0; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 1부터 시작
                         const row = rows[i];
 
                         const textarea2 = row.cells[1].querySelector('textarea');
@@ -849,12 +892,12 @@
                         if (textarea2 && input) {
                             if (textarea2.value.trim() === "") { //요구사항 공백인지 체크
                                 hasEmptyCell2 = true;
-                                requestData = [];
+                                requestData.length = 0;
                             }
 
                             if (input.value.trim() === "") { //담당자 공백인지 체크
                                 hasEmptyCell8 = true;
-                                requestData = [];
+                                requestData.length = 0;
                             }
 
                             // 각 행의 데이터를 requestData 배열에 추가
@@ -872,19 +915,22 @@
                     }
 
                     // 새로 추가하려다가 행을 다 지우고 저장 버튼을 클릭하면
-                    if (requestData.length == 0) {
-                        location.reload(); // 페이지 리로드
-                        return false;
-                    }
+//                    if (requestData.length == 0) {
+//                        location.reload(); // 페이지 리로드
+//                        return false;
+//                    }
 
                     if (hasEmptyCell2 && hasEmptyCell8) {
                         alert("요구사항과 담당자는 빈 값일 수 없습니다.");
+                        requestData.length = 0;
                         return false;
                     } else if (hasEmptyCell2) {
                         alert("요구사항에 빈 값은 허용되지 않습니다.");
+                        requestData.length = 0;
                         return false;
                     } else if (hasEmptyCell8) {
                         alert("담당자에 빈 값은 허용되지 않습니다.");
+                        requestData.length = 0;
                         return false;
                     } else {
                         // 값이 모두 유효한 경우에만 데이터를 서버로 보냄

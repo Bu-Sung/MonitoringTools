@@ -42,8 +42,8 @@ public class RequestController {
     @GetMapping("/request")
     public String request(Model model) {
 
-        List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
-        model.addAttribute("requestDTOs", requestDTOs);  // 요구사항 목록 
+//        List<RequestDTO> requestDTOs = requestService.getRequests(sessionManager.getProjectId());
+//        model.addAttribute("requestDTOs", requestDTOs);  // 요구사항 목록 
 
         return "project/request/request";
     }
