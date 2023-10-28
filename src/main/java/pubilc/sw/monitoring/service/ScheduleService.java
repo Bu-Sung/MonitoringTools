@@ -35,6 +35,8 @@ public class ScheduleService {
 
     @Value("${date.input.format}")
     private String dateInputFormatter;
+    @Value("${date.output.format}")
+    private String dateOutputFormatter;
     @Value("${date.none.time.format}")
     private String dateFormatter;
 
@@ -124,34 +126,34 @@ public class ScheduleService {
     }
 
     /**
-     * 자신이 관련된 일정을 가져온다.
+     * 자신이 관련된 오늘 일정을 가져온다.
      *
      * @param pid 프로젝트 아이디
      * @param uid 사용자 아이디
      * @return 자신이 태그된 일정 목록
      */
     public List<ScheduleDTO> findSchedules(Long pid, String uid) {
-        List<ScheduleEntity> entityList = scheduleRepository.findSchedules(pid, uid);
+        List<ScheduleEntity> entityList = scheduleRepository.findSchedules(pid);
         List<ScheduleDTO> dtoList = new ArrayList();
 
         for (ScheduleEntity entity : entityList) {
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-            String start = "";
-            String end = "";
-            if (entity.getAllTime() == 1) {
-                start = timeFormat.format(entity.getStart());
-                end = timeFormat.format(entity.getEnd());
+            if (entity.getMember().contains(uid)) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
+                if (entity.getAllTime() == 0) {
+                    formatter = DateTimeFormatter.ofPattern(dateFormatter);
+                }
+                dtoList.add(ScheduleDTO.builder()
+                        .sid(entity.getSid())
+                        .title(entity.getTitle())
+                        .color(entity.getColor())
+                        .content(entity.getContent())
+                        .allTime(entity.getAllTime())
+                        .start(entity.getStart().format(formatter))
+                        .end(entity.getEnd().format(formatter))
+                        .memberList(Arrays.asList(entity.getMember().split(",")))
+                        .build());
+                System.out.println(entity);
             }
-            dtoList.add(ScheduleDTO.builder()
-                    .sid(entity.getSid())
-                    .title(entity.getTitle())
-                    .color(entity.getColor())
-                    .content(entity.getContent())
-                    .allTime(entity.getAllTime())
-                    .start(start)
-                    .end(end)
-                    .memberList(Arrays.asList(entity.getMember().split(",")))
-                    .build());
         }
         return dtoList;
     }
@@ -229,9 +231,6 @@ public class ScheduleService {
     }
 
     public boolean updatePageSchdule(Long id, List<ScheduleDTO> scheduleDTOS, Long pid) {
-        System.out.println("-----------------------------------------------------------------------------------");
-        System.out.println(scheduleDTOS);
-        System.out.println("-----------------------------------------------------------------------------------");
         DateTimeFormatter InputFormatter = DateTimeFormatter.ofPattern(dateInputFormatter);
         List<ScheduleEntity> scheduleEntitys = new ArrayList();
         List<ScheduleEntity> newEntitys;
@@ -254,9 +253,6 @@ public class ScheduleService {
                         .mid(id)
                         .msid(s.getMsid())
                         .build());
-                System.out.println("--------------------");
-                System.out.println(s.getSid());
-                System.out.println("--------------------");
             }
             newEntitys = (List<ScheduleEntity>) scheduleRepository.saveAll(scheduleEntitys);
         } catch (Exception e) {
