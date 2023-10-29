@@ -221,6 +221,9 @@ public class ProjectService {
      */
     public int hasRight(String uid, Long pid) {
         MemberEntity memberEntity = memberRepository.findByUidAndPid(uid, pid);
+        if(memberEntity == null){
+            return -1;
+        }
         return memberEntity.getRight();
     }
 //    public boolean hasRight(String uid, Long pid) {
@@ -342,15 +345,15 @@ public class ProjectService {
                         .build();
 
                 // 카테고리 콤마로 나눠서 카테고리 리스트에 저장
-                String category = projectEntity.getCategory();
-                if (category != null && !category.isEmpty()) {
-                    String[] categories = category.split(",");
-                    List<String> categoryList = new ArrayList<>();
-                    for (String cat : categories) {
-                        categoryList.add(cat.trim());
-                    }
-                    projectDTO.setCategoryList(categoryList);
-                }
+//                String category = projectEntity.getCategory();
+//                if (category != null && !category.isEmpty()) {
+//                    String[] categories = category.split(",");
+//                    List<String> categoryList = new ArrayList<>();
+//                    for (String cat : categories) {
+//                        categoryList.add(cat.trim());
+//                    }
+//                    projectDTO.setCategoryList(categoryList);
+//                }
 
                 invitedProjects.add(projectDTO);
             }
@@ -630,5 +633,13 @@ public class ProjectService {
     public int getDaysUntilProjectEnd(Long pid) {
         return projectRepository.getDaysUntilProjectEnd(pid);
     }
-
+    
+    /**
+     * 자신이 초대된 프로젝트인지 확인하는 함수
+     */
+    public boolean checkInvite(Long pid, String uid){
+        MemberEntity entity = memberRepository.findByPidAndUidAndRightNotNegative(pid, uid);
+        return entity != null;
+    }
+            
 }

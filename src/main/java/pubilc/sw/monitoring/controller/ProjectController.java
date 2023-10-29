@@ -55,41 +55,50 @@ public class ProjectController {
      * @return project 프로젝트 리스트 조회 페이지
      */
     @GetMapping("/{pid}")
-    public String project(@PathVariable Long pid, Model model) throws JsonProcessingException {
-
+    public String project(@PathVariable Long pid, Model model, RedirectAttributes attrs) throws JsonProcessingException {
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
-        sessionManager.setProjectInfo(projectDTO,projectService.hasRight(sessionManager.getUserId(), pid));
-        model.addAttribute("project", projectDTO);
+        int hasRight = projectService.hasRight(sessionManager.getUserId(), pid);
+        if (projectDTO != null && hasRight != -1) {
+            sessionManager.setProjectInfo(projectDTO, projectService.hasRight(sessionManager.getUserId(), pid));
+            model.addAttribute("project", projectDTO);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        model.addAttribute("allData", objectMapper.writeValueAsString(graphService.getData(pid)));  // 전체 요구사항 데이터 
-        model.addAttribute("memberData", objectMapper.writeValueAsString(graphService.getMemberData(pid)));  // 멤버 요구사항 데이터 
-        model.addAttribute("burnData", objectMapper.writeValueAsString(graphService.burnMemberData(pid)));  // 번다운 데이터
-        model.addAttribute("projectDate", graphService.getProjectDate(pid));  // 프로젝트 시작, 마감 날짜 
+            ObjectMapper objectMapper = new ObjectMapper();
+            model.addAttribute("allData", objectMapper.writeValueAsString(graphService.getData(pid)));  // 전체 요구사항 데이터 
+            model.addAttribute("memberData", objectMapper.writeValueAsString(graphService.getMemberData(pid)));  // 멤버 요구사항 데이터 
+            model.addAttribute("burnData", objectMapper.writeValueAsString(graphService.burnMemberData(pid)));  // 번다운 데이터
+            model.addAttribute("projectDate", graphService.getProjectDate(pid));  // 프로젝트 시작, 마감 날짜 
 
-        model.addAttribute("todaySchedule", scheduleService.findSchedules(pid, sessionManager.getUserId()));// 금일 일정
-        model.addAttribute("userSprint", requestService.getUserSprintList(pid, sessionManager.getUserId())); // 사용자의 스프린트 내역
-        Map<String, Object> rate = requestService.getRequestCounts(pid);
-        int num = 0;
-        if (rate.get("total") instanceof Number && ((Number) rate.get("total")).doubleValue() != 0) {
-            double clear = ((Number) rate.get("clear")).doubleValue();
-            double total = ((Number) rate.get("total")).doubleValue();
-            num = (int) (clear / total * 100);
+            model.addAttribute("todaySchedule", scheduleService.findSchedules(pid, sessionManager.getUserId()));// 금일 일정
+            model.addAttribute("userSprint", requestService.getUserSprintList(pid, sessionManager.getUserId())); // 사용자의 스프린트 내역
+            Map<String, Object> rate = requestService.getRequestCounts(pid);
+            int num = 0;
+            if (rate.get("total") instanceof Number && ((Number) rate.get("total")).doubleValue() != 0) {
+                double clear = ((Number) rate.get("clear")).doubleValue();
+                double total = ((Number) rate.get("total")).doubleValue();
+                num = (int) (clear / total * 100);
+            }
+            model.addAttribute("num", num);// 달성률
+            model.addAttribute("rate", requestService.getRequestCounts(pid));// 달성률
+            model.addAttribute("endDay", projectService.getDaysUntilProjectEnd(pid));
+            return "project/project";
+        } else {
+            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
+            return "redirect:/project/list";
         }
-        model.addAttribute("num", num);// 달성률
-        model.addAttribute("rate", requestService.getRequestCounts(pid));// 달성률
-        model.addAttribute("endDay", projectService.getDaysUntilProjectEnd(pid));
-        return "project/project";
+
     }
 
     @GetMapping("/invite/{pid}")
-    public String invite(@PathVariable Long pid, Model model) {
-
-        model.addAttribute("pid", pid);  // 프로젝트 아이디 
-        model.addAttribute("inviteUserName", projectService.getInviteUserName(pid));  // 프로젝트 초대한사람 이름 
-        model.addAttribute("pName", projectService.getInviteName(pid));  // 초대받은 프로젝트 이름 
-
-        return "project/invite";
+    public String invite(@PathVariable Long pid, Model model, RedirectAttributes attrs) {
+        if (projectService.checkInvite(pid, sessionManager.getUserId())) {
+            model.addAttribute("pid", pid);  // 프로젝트 아이디 
+            model.addAttribute("inviteUserName", projectService.getInviteUserName(pid));  // 프로젝트 초대한사람 이름 
+            model.addAttribute("pName", projectService.getInviteName(pid));  // 초대받은 프로젝트 이름 
+            return "project/invite";
+        }else{
+            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
+            return "redirect:/project/list";
+        }
     }
 
     /**
@@ -128,6 +137,10 @@ public class ProjectController {
      */
     @PostMapping("/acceptInvite/{pid}")
     public String acceptInvite(@PathVariable Long pid, RedirectAttributes attrs) {
+        if (projectService.checkInvite(pid, sessionManager.getUserId())) {
+            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
+            return "redirect:/project/list";
+        }
         if (projectService.acceptInvite(pid, sessionManager.getUserId())) {
             attrs.addFlashAttribute("msg", "프로젝트 초대 수락하였습니다.");
         } else {
@@ -140,6 +153,10 @@ public class ProjectController {
     // 프로젝트 초대 거절 ㅓ 
     @PostMapping("/refuseInvite/{pid}")
     public String refuseInvite(@PathVariable Long pid, RedirectAttributes attrs) {
+        if (projectService.checkInvite(pid, sessionManager.getUserId())) {
+            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
+            return "redirect:/project/list";
+        }
         if (projectService.refuseInvite(pid, sessionManager.getUserId())) {
             attrs.addFlashAttribute("msg", "프로젝트 초대 거절하였습니다.");
         } else {
@@ -172,14 +189,17 @@ public class ProjectController {
      * @param model
      * @return projectDetails 프로젝트 상세 정보 페이지
      */
-    @GetMapping("/update/{pid}")
-    public String projectDetails(@PathVariable Long pid, Model model) {
+    @GetMapping("/update")
+    public String projectDetails(Model model) {
         ProjectDTO projectDTO = projectService.getProjectDetails(sessionManager.getProjectId());
-        model.addAttribute("project", projectDTO);
+        int hasRight = projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId());
+        if (projectDTO != null && hasRight != -1) {
+            model.addAttribute("project", projectDTO);
+            model.addAttribute("right", hasRight);
+            return "project/details";
+        }
+        return "redirect:/project/" + sessionManager.getProjectId();
 
-        int right = projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId());  // 권한 확인 
-        model.addAttribute("right", right);
-        return "project/details";
     }
 
     /**
@@ -218,9 +238,9 @@ public class ProjectController {
      * @param attrs
      * @return project 프로젝트 삭제 후 프로젝트 리스트 조회 페이지로 이동
      */
-    @GetMapping("/update/delete/{pid}")
-    public String deleteProject(@PathVariable Long pid, RedirectAttributes attrs) {
-        if (projectService.deleteProject(pid)) {
+    @GetMapping("/delete")
+    public String deleteProject(RedirectAttributes attrs) {
+        if (projectService.deleteProject(sessionManager.getProjectId())) {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 성공했습니다.");
         } else {
             attrs.addFlashAttribute("msg", "프로젝트 삭제 실패했습니다.");
@@ -294,7 +314,7 @@ public class ProjectController {
      * 프로젝트 팀원 삭제
      *
      * @param uids 삭제할 팀원 리스트
-     * @return 
+     * @return
      */
     @PostMapping("/deleteMember")
     public @ResponseBody
@@ -310,7 +330,8 @@ public class ProjectController {
      * @return
      */
     @PostMapping("/searchMembers")
-    public @ResponseBody List<UserDTO> searchMembers(@RequestBody List<String> memberList) {
+    public @ResponseBody
+    List<UserDTO> searchMembers(@RequestBody List<String> memberList) {
         return projectService.searchMembers(sessionManager.getProjectId(), memberList);
     }
 
@@ -334,35 +355,34 @@ public class ProjectController {
 
     @PostMapping("/changeSprint")
     public String chageSprint(@RequestBody Map<String, Object> request) {
-        Long frid = Long.parseLong((String)request.get("frid"));
+        Long frid = Long.parseLong((String) request.get("frid"));
         String stage = request.get("stage").toString();
         requestService.changeSprint(frid, stage);
         return "redirect:/project/kanban";
     }
-    
+
     @GetMapping("/sprint")
-    public String sprint(Model model){
-        model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
+    public String sprint(Model model) {
+        model.addAttribute("requestMap", requestService.getTrueTarget(sessionManager.getProjectId()));
         model.addAttribute("excelNames", requestService.getExcelNames(sessionManager.getProjectId()));// 엑셀 파일 리스트 
         return "/project/sprintList";
     }
-    
-    
+
     // 카테고리 목록 
     @GetMapping("/getCategory")
     public @ResponseBody
     List<String> getCategory() {
         return projectService.getProjectCategory(sessionManager.getProjectId());
     }
-    
+
     // 카테고리 삭제 
     @PostMapping("/deleteCategory")
     public @ResponseBody
-    boolean deleteCategory (@RequestBody List<String> cats) {
+    boolean deleteCategory(@RequestBody List<String> cats) {
         projectService.deleteCategory(cats, sessionManager.getProjectId());
         return true;
     }
-    
+
     // 카테고리 추가 
     @PostMapping("/addCategory")
     public @ResponseBody

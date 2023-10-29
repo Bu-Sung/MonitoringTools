@@ -73,7 +73,7 @@ public class BoardController {
     
     @GetMapping("/{bid}")
     public String getBoard(@PathVariable Long bid, Model model, RedirectAttributes attrs){
-        BoardDTO board = boardService.getBoard(bid);
+        BoardDTO board = boardService.getBoard(bid, sessionManager.getProjectId());
         if(board != null){
             model.addAttribute("board",board);
             model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId())); 
@@ -86,6 +86,11 @@ public class BoardController {
     
     @GetMapping("/delete/{bid}")
     public String deleteBoard(@PathVariable Long bid, RedirectAttributes attrs){
+         BoardDTO boardDTO = boardService.getBoard(bid, sessionManager.getProjectId());
+            if (boardDTO == null) {
+                attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/project/board/list";
+            }
         if(boardService.deleteBoard(bid)){
             attrs.addFlashAttribute("msg", "게시물이 삭제되었습니다.");
             return "redirect:/project/board/list";
@@ -97,7 +102,7 @@ public class BoardController {
     
     @GetMapping("/update/{bid}")
     public String boardDetails(@PathVariable Long bid,Model model, RedirectAttributes attrs){
-        BoardDTO board = boardService.getBoard(bid);
+        BoardDTO board = boardService.getBoard(bid, sessionManager.getProjectId());
         if(board != null){
             model.addAttribute("board",board);
             model.addAttribute("category", projectService.getProjectCategory(sessionManager.getProjectId()));

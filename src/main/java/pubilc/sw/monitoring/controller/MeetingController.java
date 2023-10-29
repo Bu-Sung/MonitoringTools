@@ -138,6 +138,11 @@ public class MeetingController {
 
     @GetMapping("delete/{mid}")
     public String meetingDelette(@PathVariable Long mid, Model model, RedirectAttributes attrs) {
+         MeetingDTO meetingDTO = meetingService.getMeeting(mid, sessionManager.getProjectId());
+            if (meetingDTO == null) {
+                attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/project/meeting/list";
+            }
         if (meetingService.deleteMeeintg(mid)) {
             attrs.addFlashAttribute("msg", "회의록이 삭제되었습니다.");
         } else {

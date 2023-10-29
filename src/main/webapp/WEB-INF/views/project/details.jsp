@@ -275,7 +275,7 @@
 
                 deleteButton.addEventListener('click', function () {
                     if (!deleteButton.disabled) {
-                        window.location.href = "delete/${project.pid}";
+                        window.location.href = "delete";
                     }
                 });
             });

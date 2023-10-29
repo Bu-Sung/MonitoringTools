@@ -68,19 +68,23 @@ public class BoardService {
         return true;
     }
 
-    public BoardDTO getBoard(Long pid) {
-        if (boardRepository.existsById(pid)) {
-            BoardEntity boardEntity = boardRepository.findById(pid).get();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
-            return BoardDTO.builder()
-                    .bid(boardEntity.getBid())
-                    .writer(boardEntity.getWriter())
-                    .title(boardEntity.getTitle())
-                    .content(boardEntity.getContent())
-                    .date(boardEntity.getDate().format(formatter))
-                    .category(boardEntity.getCategory())
-                    .files(boardEntity.getFileCheck() == 1 ? fileService.searchFile(boardFolderPath, Long.toString(boardEntity.getBid())) : null)
-                    .build();
+    public BoardDTO getBoard(Long bid, Long pid) {
+        if (boardRepository.existsById(bid)) {
+            BoardEntity boardEntity = boardRepository.findById(bid).get();
+            if (boardEntity.getPid() != pid) {
+                return null;
+            } else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
+                return BoardDTO.builder()
+                        .bid(boardEntity.getBid())
+                        .writer(boardEntity.getWriter())
+                        .title(boardEntity.getTitle())
+                        .content(boardEntity.getContent())
+                        .date(boardEntity.getDate().format(formatter))
+                        .category(boardEntity.getCategory())
+                        .files(boardEntity.getFileCheck() == 1 ? fileService.searchFile(boardFolderPath, Long.toString(boardEntity.getBid())) : null)
+                        .build();
+            }
         } else {
             return null;
         }

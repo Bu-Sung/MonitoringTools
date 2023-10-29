@@ -7,7 +7,7 @@
             <li class="breadcrumb-item"><a href="/monitoring/project/list"><img src="/monitoring/asset/logo.png" width="25rem;" class="me-2">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Project</li>
         </ol>
-        <a href="${project.pid}" class="navbar-brand">
+        <a href="/monitoring/project/${sessionScope.myInfo.pid}" class="navbar-brand">
             <h4 class="fw-600 mb-0">${sessionScope.myInfo.pname}</h4>
         </a>
         <div class="d-none d-lg-block">
