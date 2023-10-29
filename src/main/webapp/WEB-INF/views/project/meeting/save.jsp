@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
 
-                                    <input class="form-control border mb-3" type="file" name="file" multiple>
+                                    <input class="form-control border mb-3" type="file" id="file" name="file" multiple>
                                     <div id="content" class="document-content">
                                         <div class="document-content-explanation">
                                             <h2>단축키 설명</h2>
@@ -252,10 +252,10 @@
             });
         </script>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
+    <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/document.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/keyEvent.js"></script>
     <script charset="UTF-8" src="/monitoring/js/document/mdFunction.js"></script>
-    <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
     <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <!-- 부트스트랩 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

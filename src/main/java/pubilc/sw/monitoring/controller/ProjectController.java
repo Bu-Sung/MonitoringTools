@@ -59,6 +59,7 @@ public class ProjectController {
 
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         sessionManager.setProjectInfo(projectDTO,projectService.hasRight(sessionManager.getUserId(), pid));
+        System.out.println(sessionManager.getProjectRight());
         model.addAttribute("project", projectDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -75,8 +76,6 @@ public class ProjectController {
             double clear = ((Number) rate.get("clear")).doubleValue();
             double total = ((Number) rate.get("total")).doubleValue();
             num = (int) (clear / total * 100);
-        } else {
-
         }
         model.addAttribute("num", num);// 달성률
         model.addAttribute("rate", requestService.getRequestCounts(pid));// 달성률

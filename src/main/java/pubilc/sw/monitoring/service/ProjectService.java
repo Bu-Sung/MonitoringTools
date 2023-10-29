@@ -461,9 +461,6 @@ public class ProjectService {
             uidList.add(UserDTO.builder()
                     .id(user.get("id").toString())
                     .name(user.get("name").toString())
-                    .email(user.get("email").toString())
-                    .birth(user.get("birth").toString())
-                    .phone(user.get("phone").toString())
                     .build());
         }
         return uidList;
@@ -621,9 +618,6 @@ public class ProjectService {
         return UserDTO.builder()
                 .id(user.get("id").toString())
                 .name(user.get("name").toString())
-                .email(user.get("email").toString())
-                .birth(user.get("birth").toString())
-                .phone(user.get("phone").toString())
                 .build();
     }
 

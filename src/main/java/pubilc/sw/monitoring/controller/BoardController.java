@@ -62,7 +62,7 @@ public class BoardController {
     @PostMapping("/addBoard")
     public String addBoard(@ModelAttribute BoardDTO boardDTO, @RequestParam(name="file", required=false) List<MultipartFile> file, RedirectAttributes attrs){
         boardDTO.setPid(sessionManager.getProjectId());
-        boardDTO.setWriter(sessionManager.getUserName());
+        boardDTO.setWriter(sessionManager.getUserId());
         if(boardService.addBoard(boardDTO, file)){
             attrs.addFlashAttribute("msg", "게시물이 등록되었습니다.");
         }else{
@@ -110,7 +110,7 @@ public class BoardController {
     
     @PostMapping("/update/update")
     public String updateBoard(@ModelAttribute BoardDTO boardDTO, @RequestParam(name="file", required=false) List<MultipartFile> files, HttpServletRequest request, Model model){
-        boardDTO.setWriter(sessionManager.getUserName());
+        boardDTO.setWriter(sessionManager.getUserId());
         BoardDTO board = boardService.updateBoard(boardDTO, files, request.getParameter("dellist"), Integer.parseInt((String)request.getParameter("fileExist")));
         model.addAttribute("board", board);
         return "redirect:/project/board/"+ boardDTO.getBid();

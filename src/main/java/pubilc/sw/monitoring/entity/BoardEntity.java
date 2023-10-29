@@ -47,7 +47,7 @@ public class BoardEntity {
     @Column(name="board_content", columnDefinition="LONGTEXT")
     private String content; // 본문 내용
     
-    @Column(name="board_writer")
+    @Column(name="user_id")
     private String writer; // 작성자
     
     @Column(name="board_date")

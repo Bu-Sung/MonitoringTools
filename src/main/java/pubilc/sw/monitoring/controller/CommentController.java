@@ -36,7 +36,7 @@ public class CommentController {
     
     @PostMapping("/addComment")
     public @ResponseBody boolean addComment(@RequestBody CommentDTO commentDTO){
-        commentDTO.setWriter(sessionManager.getUserName());
+        commentDTO.setWriter(sessionManager.getUserId());
         return commentService.addComment(commentDTO);
     }
     

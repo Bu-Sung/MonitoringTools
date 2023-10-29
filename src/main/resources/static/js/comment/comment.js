@@ -86,10 +86,31 @@ function createComment(item) {
 //    divElement.style.paddingTop = '1rem';
 
     if (item.delete === 1) {
+        
         let para = document.createElement('p');
         para.textContent = "삭제된 댓글입니다.";
         para.classList.add('px-3', 'pt-3');
         divElement.appendChild(para);
+        var btnHrDiv = document.createElement("div");
+        btnHrDiv.className = "px-3";
+
+        // 버튼 생성 및 속성 설정 
+        var replyBtn = document.createElement("button");
+        replyBtn.type = "button";
+        replyBtn.className = "btn btn-sm btn-outline-secondary mt-1";
+        replyBtn.style.fontSize = "0.7rem";
+        replyBtn.textContent = "답글";
+        replyBtn.onclick = function () {
+            settingComentInput(item.cid);
+        };
+        btnHrDiv.appendChild(replyBtn);
+
+        // hr 태그  추가 
+        var hrElement = document.createElement("hr");
+        hrElement.className = "mt-3 mb-0"
+        btnHrDiv.appendChild(hrElement);
+        divElement.appendChild(btnHrDiv);
+        
     } else {
 //            divElement.innerHTML = `
 //                <div class="d-flex justify-content-between px-3 pt-3">
@@ -115,7 +136,7 @@ function createComment(item) {
         
         outerDiv.appendChild(writerSpan);
         // 삭제 small 생성
-        if (document.getElementById("userName").value == item.writer || document.getElementById("hasRight").value === 1) {
+        if (document.getElementById("hasRight").value === '1' || document.getElementById("userName").value == item.writer) {
             var deleteSmall = document.createElement('small');
             deleteSmall.className = 'text-danger';
             deleteSmall.textContent = '삭제';
@@ -208,7 +229,7 @@ function createChildComment(commentDiv, id) {
     commentDiv.className = "childCommentDiv";
     commentDiv.id = "child-" + id;
     commentDiv.classList.add('flex-fill');
-
+    
     let buttons = commentDiv.querySelectorAll('button');
     buttons.forEach(button => {
         button.remove();

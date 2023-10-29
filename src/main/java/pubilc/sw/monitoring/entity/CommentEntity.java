@@ -45,7 +45,7 @@ public class CommentEntity {
     @Column(name="comment_content")
     private String content; // 내용
     
-    @Column(name="comment_writer")
+    @Column(name="user_id")
     private String writer; // 작성자
     
     @Column(name="comment_date")

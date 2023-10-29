@@ -71,6 +71,8 @@
                     </div>
                     <div class="modal-body">
                         <input id="sid" type="text" hidden>
+                        <input id="msid" type="text" hidden>
+                        <input id="mid" type="text" hidden>
                         <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
                         <table class="table table-borderless">
                             <tr>

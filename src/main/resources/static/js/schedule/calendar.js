@@ -23,8 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     color: '#43aef2',
                     sid: 0,
                     memberList: [],
-                    startDateType: "date",
-                    endDateType: "date",
+                    dateType: "date",
                     startDateValue: arg.startStr,
                     endDateValue: arg.startStr
                 };
@@ -44,13 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }else{
                 end = toLocalISOString(arg.event.end);
             }
-            var startDateType = "datetime-local";
-            var endDateType = "datetime-local";
+            var dateType = "datetime-local";
             var startDateValue = start;
             var endDateValue = end;
             if (arg.event._def.allDay) {
-                startDateType = "date";
-                endDateType = "date";
+                dateType = "date";
                 startDateValue = changeDateTimeToDate(start);
                 var tmp = new Date(end);
                 endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
@@ -60,10 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 content: arg.event._def.extendedProps.content,
                 color: arg.event._def.ui.backgroundColor,
                 sid: arg.event._def.extendedProps.sid,
-                startDateType: startDateType,
-                endDateType: endDateType,
+                dateType: dateType,
                 startDateValue: startDateValue,
-                endDateValue: endDateValue
+                endDateValue: endDateValue,
+                mid : arg.event._def.extendedProps.mid,
+                msid : arg.event._def.extendedProps.msid
             };
             
             scheduleModalSetting(request);
