@@ -42,13 +42,13 @@ public class BoardService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateOutputFormatter);
         Page<BoardDTO> boardDTOList;
         Page<BoardEntity> boardEntityList = boardRepository.findByPidAndCategory(pid, category, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "date")));
-        return  boardEntityList.map(entity -> BoardDTO.builder()
-                    .bid(entity.getBid())
-                    .title(entity.getTitle())
-                    .writer(entity.getWriter())
-                    .date(entity.getDate().format(formatter))
-                    .category(entity.getCategory())
-                    .build());
+        return boardEntityList.map(entity -> BoardDTO.builder()
+                .bid(entity.getBid())
+                .title(entity.getTitle())
+                .writer(entity.getWriter())
+                .date(entity.getDate().format(formatter))
+                .category(entity.getCategory())
+                .build());
     }
 
     public boolean addBoard(BoardDTO boardDTO, List<MultipartFile> files) {
@@ -104,21 +104,16 @@ public class BoardService {
         oldBoard.setContent(boardDTO.getContent());
         oldBoard.setCategory(boardDTO.getCategory());
         oldBoard.setFileCheck(!files.get(0).isEmpty() ? 1 : fileExist);
-
         BoardEntity newEntity = boardRepository.save(oldBoard);
-        if (newEntity.getFileCheck() == 1) {
+        if (newEntity != null) {
             if (!dellist.equals("")) { // 삭제할 파일이 있으면 삭제를 진행
                 fileService.deleteFile(boardFolderPath, boardDTO.getBid().toString(), dellist);
             }
-            if (!files.get(0).isEmpty()) { // 새로 추가할 파일이 있다면 추가
-                fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
+            if (newEntity.getFileCheck() == 1) {
+                if (!files.get(0).isEmpty()) { // 새로 추가할 파일이 있다면 추가
+                    fileService.saveFile(boardFolderPath, Long.toString(newEntity.getBid()), files);
+                }
             }
-        }
-
-        //파일 저장
-        if (newEntity.getFileCheck() == 1) {
-            //파일 저장 로직
-
         }
 
         return BoardDTO.builder()
@@ -130,7 +125,7 @@ public class BoardService {
                 .date(newEntity.getDate().format(outputFormatter))
                 .build();
     }
-    
+
     public ResponseEntity<Resource> downloadFile(String filename, String mid) {
         return fileService.downloadFile(boardFolderPath + File.separator + mid, filename);
     }

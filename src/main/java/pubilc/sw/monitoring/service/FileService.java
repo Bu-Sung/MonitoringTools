@@ -152,13 +152,16 @@ public class FileService {
     
     // 파일 부분 삭제
     public void deleteFile(String path, String id ,String list){
+        String[] delFileName = list.split(",");
         path = String.format("%s%s%s", ctx.getRealPath(path),File.separator,id);
         File file = new File(path);
         File[] fileList = file.listFiles();
         if(fileList != null){
             for(File f : fileList){
-                if(f.getName().indexOf(list) != 0){ // 삭제 리스트에서 파일이름이 포함되어 있으면 삭제
-                    f.delete();
+                for(String del : delFileName){
+                    if(f.getName().equals(del)){ // 삭제 리스트에서 파일이름이 포함되어 있으면 삭제
+                        f.delete();
+                    }                
                 }
             }
         }

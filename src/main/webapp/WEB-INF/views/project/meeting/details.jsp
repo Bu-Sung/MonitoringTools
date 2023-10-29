@@ -87,7 +87,7 @@
                                     <div id="file-container" class="col-10">
                                         <ul class='list-unstyled' id="ulfile">
                                             <c:forEach items="${meeting.files}" var="file">
-                                                <li class="m-0" ><a href="../download?filename=${file}&mid=${meeting.id}">${file}</a><span
+                                                <li class="m-0" data-filename="${file}"><a href="../download?filename=${file}&mid=${meeting.id}">${file}</a><span
                                                         onclick="removefile(event)">&nbsp;삭제</span></li>
                                                     </c:forEach>
                                         </ul>

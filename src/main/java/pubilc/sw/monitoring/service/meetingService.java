@@ -147,11 +147,11 @@ public class meetingService {
                     throw new RuntimeException("Failed to add schedule list");
                 }
             }
+            if (!dellist.equals("")) { // 삭제할 파일이 있으면 삭제를 진행
+                    fileService.deleteFile(meetingFolderPath, meetingDTO.getId().toString(), dellist);
+            }
             // 첨부파일에 대한 수정 진행
             if (newEntity.getFileCheck() == 1) {
-                if (!dellist.equals("")) { // 삭제할 파일이 있으면 삭제를 진행
-                    fileService.deleteFile(meetingFolderPath, meetingDTO.getId().toString(), dellist);
-                }
                 if (!files.get(0).isEmpty()) { // 새로 추가할 파일이 있다면 추가
                     fileService.saveFile(meetingFolderPath, Long.toString(newEntity.getId()), files);
                 }

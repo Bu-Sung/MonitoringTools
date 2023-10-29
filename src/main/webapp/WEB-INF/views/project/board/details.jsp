@@ -65,9 +65,9 @@
                                            id="title" placeholder="제목을 입력하세요"
                                            name="title" value="${board.title}" required maxlength="40">
                                     <div id="file-container">
-                                        <ul id="ulfile">
+                                        <ul id="ulfile" class='list-unstyled'>
                                             <c:forEach items="${board.files}" var="file">
-                                                <li data-filename="${file}"><a
+                                                <li data-filename="${file}" class="m-0"><a
                                                         href="../download?filename=${file}&mid=${board.bid}">${file}</a><span
                                                         onclick="removefile(event)">&nbsp;삭제</span>
                                                 </li>

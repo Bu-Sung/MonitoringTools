@@ -68,6 +68,7 @@ function removefile(event) {
     const listItem = event.target.parentElement;
     delfile.push(listItem.getAttribute(`data-filename`));
     listItem.remove();
+    console.log(delfile);
 }
 
 function checkupdatefile() {
@@ -84,7 +85,7 @@ function checkupdatefile() {
     remaininput.type = 'hidden';
     remaininput.name = 'fileExist';
     remaininput.value = 0;
-    if (document.getElementById("ulfile").getElementsByTagName("li") > 0 || newfile.value) {
+    if (document.getElementById("ulfile").getElementsByTagName("li").length > 0 || newfile.length > 0) {
         remaininput.value = 1;
     }
     container.appendChild(remaininput);
