@@ -39,7 +39,7 @@
                 <!-- 중간에 깔려 있는 card -->
                 <div class="card card-white-0 mx-auto" style="height: viewportHeight;">
                     <div class="col-md-10 col-11 mx-auto my-5">
-                        <h4 class="fw-600 text-dark mb-4">회의록 작성 페이지</h4>
+                        <h4 class="fw-600 text-dark mb-4">회의록 수정 페이지</h4>
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
                                 <form id="documentForm" method="POST" action="update"
@@ -92,7 +92,7 @@
                                                     </c:forEach>
                                         </ul>
                                     </div>
-                                    <input class="form-control border mb-3" id="file" type="file" name="file"
+                                    <input class="form-control border mb-3" id="file" type="file"  name="file"
                                            multiple>
                                     <div id="content" class="document-content">
                                         ${meeting.content}
@@ -209,95 +209,95 @@
     <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
     <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <script>
-      const startDateInput = document.getElementById('startDate');
-      const endDateInput = document.getElementById('endDate');
+                    const startDateInput = document.getElementById('inputDateStart');
+                    const endDateInput = document.getElementById('inputDateEnd');
 
-      startDateInput.addEventListener('input', () => {
-        const startDate = new Date(startDateInput.value);
-            const endDate = new Date(endDateInput.value);
+                    startDateInput.addEventListener('change', () => {
+                        const startDate = new Date(startDateInput.value);
+                        const endDate = new Date(endDateInput.value);
 
-        // 시작 날짜가 미래 날짜일 경우 경고 표시
-        if (startDate > endDate) {
-            alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
-          startDateInput.value = '';
-        }
-      });
+                        if (startDate > endDate) {
+                            alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                            startDateInput.value = ''; // 입력 내용 초기화
+                        }
+                    });
 
-      endDateInput.addEventListener('input', () => {
-            const startDate = new Date(startDateInput.value);
-        const endDate = new Date(endDateInput.value);
+                    endDateInput.addEventListener('change', () => {
+                        const startDate = new Date(startDateInput.value);
+                        const endDate = new Date(endDateInput.value);
 
-                // 종료 날짜가 과거 날짜일 경우 경고 표시
-        if (endDate < startDate) {
-          alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
-          endDateInput.value = '';
-        }
-                });
-
-        
-            let pageSchedule = document.querySelectorAll("div[name]");
-             scheduleList = ${scheduleList};
-
-            // scheduleList에서 모든 msid 값을 추출
-                     let msidValues = scheduleList.map(schedule => schedule.msid);
-
-            // 각 pageSchedule 요소를 순회하며 이름이 msidValues에 포함되어 있는지 확인
-                         pageSchedule.forEach(element => {
-                setScheduleClickEvent(element);
-                         if (!msidValues.includes(Number(element.getAttribute('name')))) {
-                    element.remove();
-                }
-                     });
-        
-                 //        var divs = document.querySelectorAll('div[name]'); // class가 'scheduleDiv'이며 name 속성을 가진 모든 div 요소를 가져옵니다.
-                 //        let max = 0;
-    //        for (var i = 0; i < divs.length; i++) { // 각각의 div에 대하여
-                     //            setScheduleClickEvent(divs[i]);
-    //            var nameValue = Number(divs[i].getAttribute('name')); // name 속성 값을 숫자로 변환합니다.
-                     //            if (!isNaN(nameValue)) { // 만약 nameValue가 유효한 숫자라면
-                     //                listCount = Math.max(max, nameValue); // 현재 최대값과 비교하여 더 큰 값으로 업데이트합니다.
-    //                listCount++;
-    //            }
-    //        }
-                 
-            let max = 0;
-            scheduleList.forEach(element => {
+                        if (endDate < startDate) {
+                            alert('종료 날짜는 시작 날짜보다 빠를 수 없습니다.');
+                            endDateInput.value = ''; // 입력 내용 초기화
+                        }
+                    });
+                    
             
-                         var nameValue = element.msid; // name 속성 값을 숫자로 변환합니다.
-                         if (!isNaN(nameValue)) { // 만약 nameValue가 유효한 숫자라면
-                     listCount = Math.max(max, nameValue); // 현재 최대값과 비교하여 더 큰 값으로 업데이트합니다.
-                    listCount++;
-                }
-                 console.log(listCount);
-            });
-            console.log(scheduleList);
-        
-                 document.addEventListener("DOMContentLoaded", function () {
-                 var linkElement = document.querySelector('#side_meeting');
-                 let paramPage = new URLSearchParams(window.location.search).get('page');
+
+                    async function settingEditScheduleList() {
+                        let pageSchedule = document.querySelectorAll("div[name]");
+                        
+                        let msidValues = scheduleList.map(schedule => schedule.msid);
+                        listCount = Math.max.apply(null, msidValues);
+                        listCount++;
+
+                        for (let element of pageSchedule) {
+                            let num = Number(element.getAttribute('name'));
+                            if (!msidValues.includes(num)) {
+                                element.remove();
+                            } else {
+                                let targetSchedule = scheduleList[num];
+                                let startDateValue = targetSchedule.start;
+                                let endDateValue = targetSchedule.end;
+                                if (!targetSchedule.allTime) {
+                                    startDateValue = changeDateTimeToDate(targetSchedule.start);
+                                    var tmp = new Date(targetSchedule.end);
+                                    endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
+                                }
+                                element.innerHTML = '';
+                                var small = document.createElement('small');
+                                small.className = 'scheduleText';
+                                if (startDateValue === endDateValue) {
+                                    small.textContent = startDateValue.replace("T", " ");
+                                } else {
+                                    small.textContent = startDateValue.replace("T", " ") + ' ~ ' + endDateValue.replace("T", " ");
+                                }
+                                element.appendChild(small);
+                                setScheduleClickEvent(element);
+                                scheduleList[num].memberList = await getScheduleMemberList(targetSchedule.sid);
+                            }
+                        }
+                    }
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        scheduleList = ${scheduleList};
+                        settingEditScheduleList();
+                        console.log(scheduleList);
+                        var linkElement = document.querySelector('#side_meeting');
+                        let paramPage = new URLSearchParams(window.location.search).get('page');
                         //사이드바에서 회의록 진하게 보이도록 수정
-                 if (linkElement) {
+                        if (linkElement) {
                             linkElement.classList.remove('img-opacity');
                         }
 
-                 var liItems = document.querySelectorAll("#pageList .page-item a");
+                        var liItems = document.querySelectorAll("#pageList .page-item a");
                         liItems.forEach(function (item) {
-                 if (item.textContent.trim() === String(paramPage)) {
-                     item.style.backgroundColor = "#369FFF";
+                            if (item.textContent.trim() === String(paramPage)) {
+                                item.style.backgroundColor = "#369FFF";
                                 item.style.color = "white";
-                     }
+                            }
                         });
 
                         const dashboardMenu = document.getElementById("dashboardMenu");
-                     const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+                        const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
 
-                 // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                 offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+                        // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+                        offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
                         //offcanvas에서 회의록 진하게 보이도록 수정
-                 offcanvasDashboardMenu.classList.remove('img-opacity');
+                        offcanvasDashboardMenu.classList.remove('img-opacity');
                     });
 
-            </script>
+                </script>
     <!-- 부트스트랩 script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -40,7 +40,7 @@ public class MeetingEntity {
     @Column(name="meeting_title")
     private String title;
     
-    @Column(name="meeting_writer")
+    @Column(name="user_id")
     private String writer;
     
     @Column(name="meeting_start")

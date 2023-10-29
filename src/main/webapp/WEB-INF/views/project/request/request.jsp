@@ -62,7 +62,7 @@
                                             </div>
                                             <hr>
                                         </div>
-                                        <input id="hasRight" type="text" value="${sessionScope.hasRight}" hidden>
+                                        <input id="hasRight" type="text" value="${sessionScope.myInfo.hasRight}" hidden>
                                         <div style='overflow-x:auto;'>
                                             <table class="table table-hover">
                                                 <thead>
@@ -161,7 +161,7 @@
                                 </th>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <textarea id="rname" name="rname" class="form-control" style="min-height: 80px;" autocomplete="off" required maxlength="100"></textarea>
+                                        <textarea id="rname" name="rname" class="form-control" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''} style="min-height: 80px;" autocomplete="off" required maxlength="100"></textarea>
                                     </div>
                                 </td>
                             </tr>
@@ -169,7 +169,7 @@
                                 <th style="vertical-align: middle;"><label for="date">추정치<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="date" name="date" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="date" name="date" class="form-select" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''} style="border-radius: 0.3rem; appearance: none;">
                                             <option value="-1">-1</option>
                                             <option value="1" selected>1</option>
                                             <option value="2">2</option>
@@ -190,7 +190,7 @@
                                 <th style="vertical-align: middle;"><label for="rank">우선 순위<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="rank" name="rank" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="rank" name="rank" class="form-select" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''} style="border-radius: 0.3rem; appearance: none;">
                                             <option value="상">상</option>
                                             <option value="중">중</option>
                                             <option value="하">하</option>
@@ -202,7 +202,7 @@
                                 <th style="vertical-align: middle;"><label for="stage">개발단계<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="stage" name="stage" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="stage" name="stage" class="form-select" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''} style="border-radius: 0.3rem; appearance: none;">
                                             <option value="대기" >대기</option>
                                             <option value="분석">분석</option>
                                             <option value="설계">설계</option>
@@ -217,7 +217,7 @@
                                 <th style="vertical-align: middle;"><label for="target">반복 대상<span class="text-danger">*</span></label></th>
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <select id="target" name="target" class="form-select" style="border-radius: 0.3rem; appearance: none;">
+                                        <select id="target" name="target" class="form-select" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''} style="border-radius: 0.3rem; appearance: none;">
                                             <option value="true">true</option>
                                             <option value="false" selected>false</option>
                                         </select>
@@ -229,7 +229,7 @@
                                 <td>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <div style="width:100%;">
-                                            <input type="text" id="uid" name="uid" class="form-control"  autocomplete="off" readonly>
+                                            <input type="text" id="uid" name="uid" class="form-control" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}  autocomplete="off" readonly>
                                             <div class="dropdown-menu">
                                             </div>
                                         </div>
@@ -238,16 +238,18 @@
                             <tr>
                                 <th style="vertical-align: middle;"><label for="note">비고</label></th>
                                 <td>
-                                    <input type="text" id="note" name="note" class="form-control"  autocomplete="off" maxlength="100">
+                                    <input type="text" id="note" name="note" class="form-control" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}  autocomplete="off" maxlength="100">
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="editRequest" class="btn btn-primary fw-500"
-                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>수정하기</button>
-                        <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
-                                style="width: 7rem;" ${sessionScope.myInfo.hasRight == 3 ? 'disabled' : ''}>삭제하기</button>
+                        <c:if test="${sessionScope.myInfo.hasRight != 3}">
+                            <button type="button" id="editRequest" class="btn btn-primary fw-500"
+                                    style="width: 7rem;">수정하기</button>
+                            <button type="button" id="deleteRequest" class="btn btn-danger fw-500"
+                                    style="width: 7rem;">삭제하기</button>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -521,7 +523,7 @@
 
                     var username = document.createElement('td');
                     var usernameDiv = document.createElement('div');
-                    usernameDiv.innerText = item.username;
+                    usernameDiv.innerText = item.uid;
                     usernameDiv.className = "d-flex justify-content-center align-items-center";
                     username.appendChild(usernameDiv);
                     tr.append(username);
@@ -554,75 +556,79 @@
 
             document.addEventListener('DOMContentLoaded', function () {
                 getRequestList(); // 요구사항 설정
-                getAllMemberInfo(); // 멤버 인원 설정
+                console.log(document.getElementById("hasRight").value);
+                console.log(typeof document.getElementById("hasRight").value);
+                if(document.getElementById("hasRight").value !== '3'){
+                    getAllMemberInfo(); // 멤버 인원 설정
 
-                /* 프로젝트 멤버 인원을 네임카드로 배치 */
-                document.getElementById("uid").addEventListener("click", function (event) {
-                    settingMemberNameCard(event.target.parentNode);
-                });
+                    /* 프로젝트 멤버 인원을 네임카드로 배치 */
+                    document.getElementById("uid").addEventListener("click", function (event) {
+                        settingMemberNameCard(event.target.parentNode);
+                    });
 
-                /* 요구사항 수정하기 버튼 클릭 시 */
-                document.getElementById('editRequest').addEventListener('click', function () {
-                    if (rname.value === '') {
-                        alert("요구사항 명을 입력해 주세요");
-                        rname.focus();
-                    } else if (uid.value === '') {
-                        alert("담당자를 선택해 주세요");
-                        uid.focus();
-                    } else {
-                        request = {
-                            frid: parseInt(frid.value),
-                            rid: rid.value,
-                            name: rname.value,
-                            date: date.value,
-                            rank: rank.value,
-                            stage: stage.value,
-                            target: target.value,
-                            uid: uid.value,
-                            note: note.value
-                        }
-                        if (!saveRequest(request)) {
-                            alert("요구사항을 저장했습니다.");
-                            location.reload();
+                    /* 요구사항 수정하기 버튼 클릭 시 */
+                    document.getElementById('editRequest').addEventListener('click', function () {
+                        if (rname.value === '') {
+                            alert("요구사항 명을 입력해 주세요");
+                            rname.focus();
+                        } else if (uid.value === '') {
+                            alert("담당자를 선택해 주세요");
+                            uid.focus();
                         } else {
-                            alert("요구사항 저장에 실패했습니다.");
+                            request = {
+                                frid: parseInt(frid.value),
+                                rid: rid.value,
+                                name: rname.value,
+                                date: date.value,
+                                rank: rank.value,
+                                stage: stage.value,
+                                target: target.value,
+                                uid: uid.value,
+                                note: note.value
+                            }
+                            if (!saveRequest(request)) {
+                                alert("요구사항을 저장했습니다.");
+                                location.reload();
+                            } else {
+                                alert("요구사항 저장에 실패했습니다.");
+                                location.reload();
+                            }
+
+
+                        }
+                    });
+
+                    /* 삭제하기 버튼 클릭시 */
+                    document.getElementById("deleteRequest").addEventListener("click", function () {
+                        if (confirm("정말 삭제하시겠습니까??") == true) {
+                            fetch('/monitoring/project/request/delete?frid=' + frid.value, {})
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data) {
+                                            alert("요구사항이 삭제되었습니다.");
+                                        } else {
+                                            alert("요구사항삭제에 실패하였습니다.");
+                                        }
+                                    });
                             location.reload();
                         }
-                        
-                        
-                    }
-                });
+                    });
 
-                /* 삭제하기 버튼 클릭시 */
-                document.getElementById("deleteRequest").addEventListener("click", function () {
-                    if (confirm("정말 삭제하시겠습니까??") == true) {
-                        fetch('/monitoring/project/request/delete?frid=' + frid.value, {})
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data) {
-                                        alert("요구사항이 삭제되었습니다.");
-                                    } else {
-                                        alert("요구사항삭제에 실패하였습니다.");
-                                    }
-                                });
-                        location.reload();
-                    }
-                });
-
-                /* 추정치 변화 시 */
-                document.getElementById("date").addEventListener("change", function () {
-                    var stage = document.getElementById("stage");
-                    var target = document.getElementById("target");
-                    if (document.getElementById("date").value === "-1") {
-                        stage.selectedIndex = 0;
-                        target.selectedIndex = 1;
-                        stage.disabled = true;
-                        target.disabled = true;
-                    } else {
-                        stage.disabled = false;
-                        target.disabled = false;
-                    }
-                });
+                    /* 추정치 변화 시 */
+                    document.getElementById("date").addEventListener("change", function () {
+                        var stage = document.getElementById("stage");
+                        var target = document.getElementById("target");
+                        if (document.getElementById("date").value === "-1") {
+                            stage.selectedIndex = 0;
+                            target.selectedIndex = 1;
+                            stage.disabled = true;
+                            target.disabled = true;
+                        } else {
+                            stage.disabled = false;
+                            target.disabled = false;
+                        }
+                    });
+                }
             });
 
             const resultsElement = document.getElementById('results');
@@ -697,10 +703,12 @@
             var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
             document.addEventListener("DOMContentLoaded", function () {
-                const addRequestButton = document.getElementById("addRequestNew");
+                if(document.getElementById("hasRight").value !== '3'){
+                    const addRequestButton = document.getElementById("addRequestNew");
+                    const saveButton = document.getElementById("saveButton");
+                    const createExcelButton = document.getElementById("createExcelButton");
+                
                 const newRequestTable = document.getElementById("requestListTable");
-                const saveButton = document.getElementById("saveButton");
-                const createExcelButton = document.getElementById("createExcelButton");
                 const createDownRequestExcelButton = document.getElementById("createDownRequestExcelButton");
 
                 // 데이터를 저장할 배열 선언
@@ -956,6 +964,7 @@
                                 .catch((error) => console.error('Error:', error));
                     }
                 }
+            }
             });
 
             function autoAdjustHeight(textarea) {

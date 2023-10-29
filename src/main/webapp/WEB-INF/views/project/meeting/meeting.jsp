@@ -161,49 +161,84 @@
            </div>
        </div>
     </div>
-                                
+
+    <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
     <script>
-            let scheduleList = [];
 
-            document.addEventListener('DOMContentLoaded', function () {
-                let editableElements = document.querySelectorAll('[contenteditable="true"]');
+        document.addEventListener('DOMContentLoaded', function () {
+            let editableElements = document.querySelectorAll('[contenteditable="true"]');
 
-                editableElements.forEach(function (element) {
-                    element.setAttribute('contenteditable', 'false');
-                });
-
-                let pageSchedule = document.querySelectorAll("div[name]");
-
-                scheduleList = ${scheduleList};
-
-                // scheduleList에서 모든 msid 값을 추출
-                let msidValues = scheduleList.map(schedule => schedule.msid);
-                console.log(scheduleList);
-                // 각 pageSchedule 요소를 순회하며 이름이 msidValues에 포함되어 있는지 확인
-                pageSchedule.forEach(element => {
-                    if (!msidValues.includes(Number(element.getAttribute('name')))) {
-                        element.remove();
-                    }
-                });
-
-                document.querySelectorAll('small').forEach(function (element) {
-                    element.addEventListener('click', function (event) {
-                        settingReadSchedule(event);
-                        var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
-                        myModal.show();
-                    });
-                });
-
-
+            editableElements.forEach(function (element) {
+                element.setAttribute('contenteditable', 'false');
             });
 
-            async function settingReadSchedule(event) {
+            let pageSchedule = document.querySelectorAll("div[name]");
+
+            scheduleList = ${scheduleList};
+            settingReadScheduleList();
+            // scheduleList에서 모든 msid 값을 추출
+//            let msidValues = scheduleList.map(schedule => schedule.msid);
+//            console.log(scheduleList);
+//            // 각 pageSchedule 요소를 순회하며 이름이 msidValues에 포함되어 있는지 확인
+//            pageSchedule.forEach(element => {
+//                if (!msidValues.includes(Number(element.getAttribute('name')))) {
+//                    element.remove();
+//                }
+//            });
+//
+//            document.querySelectorAll('small').forEach(function (element) {
+//                element.addEventListener('click', function (event) {
+//                    settingReadSchedule(event);
+//                    var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
+//                    myModal.show();
+//                });
+//            });
+
+
+        });
+
+        async function settingReadScheduleList() {
+            let pageSchedule = document.querySelectorAll("div[name]");
+
+            let msidValues = scheduleList.map(schedule => schedule.msid);
+
+            for (let element of pageSchedule) {
+                let num = Number(element.getAttribute('name'));
+                if (!msidValues.includes(num)) {
+                    element.remove();
+                } else {
+                    let targetSchedule = scheduleList[num];
+                    let startDateValue = targetSchedule.start;
+                    let endDateValue = targetSchedule.end;
+                    if (!targetSchedule.allTime) {
+                        startDateValue = changeDateTimeToDate(targetSchedule.start);
+                        var tmp = new Date(targetSchedule.end);
+                        endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
+                    }
+                    element.innerHTML = '';
+                    var small = document.createElement('small');
+                    small.className = 'scheduleText';
+                    if (startDateValue === endDateValue) {
+                        small.textContent = startDateValue.replace("T", " ");
+                    } else {
+                        small.textContent = startDateValue.replace("T", " ") + ' ~ ' + endDateValue.replace("T", " ");
+                    }
+                    element.appendChild(small);
+                    settingReadSchedule(element);
+                    scheduleList[num].memberList = await getScheduleMemberList(targetSchedule.sid);
+                }
+            }
+        }
+
+        function settingReadSchedule(div) {
+            div.addEventListener("click", function (event){
                 var eventDiv = null;
                 if (!event.target.getAttribute('name')) {
                     eventDiv = event.target.parentNode;
                 } else {
                     eventDiv = event.target;
                 }
+                console.log(eventDiv);
                 var item = scheduleList.find(function (element) {
                     return element.msid === Number(eventDiv.getAttribute('name'));
                 });
@@ -226,43 +261,46 @@
                 document.getElementById("content").value = item.content;
                 document.getElementById("colorSelect").style.backgroundColor = item.color;
                 memberList = item.memberList;
-                memberList = await getScheduleMemberList(item.sid);
-                if (memberList.length > 0) {
-                    memberListDiv.innerHTML = '';
-                    memberList.forEach(element => {
-                        var newDiv = createProfileCard(element.name, element.id);
-                        memberListDiv.appendChild(newDiv);
-                    });
-                }
-            }
-            
-            document.addEventListener("DOMContentLoaded", function () {
-                    var linkElement = document.querySelector('#side_meeting');
-                    let paramPage = new URLSearchParams(window.location.search).get('page');
-                    //사이드바에서 회의록 진하게 보이도록 수정
-                    if (linkElement) {
-                        linkElement.classList.remove('img-opacity');
-                    }
-
-                    var liItems = document.querySelectorAll("#pageList .page-item a");
-                    liItems.forEach(function (item) {
-                        if (item.textContent.trim() === String(paramPage)) {
-                            item.style.backgroundColor = "#369FFF";
-                            item.style.color = "white";
-                        }
-                    });
-
-                    const dashboardMenu = document.getElementById("dashboardMenu");
-                    const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
-
-                    // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
-                    offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
-                    //offcanvas에서 회의록 진하게 보이도록 수정
-                    offcanvasDashboardMenu.classList.remove('img-opacity');
+                memberListDiv.innerHTML = '';
+                memberList.forEach(element => {
+                    var card = createProfileCard(element.name, element.id);
+                    var cardDiv = document.createElement("div");
+                    cardDiv.className = "d-flex flex-column col-11";
+                    cardDiv.appendChild(card);
+                    memberListDiv.appendChild(cardDiv);      
                 });
+                var myModal = new bootstrap.Modal(document.getElementById('openModal'), {});
+                myModal.show();
+            });
+            
+        }
 
-                                </script>
-            <script charset="UTF-8" src="/monitoring/js/schedule/schedule.js"></script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var linkElement = document.querySelector('#side_meeting');
+            let paramPage = new URLSearchParams(window.location.search).get('page');
+            //사이드바에서 회의록 진하게 보이도록 수정
+            if (linkElement) {
+                linkElement.classList.remove('img-opacity');
+            }
+
+            var liItems = document.querySelectorAll("#pageList .page-item a");
+            liItems.forEach(function (item) {
+                if (item.textContent.trim() === String(paramPage)) {
+                    item.style.backgroundColor = "#369FFF";
+                    item.style.color = "white";
+                }
+            });
+
+            const dashboardMenu = document.getElementById("dashboardMenu");
+            const offcanvasDashboardMenu = document.getElementById("offcanvasDashboardMenu");
+
+            // menuContent의 내용을 offcanvasMenuContent에 가져와서 화면에 출력
+            offcanvasDashboardMenu.innerHTML = dashboardMenu.innerHTML;
+            //offcanvas에서 회의록 진하게 보이도록 수정
+            offcanvasDashboardMenu.classList.remove('img-opacity');
+        });
+
+                                    </script>
             <script charset="UTF-8" src="/monitoring/js/user/search.js"></script>
     <!--<script src="https://cdn.jsdelivr.net/npm/marked@4.0.3/lib/marked.min.js"></script>-->
     <!-- 부트스트랩 script -->

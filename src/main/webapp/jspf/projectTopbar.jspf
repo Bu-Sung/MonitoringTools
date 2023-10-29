@@ -48,7 +48,7 @@
                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="ms-3 my-0 pe-2">
                         <p class="fw-500 mb-0 text-dark">${sessionScope.myInfo.uname}<span>님</span></p>
-                        <small class="text-gray">${hasRight == 1 ? '관리자' : '팀원'}</small>
+                        <small class="text-gray">${sessionScope.myInfo.hasRight == 1 ? '관리자' : '팀원'}</small>
                     </div>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">

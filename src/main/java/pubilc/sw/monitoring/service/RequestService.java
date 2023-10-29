@@ -80,8 +80,8 @@ public class RequestService {
 
         for (RequestEntity requestEntity : requestEntities) {
 
-            UserEntity userEntity = userRepository.findById(requestEntity.getUid()).orElse(null);
-            String username = (userEntity != null) ? userEntity.getName() : null;
+//            UserEntity userEntity = userRepository.findById(requestEntity.getUid()).orElse(null);
+//            String username = (userEntity != null) ? userEntity.getName() : null;
 
             requestDTOs.add(RequestDTO.builder()
                     .frid(requestEntity.getFrid())
@@ -94,7 +94,6 @@ public class RequestService {
                     .target(requestEntity.getTarget())
                     .uid(requestEntity.getUid())
                     .note(requestEntity.getNote())
-                    .username(username) // username 설정
                     .build());
         }
 
@@ -273,7 +272,7 @@ public class RequestService {
                     row.createCell(3).setCellValue(requestDTO.getRank());
                     row.createCell(4).setCellValue(requestDTO.getStage());
                     row.createCell(5).setCellValue(requestDTO.getTarget());
-                    row.createCell(6).setCellValue(requestDTO.getUsername());
+                    row.createCell(6).setCellValue(requestDTO.getUid());
                     row.createCell(7).setCellValue(requestDTO.getNote());
                 }
             }
@@ -372,7 +371,7 @@ public class RequestService {
             row.createCell(3).setCellValue(requestDTO.getRank());
             row.createCell(4).setCellValue(requestDTO.getStage());
             row.createCell(5).setCellValue(requestDTO.getTarget());
-            row.createCell(6).setCellValue(requestDTO.getUsername());
+            row.createCell(6).setCellValue(requestDTO.getUid());
             row.createCell(7).setCellValue(requestDTO.getNote());
         }
 
@@ -416,7 +415,6 @@ public class RequestService {
                     .target(requestEntity.getTarget())
                     .uid(requestEntity.getUid())
                     .note(requestEntity.getNote())
-                    .username(username) // username 설정
                     .build());
         }
 
@@ -467,7 +465,7 @@ DataFormatter dataFormatter = new DataFormatter();
                                 requestDTO.setRank((String) row.getCell(3).getStringCellValue());
                                 requestDTO.setStage((String) row.getCell(4).getStringCellValue());
                                 requestDTO.setTarget((String) row.getCell(5).getStringCellValue());
-                                requestDTO.setUsername((String) row.getCell(6).getStringCellValue());
+                                requestDTO.setUid((String) row.getCell(6).getStringCellValue());
                                 requestDTO.setNote("");
                                 
                                 requestDTO.setRequestDate(requestDateInt);  // 요구사항 파일 날짜 

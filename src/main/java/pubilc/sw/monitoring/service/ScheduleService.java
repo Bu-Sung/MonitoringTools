@@ -80,6 +80,8 @@ public class ScheduleService {
                     .start(entity.getStart().format(formatter))
                     .end(entity.getEnd().format(formatter))
                     .memberList(Arrays.asList(entity.getMember().split(",")))
+                    .mid(entity.getMid())
+                    .msid(entity.getMsid())
                     .build());
         }
         return scheduleDTOList;
@@ -99,6 +101,8 @@ public class ScheduleService {
                 .start(LocalDateTime.parse(scheduleDTO.getStart(), InputFormatter))
                 .end(LocalDateTime.parse(scheduleDTO.getEnd(), InputFormatter))
                 .member(scheduleDTO.getMemberList().isEmpty() ? "" : String.join(",", scheduleDTO.getMemberList()))
+                .msid(scheduleDTO.getMsid())
+                .mid(scheduleDTO.getMid())
                 .build());
         return newEntity != null;
     }
@@ -152,7 +156,6 @@ public class ScheduleService {
                         .end(entity.getEnd().format(formatter))
                         .memberList(Arrays.asList(entity.getMember().split(",")))
                         .build());
-                System.out.println(entity);
             }
         }
         return dtoList;

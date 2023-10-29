@@ -35,7 +35,7 @@ contentDiv.addEventListener("keyup", function (event) {
 //본문 시작
 contentDiv.addEventListener("click", function (event) {
     const innerDiv = contentDiv.querySelector('div');
-    
+
     if (innerDiv && innerDiv.classList.contains('document-content-explanation')) {
         const newDiv = createDiv(event.currentTarget);
         contentDiv.innerHTML = "";
@@ -50,7 +50,7 @@ function saveDocument() {
     const formDiv = document.getElementById("documentForm");
     const text = document.getElementById("content");
     const content = document.createElement('input');
-
+    const file = document.getElementById("file");
     content.setAttribute("type", "hidden");
     content.setAttribute("name", "content");
     content.setAttribute("value", text.innerHTML);
@@ -90,3 +90,17 @@ function checkupdatefile() {
     }
     container.appendChild(remaininput);
 }
+
+document.getElementById('file').addEventListener('change', function (e) {
+    var files = this.files; // FileList object
+
+    var maxSize = 5 * 1024 * 1024; // 최대 용량 (5MB)
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.size > maxSize) {
+            alert("파일 사이즈가 너무 큽니다. (최대 5MB)");
+            this.value = ""; // input value 초기화
+            break;
+        }
+    }
+}, false);

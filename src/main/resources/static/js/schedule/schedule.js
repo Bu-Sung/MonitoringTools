@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.location.href.includes("schedule")) {
         var saveScheduleButton = document.getElementById("saveSchedule");
         saveScheduleButton.addEventListener("click", function () {
-            if (validateFields(document.getElementById('title'))) {
+            if (validateFields(document.getElementById("title"), document.getElementById('startDate'), document.getElementById('endDate'))) {
                 if (confirm("저장하시겠습니까??") == true) {
                     var item = scheduleItem();
                     fetch("schedule/addSchedule", {
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var updateScheduleButton = document.getElementById("updateSchedule");
         updateScheduleButton.addEventListener("click", function () {
-            if (validateFields(document.getElementById('title'))) {
+            if (validateFields(document.getElementById("title"), document.getElementById('startDate'), document.getElementById('endDate'))) {
                 if (confirm("수정하시겠습니까??") == true) {
                     var memberListId = [];
                     memberList.forEach(item => {
@@ -109,7 +109,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         color: colorSelect.value,
                         start: startDate.value,
                         end: endDateValue,
-                        memberList: memberListId
+                        memberList: memberListId,
+                        msid : msid.value,
+                        mid : mid.value
                     };
                     fetch("schedule/updateSchedule", {
                         method: 'POST',
@@ -208,10 +210,12 @@ function scheduleModal() {
 
 async function scheduleModalSetting(item) { // 일정 초기값 세팅
     sid.value = item.sid;
+    mid.value = item.mid;
+    msid.value = item.msid;
     title.value = item.title;
-    startDate.type = item.startDateType;
+    startDate.type = item.dateType;
     startDate.value = item.startDateValue;
-    endDate.type = item.endDateType;
+    endDate.type = item.dateType;
     endDate.value = item.endDateValue;
     content.value = item.content;
     colorSelect.style.backgroundColor = item.color;
@@ -358,7 +362,6 @@ async function getScheduleMemberList(sid) {
     try {
         const response = await fetch("/monitoring/project/schedule/getScheduleMembers?sid=" + parseInt(sid));
         const data = await response.json();
-        console.log(data);
         if (data) {
             for (var item of data) {
                 ScheduleMemberList.push(item);
@@ -371,7 +374,7 @@ async function getScheduleMemberList(sid) {
 }
 
 /* 일정 저장에 대한 유효성 검사 */
-function validateFields(title) {
+function validateFields(title, start, end) {
     let vali = true;
 
     if (title.value.trim() === '') {
@@ -379,6 +382,15 @@ function validateFields(title) {
         title.focus();
         vali = false;
     }
-
+    if(start.value === ''){
+        alert("시작 날짜를 선택해주세요");
+        start.focus();
+        vali = false;
+    }
+    if(end.value === ''){
+        alert("종료 날짜를 선택해주세요");
+        end.focus();
+        vali = false;
+    }
     return vali;
 }

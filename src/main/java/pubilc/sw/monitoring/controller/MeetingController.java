@@ -105,7 +105,7 @@ public class MeetingController {
             // 예외 처리 로직 추가
         }
         meetingDTO.setProjectId(sessionManager.getProjectId());
-        meetingDTO.setWriter(sessionManager.getUserName());
+        meetingDTO.setWriter(sessionManager.getUserId());
         if (meetingService.addMeeting(meetingDTO, file, scheduleList)) {
             attrs.addFlashAttribute("msg", "회의록이 등록되었습니다.");
         } else {
@@ -123,7 +123,7 @@ public class MeetingController {
     @PostMapping("update/update")
     public String updateMeeting(@ModelAttribute MeetingDTO meetingDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files, @RequestParam(name = "scheduleList", required = false) String scheduleJson, HttpServletRequest request, Model model) {
         meetingDTO.setProjectId(sessionManager.getProjectId());
-        meetingDTO.setWriter(sessionManager.getUserName());
+        meetingDTO.setWriter(sessionManager.getUserId());
         ObjectMapper objectMapper = new ObjectMapper();
         List<ScheduleDTO> scheduleList = new ArrayList();
         try {

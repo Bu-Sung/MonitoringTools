@@ -182,7 +182,7 @@ public class UserController {
     public String updateUser(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs) {
         if (userService.updateUserInfo(userDTO)) {
             attrs.addFlashAttribute("msg", "정보 수정을 완료하였습니다.");
-            return "redirect:/";
+            return "redirect:/login";
         } else {
             attrs.addFlashAttribute("msg", "정보 수정에 실패하였습니다.");
             return "redirect:/update";

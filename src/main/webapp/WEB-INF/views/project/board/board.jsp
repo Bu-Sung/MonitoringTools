@@ -44,7 +44,7 @@
                         <div class="card card-white-1 p-4">
                             <div id="meeting">
                                 <input type="text" id="hasRight" hidden value="${sessionScope.myInfo.hasRight}">
-                                <input type="text" id="userName" hidden value="${sessionScope.myInfo.uname}">
+                                <input type="text" id="userName" hidden value="${sessionScope.myInfo.uid}">
                                 <div class="d-flex justify-content-between">
                                     <div class="meeing-title" style="font-size: 2rem; overflow-wrap: break-word; word-break: break-all;">${board.title}</div>
                                     <c:if test="${sessionScope.myInfo.hasRight eq 1 || (sessionScope.myInfo.hasRight eq 2 && sessionScope.myInfo.uname eq meeting.writer)}">
