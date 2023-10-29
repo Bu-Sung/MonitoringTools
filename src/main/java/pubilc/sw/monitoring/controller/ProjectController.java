@@ -59,7 +59,6 @@ public class ProjectController {
 
         ProjectDTO projectDTO = projectService.getProjectDetails(pid);
         sessionManager.setProjectInfo(projectDTO,projectService.hasRight(sessionManager.getUserId(), pid));
-        System.out.println(sessionManager.getProjectRight());
         model.addAttribute("project", projectDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -343,7 +342,6 @@ public class ProjectController {
     
     @GetMapping("/sprint")
     public String sprint(Model model){
-        System.out.println(requestService.getTrueTarget(sessionManager.getProjectId()));
         model.addAttribute("requestMap",requestService.getTrueTarget(sessionManager.getProjectId()));
         model.addAttribute("excelNames", requestService.getExcelNames(sessionManager.getProjectId()));// 엑셀 파일 리스트 
         return "/project/sprintList";

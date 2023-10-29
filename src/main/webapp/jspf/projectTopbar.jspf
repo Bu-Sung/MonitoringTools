@@ -4,7 +4,7 @@
     <div class="container-fluid d-flex justify-content-between">
         <ol class="breadcrumb position-absolute d-block d-lg-none d-flex"
             style="transform: translateY(-35px);">
-            <li class="breadcrumb-item"><a href="#"><img src="/monitoring/asset/logo.png" width="25rem;" class="me-2">Home</a></li>
+            <li class="breadcrumb-item"><a href="/monitoring/project/list"><img src="/monitoring/asset/logo.png" width="25rem;" class="me-2">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Project</li>
         </ol>
         <a href="${project.pid}" class="navbar-brand">

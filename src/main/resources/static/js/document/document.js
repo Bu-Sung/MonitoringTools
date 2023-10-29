@@ -50,7 +50,6 @@ function saveDocument() {
     const formDiv = document.getElementById("documentForm");
     const text = document.getElementById("content");
     const content = document.createElement('input');
-    const file = document.getElementById("file");
     content.setAttribute("type", "hidden");
     content.setAttribute("name", "content");
     content.setAttribute("value", text.innerHTML);

@@ -5,12 +5,8 @@
 package pubilc.sw.monitoring.service;
 
 import java.util.Optional;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pubilc.sw.monitoring.SessionManager;
 import pubilc.sw.monitoring.dto.UserDTO;
 import pubilc.sw.monitoring.entity.UserEntity;
 import pubilc.sw.monitoring.repository.UserRepository;

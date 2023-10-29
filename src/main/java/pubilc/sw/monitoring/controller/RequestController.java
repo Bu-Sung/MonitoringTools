@@ -72,7 +72,6 @@ public class RequestController {
         if (requestDTOList == null || requestDTOList.isEmpty()) {
             return false;
         }
-        System.out.println(requestDTOList);
         List<Boolean> results = new ArrayList<>();
 
         for (RequestDTO requestDTO : requestDTOList) {
