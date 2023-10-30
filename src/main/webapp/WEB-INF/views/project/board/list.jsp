@@ -43,7 +43,7 @@
                                 <span>공지사항</span> 목록
                             </h4>    
                             <div class="d-flex justify-content-between align-items-center mt-5">
-                                <c:if test="${sessionScope.hasRight != 3}">
+                                <c:if test="${sessionScope.myInfo.hasRight != 3}">
                                     <a href="save"><button class="btn btn-primary">등록하기</button></a>
                                 </c:if>
                                 <select id="category" class="border p-2 fw-500" style="border-radius: 0.3rem;">
