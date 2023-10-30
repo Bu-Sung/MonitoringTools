@@ -82,8 +82,7 @@ public class ProjectController {
             model.addAttribute("endDay", projectService.getDaysUntilProjectEnd(pid));
             return "project/project";
         } else {
-            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-            return "redirect:/project/list";
+            return "/monitoring/error";
         }
 
     }
@@ -96,8 +95,7 @@ public class ProjectController {
             model.addAttribute("pName", projectService.getInviteName(pid));  // 초대받은 프로젝트 이름 
             return "project/invite";
         } else {
-            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-            return "redirect:/project/list";
+            return "/monitoring/error";
         }
     }
 
@@ -145,8 +143,7 @@ public class ProjectController {
             }
             return "redirect:/project/list";
         } else {
-            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-            return "redirect:/project/list";
+            return "/monitoring/error";
         }
 
     }
@@ -162,8 +159,7 @@ public class ProjectController {
             }
             return "redirect:/project/list";
         } else {
-            attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-            return "redirect:/project/list";
+            return "/monitoring/error";
         }
 
     }

@@ -62,8 +62,7 @@ public class MeetingController {
         try {
             MeetingDTO meetingDTO = meetingService.getMeeting(mid, sessionManager.getProjectId());
             if (meetingDTO == null) {
-                attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-                return "redirect:/project/meeting/list";
+                return "/monitoring/error";
             }
             model.addAttribute("meeting", meetingDTO);
             model.addAttribute("scheduleList", new ObjectMapper().writeValueAsString(scheduleService.getPageScheduleList(mid)));
@@ -78,8 +77,7 @@ public class MeetingController {
         try {
             MeetingDTO meetingDTO = meetingService.getMeeting(mid, sessionManager.getProjectId());
             if (meetingDTO == null) {
-                attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-                return "redirect:/project/meeting/list";
+                return "/monitoring/error";
             }
             model.addAttribute("meeting", meetingDTO);
             model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId()));
@@ -140,8 +138,7 @@ public class MeetingController {
     public String meetingDelette(@PathVariable Long mid, Model model, RedirectAttributes attrs) {
          MeetingDTO meetingDTO = meetingService.getMeeting(mid, sessionManager.getProjectId());
             if (meetingDTO == null) {
-                attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-                return "redirect:/project/meeting/list";
+                return "/monitoring/error";
             }
         if (meetingService.deleteMeeintg(mid)) {
             attrs.addFlashAttribute("msg", "회의록이 삭제되었습니다.");

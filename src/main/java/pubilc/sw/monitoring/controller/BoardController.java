@@ -79,18 +79,16 @@ public class BoardController {
             model.addAttribute("editRight", projectService.hasRight(sessionManager.getUserId(), sessionManager.getProjectId())); 
             return "/project/board/board";
         }else{
-            attrs.addFlashAttribute("msg", "게시물이 존재하지 않습니다.");
-            return "redirect:/project/board/list";
+            return "/monitoring/error";
         }
     }
     
     @GetMapping("/delete/{bid}")
     public String deleteBoard(@PathVariable Long bid, RedirectAttributes attrs){
          BoardDTO boardDTO = boardService.getBoard(bid, sessionManager.getProjectId());
-            if (boardDTO == null) {
-                attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
-                return "redirect:/project/board/list";
-            }
+        if (boardDTO == null) {
+            return "/monitoring/error";
+        }
         if(boardService.deleteBoard(bid)){
             attrs.addFlashAttribute("msg", "게시물이 삭제되었습니다.");
             return "redirect:/project/board/list";
@@ -108,8 +106,7 @@ public class BoardController {
             model.addAttribute("category", projectService.getProjectCategory(sessionManager.getProjectId()));
             return "/project/board/details";
         }else{
-            attrs.addFlashAttribute("msg", "게시물이 존재하지 않습니다.");
-            return "redirect:/project/board/list";
+            return "/monitoring/error";
         }
     }
     
