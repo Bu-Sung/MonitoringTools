@@ -49,4 +49,9 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     
     @Query("SELECT p FROM ProjectEntity p WHERE p.start <= :currentDate AND p.end >= :currentDate")
     List<ProjectEntity> findByStartBeforeAndEndAfter(@Param("currentDate") Date currentDate);
+    
+    @Transactional
+    @Modifying
+    @Query("UPDATE BoardEntity b SET b.category = '공지사항' WHERE b.pid = :pid AND b.category IN :cats")
+    int updateCategoryToNotice(Long pid, List<String> cats);
 }

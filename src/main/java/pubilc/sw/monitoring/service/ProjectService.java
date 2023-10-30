@@ -582,7 +582,7 @@ public class ProjectService {
         String updateCats = String.join(",", categoryList);
 
         projectRepository.updateCategory(pid, updateCats);
-
+        projectRepository.updateCategoryToNotice(pid,cats);
         status = true;
 
         return status;

@@ -73,7 +73,7 @@
                                                     <td>${list.name}</td>
                                                     <td class="text-center">${list.date}</td>
                                                     <td class="text-center">${list.stage}</td>
-                                                    <td class="text-center">${list.username}</td>
+                                                    <td class="text-center">${list.uid}</td>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
