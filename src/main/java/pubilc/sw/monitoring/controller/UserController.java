@@ -119,12 +119,13 @@ public class UserController {
     }
 
     @PostMapping("/findPw")
-    public String findPwSuccess(@ModelAttribute UserDTO userDTO) {
+    public String findPwSuccess(@ModelAttribute UserDTO userDTO, RedirectAttributes attrs) {
         if (userService.findPw(userDTO)) {
             sessionManager.setUserInfo(userDTO);
             return "findPwSuccess";
         } else {
-            return "findUser";
+            attrs.addFlashAttribute("msg", "정보와 일치하는 아이디가 존재하지 않습니다.");
+            return "redirect:/findUser";
         }
     }
 

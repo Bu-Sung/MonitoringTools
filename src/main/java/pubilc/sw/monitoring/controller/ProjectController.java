@@ -95,7 +95,7 @@ public class ProjectController {
             model.addAttribute("inviteUserName", projectService.getInviteUserName(pid));  // 프로젝트 초대한사람 이름 
             model.addAttribute("pName", projectService.getInviteName(pid));  // 초대받은 프로젝트 이름 
             return "project/invite";
-        }else{
+        } else {
             attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
             return "redirect:/project/list";
         }
@@ -138,31 +138,34 @@ public class ProjectController {
     @PostMapping("/acceptInvite/{pid}")
     public String acceptInvite(@PathVariable Long pid, RedirectAttributes attrs) {
         if (projectService.checkInvite(pid, sessionManager.getUserId())) {
+            if (projectService.acceptInvite(pid, sessionManager.getUserId())) {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 수락하였습니다.");
+            } else {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 수락 실패하였습니다.");
+            }
+            return "redirect:/project/list";
+        } else {
             attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
             return "redirect:/project/list";
         }
-        if (projectService.acceptInvite(pid, sessionManager.getUserId())) {
-            attrs.addFlashAttribute("msg", "프로젝트 초대 수락하였습니다.");
-        } else {
-            attrs.addFlashAttribute("msg", "프로젝트 초대 수락 실패하였습니다.");
-        }
 
-        return "redirect:/project/list";
     }
 
     // 프로젝트 초대 거절 ㅓ 
     @PostMapping("/refuseInvite/{pid}")
     public String refuseInvite(@PathVariable Long pid, RedirectAttributes attrs) {
         if (projectService.checkInvite(pid, sessionManager.getUserId())) {
+            if (projectService.refuseInvite(pid, sessionManager.getUserId())) {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 거절하였습니다.");
+            } else {
+                attrs.addFlashAttribute("msg", "프로젝트 초대 거절 실패하였습니다.");
+            }
+            return "redirect:/project/list";
+        } else {
             attrs.addFlashAttribute("msg", "잘못된 접근입니다.");
             return "redirect:/project/list";
         }
-        if (projectService.refuseInvite(pid, sessionManager.getUserId())) {
-            attrs.addFlashAttribute("msg", "프로젝트 초대 거절하였습니다.");
-        } else {
-            attrs.addFlashAttribute("msg", "프로젝트 초대 거절 실패하였습니다.");
-        }
-        return "redirect:/project/list";
+
     }
 
     /**
