@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 var scheduleItem = scheduleList.find(function (item) {
                     return item.msid === Number(name);
                 });
-                console.log(scheduleItem);
                 if (scheduleItem) {
                     var allTime = 1;
                     var endDateValue = endDate.value;
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     scheduleItem.msid = Number(name);
                     scheduleItem.allTime = allTime;
                     scheduleItem.title = document.getElementById("scheduleTitle").value;
-                    scheduleItem.content = document.getElementById("content").value;
+                    scheduleItem.content = document.getElementById("scheduleContent").value;
                     scheduleItem.color = document.getElementById("colorSelect").value;
                     scheduleItem.datetype = document.getElementById("startDate").type;
                     scheduleItem.start = document.getElementById("startDate").value;
@@ -134,7 +133,7 @@ function checkMD(eventDiv) {
             document.getElementById("startDate").value = todayText;
             document.getElementById("endDate").type = "date";
             document.getElementById("endDate").value = todayText;
-            document.getElementById("content").value = '';
+            document.getElementById("scheduleContent").value = '';
             document.getElementById("colorSelect").value = '#43aef2';
             addMember.value = '';
             document.getElementById("memberListDiv").innerHTML = '';
@@ -201,7 +200,7 @@ function replaceSchdule() {
         sid: 0,
         allTime: allTime,
         title: document.getElementById("scheduleTitle").value,
-        content: document.getElementById("content").value,
+        content: document.getElementById("scheduleContent").value,
         color: document.getElementById("colorSelect").value,
         datetype: document.getElementById("startDate").type,
         start: document.getElementById("startDate").value,
@@ -255,7 +254,7 @@ async function setModal(item) {
     document.getElementById("startDate").value = startDateValue;
     document.getElementById("endDate").type = dateType;
     document.getElementById("endDate").value = endDateValue;
-    document.getElementById("content").value = item.content;
+    document.getElementById("scheduleContent").value = item.content;
     document.getElementById("colorSelect").value = item.color;
     addMember.value = '';
 

@@ -53,7 +53,7 @@
                                 </select>
                             </div>
                             <div class="card card-white-1 mt-3" style="height: 50vh;">
-                                <div class="card-body" style="overflow: auto; white-space: nowrap;">
+                                <div class="card-body" >
                                     <table class="table">
                                         <thead>
                                             <tr class="text-primary">

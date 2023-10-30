@@ -138,7 +138,7 @@
                             <th><label for="content">내용</label></th>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <textArea id="content" class="form-control" readonly></textArea>
+                                    <textArea id="scheduleContent" class="form-control" readonly></textArea>
                            </div>
                        </td>
                    </tr>
@@ -170,6 +170,9 @@
 
             editableElements.forEach(function (element) {
                 element.setAttribute('contenteditable', 'false');
+                if(element.innerHTML ===''){
+                    element.innerHTML ='&nbsp;';
+                }
             });
 
             let pageSchedule = document.querySelectorAll("div[name]");
@@ -253,12 +256,13 @@
                     var tmp = new Date(end);
                     endDateValue = changeDateTimeToDate(toLocalISOString(tmp.setDate(tmp.getDate() - 1)));
                 }
+                console.log(item);
                 document.getElementById("scheduleTitle").value = item.title;
                 document.getElementById("startDate").type = dateType;
                 document.getElementById("startDate").value = startDateValue;
                 document.getElementById("endDate").type = dateType;
                 document.getElementById("endDate").value = endDateValue;
-                document.getElementById("content").value = item.content;
+                document.getElementById("scheduleContent").value = item.content;
                 document.getElementById("colorSelect").style.backgroundColor = item.color;
                 memberList = item.memberList;
                 memberListDiv.innerHTML = '';

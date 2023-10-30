@@ -43,9 +43,6 @@ public class ProjectService {
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
 
-    @Value("${page.limit}")
-    private int pageLimit;
-
     /**
      * 프로젝트 추가 함수 (project 테이블 및 member 테이블에 정보 추가)
      *
@@ -105,9 +102,9 @@ public class ProjectService {
         }
         Page<ProjectEntity> projectEntityList;
         if (name.equals("") || name == null) {
-            projectEntityList = projectRepository.findByIds(projectIdList, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
+            projectEntityList = projectRepository.findByIds(projectIdList, PageRequest.of(nowPage - 1, 5, Sort.by(Sort.Direction.DESC, "end")));
         } else {
-            projectEntityList = projectRepository.findByIdsAndName(projectIdList, name, PageRequest.of(nowPage - 1, pageLimit, Sort.by(Sort.Direction.DESC, "end")));
+            projectEntityList = projectRepository.findByIdsAndName(projectIdList, name, PageRequest.of(nowPage - 1, 5, Sort.by(Sort.Direction.DESC, "end")));
         }
 
         for (ProjectEntity projectEntity : projectEntityList.getContent()) {

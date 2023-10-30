@@ -157,7 +157,7 @@
                             <th><label for="content">내용</label></th>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <textArea id="content" class="form-control"></textArea>
+                                    <textArea id="scheduleContent" class="form-control"></textArea>
                            </div>
                        </td>
                    </tr>

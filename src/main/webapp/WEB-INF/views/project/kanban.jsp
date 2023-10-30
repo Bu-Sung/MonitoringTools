@@ -46,7 +46,7 @@
                                         </div>
                                         <div id="backlog" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
-                                                <c:if test="${list.stage eq '대기' && list.target != 'true'}">
+                                                <c:if test="${list.stage eq '대기' && list.target != 'true' && list.date != -1}">
                                                     <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}"  data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
@@ -63,7 +63,7 @@
                                         </div>
                                         <div id="todo" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
-                                                <c:if test="${list.stage != '대기' && list.stage != '테스트' && list.stage != '완료' && list.target != 'true'}">
+                                                <c:if test="${list.stage != '대기' && list.stage != '테스트' && list.stage != '완료' && list.target != 'true' && list.date != -1}">
                                                     <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}"  data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
@@ -80,7 +80,7 @@
                                         </div>
                                         <div id="progress" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
-                                                <c:if test="${list.stage != '대기' && list.stage != '완료' && list.target == 'true'}">
+                                                <c:if test="${list.stage != '대기' && list.stage != '완료' && list.target == 'true' && list.date != -1}">
                                                     <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}"  data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
@@ -97,7 +97,7 @@
                                         </div>
                                         <div id="test" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
-                                                <c:if test="${list.stage eq '테스트' && list.target != 'true'}">
+                                                <c:if test="${list.stage eq '테스트' && list.target != 'true' && list.date != -1}">
                                                     <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}" data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>
@@ -114,7 +114,7 @@
                                         </div>
                                         <div id="clear" class="card-body w-100 memo-list">
                                             <c:forEach items="${request}" var="list">
-                                                <c:if test="${list.stage eq '완료' && list.target != 'true'}">
+                                                <c:if test="${list.stage eq '완료' && list.target != 'true' && list.date != -1}">
                                                     <div class="memo-yellow" data-bs-toggle="modal" data-memoid="${list.frid}" data-requestUser="${list.uid}" data-bs-target="#myModal">
                                                         ${list.name}
                                                     </div>

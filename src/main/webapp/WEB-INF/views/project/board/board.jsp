@@ -108,6 +108,9 @@
 
             editableElements.forEach(function (element) {
                 element.setAttribute('contenteditable', 'false');
+                if(element.innerHTML ===''){
+                    element.innerHTML ='&nbsp;';
+                }
             });
 
             var linkElement = document.querySelector('#side_list');

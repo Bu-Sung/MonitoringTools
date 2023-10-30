@@ -120,7 +120,7 @@
                 <div class="modal-body">
                     <table class="table table-borderless">
                         <tr>
-                            <th style="width:25%"><label for="title">제목<span class="text-danger">*</span></label>
+                            <th style="width:25%"><label for="scheduleTitle">제목<span class="text-danger">*</span></label>
                             </th>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -153,10 +153,10 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><label for="content">내용</label></th>
+                            <th><label for="scheduleContentt">내용</label></th>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <textArea id="content" class="form-control"></textArea>
+                                    <textArea id="scheduleContent" class="form-control"></textArea>
                            </div>
                        </td>
                    </tr>

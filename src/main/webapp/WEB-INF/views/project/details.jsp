@@ -353,12 +353,16 @@
                                 if (isAvailable) {
                                     getCategoryList().then(() => {
                                         reloadBaseCategory();
+                                        
                                     });
+                                    taskInput.value = '';
                                 } else {
+                                    taskInput.value = '';
                                     alert("이미 존재하는 카테고리입니다.");
                                 }
                             })
                             .catch(error => console.error('Error:', error));
+                    
                 }
             });
 

@@ -58,17 +58,14 @@ function createDiv(eventDiv) {
 /* 본문 div 삭제 */
 function deleteDiv(eventDiv) {
     contentWrap = eventDiv.parentNode;
-
     if (eventDiv.innerHTML === "") {
         const preDiv = contentWrap.previousElementSibling;
         const nextDiv = contentWrap.nextElementSibling;
         var name = contentWrap.querySelector('div').getAttribute('name'); // name 속성 값을 가져옵니다.
         if (name) { // 만약 name이 존재한다면
-            console.log(name);
             scheduleList.splice(scheduleList.findIndex(function (item) {
                 return item.msid === Number(name);
             }), 1);
-            console.log(scheduleList);
         }
         contentWrap.remove();
         if (preDiv) {
@@ -77,6 +74,19 @@ function deleteDiv(eventDiv) {
             nextDiv.querySelector('.document-content-div').focus();
         } else {
             document.getElementById("content").innerHTML = explanation;
+        }
+    } else {
+        var firstDiv = contentWrap.querySelector('div:first-child');
+        if (firstDiv.classList.contains('dot')) {
+            var selection = window.getSelection();
+            var range = selection.getRangeAt(0);
+            var preCaretRange = range.cloneRange();
+            preCaretRange.selectNodeContents(eventDiv);
+            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            var position = preCaretRange.toString().length;
+            if (position === 0) {
+                firstDiv.remove();
+            }
         }
     }
 }

@@ -94,12 +94,16 @@
             document.getElementById('findIdForm').addEventListener('submit', function (e) {
                 var phoneInput = this.querySelector('input[name="phone"]');
                 var phoneValue = phoneInput.value;
-                phoneInput.value = phoneValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+                if(!phoneValue.includes("-")){
+                    phoneInput.value = phoneValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+                }
             });
             document.getElementById('findPwForm').addEventListener('submit', function (e) {
                 var phoneInput = this.querySelector('input[name="phone"]');
                 var phoneValue = phoneInput.value;
-                phoneInput.value = phoneValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+                if(!phoneValue.includes("-")){
+                    phoneInput.value = phoneValue.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+                }
             });
         });
 
