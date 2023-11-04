@@ -507,6 +507,10 @@
                                 }
                             });
                         }
+                        
+                        if(item.stage === "완료"){
+                             tr.style.backgroundColor = "#D6E8B3";
+                        }
 
                         selectTarget.addEventListener('focus', function (e) {
                             this.parentNode.parentNode.parentNode.classList.add('dontClick');
