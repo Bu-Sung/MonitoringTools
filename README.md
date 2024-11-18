@@ -16,8 +16,7 @@
   3.3 [프로젝트 자료 관리](#3-프로젝트-자료-관리) <br>
   3.4 [일정 관리](#4-일정-관리) <br>
   3.5 [동적 웹 어플리케이션 시스템](#5-동적-웹-어플리케이션-시스템) <br><br>
-4. [사용 방법](#-사용-방법)<br><br>
-5. [Licenses](#Licenses)
+4. [Licenses](#Licenses)
 
 <br><br><br>
 ## 🖥 프로젝트 소개
@@ -162,20 +161,6 @@
 <br><br>
 #### 5.3 작은 화면
 ![대시보드(sm)](https://github.com/KimLeeParkTeam-2023/MonitoringTools/assets/104774302/e6c92a06-d662-4191-96f3-96e313fb10d1)
-<br><br><br>
-
-## 💡 사용 방법
-### 1. 프로젝트 폴더 파일 다운로드
-### 2. 원하는 위치에 압축 해제
-### 3. 폴더 안 'monitoring-sql' 파일을 이용하여 MySQL에 테이블 생성
-### 4. src/main/resources/application.properties 파일에서 연결 정보 확인하고 자신의 DB에 연결
-- **연결 URL** - spring.datasource.url=jdbc:mysql://localhost:3306/monitoring??useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul<br>
-- **연결 아이디** - spring.datasource.username=monitoring<br>
-- **연결 비밀번호** - spring.datasource.password=qwer1234<br>
-### 5. 해당 프로젝트 최상위 폴더로 이동하여 (pom.xml이 있는 폴더) cmd 창 실행
-### 6. ./mvnw clean install 명령어를 사용해서 빌드
-### 7. java -jar target/monitoring.war 명령어를 사용해 실행
-### 8. localhost:8080/monitoring/ 경로로 접속
 <br><br><br>
 
 ## Licenses
